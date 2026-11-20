@@ -1,0 +1,24 @@
+# Godot 4 .gitignore
+
+# Godot 4 cache and imported files
+.godot/
+.import/
+
+# Export presets (contengono keystore e percorsi locali personali)
+export_presets.cfg
+
+# Mono / C# (se utilizzato)
+.mono/
+data_*/
+mono_crash.*.json
+[Bb]in/
+[Oo]bj/
+.vs/
+*.csproj
+*.sln
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
