@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://8shnvnc2raqs"]
+
+[ext_resource type="Script" uid="uid://ddoy3enq8x4u4" path="res://scripts/hoop.gd" id="1_kqfn8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7fw7d"]
+size = Vector2(60, 30)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4b3kd"]
+radius = 5.0
+
+[node name="Hoop" type="Area2D" unique_id=2129366597]
+script = ExtResource("1_kqfn8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=987441805]
+shape = SubResource("RectangleShape2D_7fw7d")
+
+[node name="RimLeft" type="StaticBody2D" parent="." unique_id=1971157256]
+position = Vector2(-32, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RimLeft" unique_id=37198135]
+shape = SubResource("CircleShape2D_4b3kd")
+
+[node name="RimRight" type="StaticBody2D" parent="." unique_id=554700612]
+position = Vector2(32, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RimRight" unique_id=1637186649]
+shape = SubResource("CircleShape2D_4b3kd")
+
+[node name="VisualNet" type="Line2D" parent="." unique_id=772711558]
+points = PackedVector2Array(-30, 0, -20, 40, 0, 45, 20, 40, 30, 0)
+width = 3.0

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bsd78lqo0lwov"]
 
 [ext_resource type="PackedScene" uid="uid://5q0llfh6o84w" path="res://scenes/ball.tscn" id="1_o5qli"]
+[ext_resource type="PackedScene" uid="uid://8shnvnc2raqs" path="res://scenes/hoop.tscn" id="2_0wfyh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7fw7d"]
 size = Vector2(1280, 40)
@@ -14,4 +15,7 @@ position = Vector2(640, 650)
 shape = SubResource("RectangleShape2D_7fw7d")
 
 [node name="Ball" parent="." unique_id=1967342746 instance=ExtResource("1_o5qli")]
-position = Vector2(464, 213)
+position = Vector2(219, 209)
+
+[node name="Hoop" parent="." unique_id=1457214946 instance=ExtResource("2_0wfyh")]
+position = Vector2(676, 195)
