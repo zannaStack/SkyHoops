@@ -20,4 +20,8 @@ shape = SubResource("CircleShape2D_4b3kd")
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("1_7s4qf")
 
-[node name="Area2D" type="Area2D" parent="." unique_id=1029262424]
+[node name="TrajectoryLine" type="Line2D" parent="." unique_id=1027073596]
+top_level = true
+z_index = 1
+width = 4.0
+default_color = Color(1, 0.42352942, 0, 1)
