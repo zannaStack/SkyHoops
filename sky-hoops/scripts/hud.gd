@@ -2,40 +2,93 @@ extends CanvasLayer
 
 @onready var stamina_bar: ProgressBar = $StaminaBar
 @onready var distance_label: Label = $DistanceLabel
+@onready var coin_label: Label = $CoinLabel
+
 @onready var game_over_panel: Panel = $GameOverPanel
+@onready var game_over_label: Label = $GameOverPanel/GameOver
+@onready var power_button: Button = $GameOverPanel/PowerButton
+@onready var aim_button: Button = $GameOverPanel/AimButton
 @onready var retry_button: Button = $GameOverPanel/RetryButton
 
 func _ready() -> void:
-	if not game_over_panel:
-		game_over_panel = get_node_or_null("GameOverPanel")
-	if not retry_button:
-		retry_button = get_node_or_null("GameOverPanel/RetryButton")
-		
+	# Recupero difensivo in caso di accesso prima dell'_onready
+	_ensure_nodes()
+	
 	if game_over_panel:
 		game_over_panel.visible = false
+	
 	if retry_button and not retry_button.pressed.is_connected(_on_retry_pressed):
 		retry_button.pressed.connect(_on_retry_pressed)
+	if power_button and not power_button.pressed.is_connected(_on_power_pressed):
+		power_button.pressed.connect(_on_power_pressed)
+	if aim_button and not aim_button.pressed.is_connected(_on_aim_pressed):
+		aim_button.pressed.connect(_on_aim_pressed)
+	
+	update_coins(GameManager.coins)
 
-func update_stamina(value: float) -> void:
+func _ensure_nodes() -> void:
 	if not stamina_bar:
 		stamina_bar = get_node_or_null("StaminaBar")
+	if not distance_label:
+		distance_label = get_node_or_null("DistanceLabel")
+	if not coin_label:
+		coin_label = get_node_or_null("CoinLabel")
+	if not game_over_panel:
+		game_over_panel = get_node_or_null("GameOverPanel")
+	if game_over_panel:
+		if not game_over_label:
+			game_over_label = game_over_panel.get_node_or_null("GameOver")
+		if not power_button:
+			power_button = game_over_panel.get_node_or_null("PowerButton")
+		if not aim_button:
+			aim_button = game_over_panel.get_node_or_null("AimButton")
+		if not retry_button:
+			retry_button = game_over_panel.get_node_or_null("RetryButton")
+
+func update_stamina(value: float) -> void:
+	_ensure_nodes()
 	if stamina_bar:
 		stamina_bar.value = value
 
 func update_distance(distance_meters: int) -> void:
-	if not distance_label:
-		distance_label = get_node_or_null("DistanceLabel")
+	_ensure_nodes()
 	if distance_label:
 		distance_label.text = str(distance_meters) + " m"
 
+func update_coins(total_coins: int) -> void:
+	_ensure_nodes()
+	if coin_label:
+		coin_label.text = "🪙 " + str(total_coins)
+
 func show_game_over(final_distance: int) -> void:
-	if not game_over_panel:
-		game_over_panel = get_node_or_null("GameOverPanel")
+	_ensure_nodes()
 	if game_over_panel:
 		game_over_panel.visible = true
-		var label = game_over_panel.get_node_or_null("GameOver")
-		if label:
-			label.text = "GAME OVER!\nMetri percorsi: " + str(final_distance) + " m"
+	if game_over_label:
+		game_over_label.text = "GAME OVER!\nMetri: " + str(final_distance) + " m | Record: " + str(GameManager.high_score) + " m"
+	refresh_upgrade_buttons()
+
+func refresh_upgrade_buttons() -> void:
+	_ensure_nodes()
+	if power_button:
+		var p_cost = GameManager.get_power_upgrade_cost()
+		power_button.text = "FORZA (Lv. " + str(GameManager.power_level) + ") - " + str(p_cost) + " 🪙"
+		power_button.disabled = (GameManager.coins < p_cost)
+	
+	if aim_button:
+		var a_cost = GameManager.get_aim_upgrade_cost()
+		aim_button.text = "MIRINO (Lv. " + str(GameManager.aim_level) + ") - " + str(a_cost) + " 🪙"
+		aim_button.disabled = (GameManager.coins < a_cost)
+
+func _on_power_pressed() -> void:
+	if GameManager.upgrade_power():
+		update_coins(GameManager.coins)
+		refresh_upgrade_buttons()
+
+func _on_aim_pressed() -> void:
+	if GameManager.upgrade_aim():
+		update_coins(GameManager.coins)
+		refresh_upgrade_buttons()
 
 func _on_retry_pressed() -> void:
 	Engine.time_scale = 1.0
