@@ -35,9 +35,14 @@ offset = Vector2(180, -120)
 position_smoothing_enabled = true
 
 [node name="BallVisual" type="Sprite2D" parent="." unique_id=1659212538]
-position = Vector2(24, 0)
-scale = Vector2(0.25, 0.25)
+position = Vector2(22, 4)
+scale = Vector2(0.38, 0.38)
 texture = ExtResource("3_dqkch")
+
+[node name="BallLight" type="PointLight2D" parent="BallVisual" unique_id=1659212539]
+energy = 1.1
+texture = SubResource("GradientTexture2D_player_fire")
+texture_scale = 2.4
 
 [node name="DustParticles" type="CPUParticles2D" parent="." unique_id=1849201948]
 position = Vector2(-12, 22)

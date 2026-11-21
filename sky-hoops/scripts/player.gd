@@ -25,6 +25,8 @@ var max_visible_dots: int = 2
 var can_dunk: bool = false
 var current_dunk_hoop: Node2D = null
 var was_on_floor: bool = true
+var dribble_timer: float = 0.0
+var base_ball_scale: Vector2 = Vector2(0.38, 0.38)
 
 # Parametri Combo e modalità "On Fire"
 var combo_count: int = 0
@@ -193,6 +195,9 @@ func _physics_process(delta: float) -> void:
 	# Controllo opportunità di Schiacciata (Slam Dunk)
 	check_dunk_opportunity()
 
+	# Palleggio fisico e dinamico del basket (Dribbling realistico)
+	update_ball_dribble(delta)
+
 	velocity.x = current_speed
 	floor_snap_length = 12.0
 	move_and_slide()
@@ -234,6 +239,56 @@ func jump() -> void:
 		var tween = create_tween()
 		tween.tween_property($Sprite2D, "scale", Vector2(0.35, 0.55), 0.08)
 		tween.tween_property($Sprite2D, "scale", Vector2(0.45, 0.45), 0.15)
+
+# --- SISTEMA PALLEGGIO FISICO REALISTICO (DRIBBLING) ---
+func update_ball_dribble(delta: float) -> void:
+	if not has_ball or not ball_visual or not ball_visual.visible:
+		return
+
+	# Rotazione naturale rotolamento della palla in corsa
+	ball_visual.rotation += (current_speed / 48.0) * delta
+
+	# 1. In fase di caricamento tiro (Aim con slow-motion)
+	if is_dragging or is_button_charging:
+		var aim_x = -18.0 if current_drag_vector.x < -10.0 else 22.0
+		var target_aim_pos = Vector2(aim_x, -24.0)
+		ball_visual.position = ball_visual.position.lerp(target_aim_pos, 16.0 * delta)
+		ball_visual.scale = ball_visual.scale.lerp(base_ball_scale, 14.0 * delta)
+		return
+
+	# 2. In Schiacciata pronta (Slam Dunk range)
+	if can_dunk:
+		var target_dunk_pos = Vector2(16.0, -32.0)
+		ball_visual.position = ball_visual.position.lerp(target_dunk_pos, 14.0 * delta)
+		ball_visual.scale = ball_visual.scale.lerp(base_ball_scale, 14.0 * delta)
+		return
+
+	# 3. In salto / a mezz'aria o in volo
+	var is_flying: bool = (GameManager.special_ability_level >= 3 and int(global_position.x / 50.0) < 1000)
+	if not is_on_floor() or is_flying:
+		# Palla raccolta al petto/in controllo durante il balzo
+		var air_pos = Vector2(20.0, -8.0 + sin(Time.get_ticks_msec() * 0.007) * 3.0)
+		ball_visual.position = ball_visual.position.lerp(air_pos, 12.0 * delta)
+		ball_visual.scale = ball_visual.scale.lerp(base_ball_scale, 12.0 * delta)
+		return
+
+	# 4. Corsa a terra -> PALLEGGIO RITMICO (Dribble tra mano e asfalto/erba)
+	var speed_factor = current_speed / base_speed
+	dribble_timer += delta * 13.0 * speed_factor
+
+	# Ciclo rimbalzo: 0 = mano in alto, 1 = tocco del suolo in basso
+	var cycle: float = abs(sin(dribble_timer))
+	var dribble_y: float = lerp(-2.0, 22.0, cycle)
+	var dribble_x: float = lerp(18.0, 26.0, cycle)
+
+	ball_visual.position.x = dribble_x
+	ball_visual.position.y = dribble_y
+
+	# Micro Squash & Stretch al contatto col suolo
+	if cycle > 0.88:
+		ball_visual.scale = Vector2(base_ball_scale.x * 1.14, base_ball_scale.y * 0.84)
+	else:
+		ball_visual.scale = Vector2(base_ball_scale.x * 0.95, base_ball_scale.y * 1.05)
 
 # --- SISTEMA SCHIACCIATA (SLAM DUNK) & CONTROLLI ---
 func check_dunk_opportunity() -> void:
@@ -356,13 +411,6 @@ func update_aim(screen_pos: Vector2) -> void:
 	# Punta e Spara Diretto: trascini nella direzione esatta in cui vuoi tirare!
 	var raw_drag: Vector2 = screen_pos - drag_start_position
 	current_drag_vector = raw_drag.limit_length(max_drag_distance)
-	
-	# Orienta la palla in mano in avanti o all'indietro a seconda di dove miri
-	if current_drag_vector.x < -10.0:
-		ball_visual.position.x = -24.0
-	else:
-		ball_visual.position.x = 24.0
-		
 	draw_trajectory()
 
 func release_shot() -> void:
