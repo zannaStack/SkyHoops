@@ -65,6 +65,10 @@ var btn_next: Button = null
 var upgrade_area: Panel = null
 var btn_power: Button = null
 var btn_aim: Button = null
+var btn_jump: Button = null
+var btn_stamina: Button = null
+var btn_special: Button = null
+var special_desc: Label = null
 
 var tab_sport: Button = null
 var tab_stage: Button = null
@@ -95,6 +99,12 @@ func _ready() -> void:
 		btn_power.pressed.connect(_on_power_pressed)
 	if btn_aim and not btn_aim.pressed.is_connected(_on_aim_pressed):
 		btn_aim.pressed.connect(_on_aim_pressed)
+	if btn_jump and not btn_jump.pressed.is_connected(_on_jump_pressed):
+		btn_jump.pressed.connect(_on_jump_pressed)
+	if btn_stamina and not btn_stamina.pressed.is_connected(_on_stamina_pressed):
+		btn_stamina.pressed.connect(_on_stamina_pressed)
+	if btn_special and not btn_special.pressed.is_connected(_on_special_pressed):
+		btn_special.pressed.connect(_on_special_pressed)
 
 	# Aggiorna dati e schermata iniziale
 	refresh_top_bar()
@@ -114,6 +124,10 @@ func _ensure_nodes() -> void:
 	if not upgrade_area: upgrade_area = find_child("UpgradeArea", true, false)
 	if not btn_power: btn_power = find_child("BtnPower", true, false)
 	if not btn_aim: btn_aim = find_child("BtnAim", true, false)
+	if not btn_jump: btn_jump = find_child("BtnJump", true, false)
+	if not btn_stamina: btn_stamina = find_child("BtnStamina", true, false)
+	if not btn_special: btn_special = find_child("BtnSpecial", true, false)
+	if not special_desc: special_desc = find_child("SpecialDesc", true, false)
 	if not tab_sport: tab_sport = find_child("TabSport", true, false)
 	if not tab_stage: tab_stage = find_child("TabStage", true, false)
 	if not tab_tune: tab_tune = find_child("TabTune", true, false)
@@ -130,7 +144,7 @@ func _on_tab_tune_pressed() -> void:
 func refresh_top_bar() -> void:
 	_ensure_nodes()
 	if coin_label:
-		coin_label.text = "🪙 " + str(GameManager.coins)
+		coin_label.text = str(GameManager.coins)
 	if record_label:
 		record_label.text = "🏆 Record: " + str(GameManager.high_score) + " m"
 
@@ -193,15 +207,63 @@ func _on_next_pressed() -> void:
 
 func refresh_upgrade_buttons() -> void:
 	_ensure_nodes()
+	# 1. FORZA
 	if btn_power:
 		var p_cost = GameManager.get_power_upgrade_cost()
-		btn_power.text = "FORZA (Lv. " + str(GameManager.power_level) + ") - " + str(p_cost) + " 🪙"
-		btn_power.disabled = (GameManager.coins < p_cost)
+		if p_cost == -1:
+			btn_power.text = "FORZA (Lv. 10/10) - MAX"
+			btn_power.disabled = true
+		else:
+			btn_power.text = "FORZA (Lv. " + str(GameManager.power_level) + "/10) - " + str(p_cost) + " 🪙"
+			btn_power.disabled = (GameManager.coins < p_cost)
 
+	# 2. MIRINO
 	if btn_aim:
 		var a_cost = GameManager.get_aim_upgrade_cost()
-		btn_aim.text = "MIRINO (Lv. " + str(GameManager.aim_level) + ") - " + str(a_cost) + " 🪙"
-		btn_aim.disabled = (GameManager.coins < a_cost)
+		if a_cost == -1:
+			btn_aim.text = "MIRINO (Lv. 10/10) - MAX"
+			btn_aim.disabled = true
+		else:
+			btn_aim.text = "MIRINO (Lv. " + str(GameManager.aim_level) + "/10) - " + str(a_cost) + " 🪙"
+			btn_aim.disabled = (GameManager.coins < a_cost)
+
+	# 3. SALTO
+	if btn_jump:
+		var j_cost = GameManager.get_jump_upgrade_cost()
+		if j_cost == -1:
+			btn_jump.text = "SALTO (Lv. 10/10) - MAX"
+			btn_jump.disabled = true
+		else:
+			btn_jump.text = "SALTO (Lv. " + str(GameManager.jump_level) + "/10) - " + str(j_cost) + " 🪙"
+			btn_jump.disabled = (GameManager.coins < j_cost)
+
+	# 4. STAMINA
+	if btn_stamina:
+		var s_cost = GameManager.get_stamina_upgrade_cost()
+		if s_cost == -1:
+			btn_stamina.text = "STAMINA (Lv. 10/10) - MAX"
+			btn_stamina.disabled = true
+		else:
+			btn_stamina.text = "STAMINA (Lv. " + str(GameManager.stamina_level) + "/10) - " + str(s_cost) + " 🪙"
+			btn_stamina.disabled = (GameManager.coins < s_cost)
+
+	# 5. SPECIAL ABILITY
+	if btn_special:
+		var sp_cost = GameManager.get_special_ability_cost()
+		var sp_name = GameManager.get_special_ability_name()
+		if sp_cost == -1:
+			btn_special.text = sp_name
+			btn_special.disabled = true
+		else:
+			btn_special.text = "⭐ SBLOCCA: " + sp_name + " - " + str(sp_cost) + " 🪙"
+			btn_special.disabled = (GameManager.coins < sp_cost)
+
+	if special_desc:
+		match GameManager.special_ability_level:
+			0: special_desc.text = "Prossima: 🧲 Calamita attira le monete fluttuanti vicine!"
+			1: special_desc.text = "Prossima: ⚡ Stamina sempre piena al 100% per i primi 1000 metri!"
+			2: special_desc.text = "Prossima: ✈️ Volo aereo supersonico per i primi 1000 metri!"
+			_: special_desc.text = "✨ Calamita, Stamina 1000m e Volo Aereo tutti attivi!"
 
 func _on_power_pressed() -> void:
 	if GameManager.upgrade_power():
@@ -210,6 +272,21 @@ func _on_power_pressed() -> void:
 
 func _on_aim_pressed() -> void:
 	if GameManager.upgrade_aim():
+		refresh_top_bar()
+		refresh_upgrade_buttons()
+
+func _on_jump_pressed() -> void:
+	if GameManager.upgrade_jump():
+		refresh_top_bar()
+		refresh_upgrade_buttons()
+
+func _on_stamina_pressed() -> void:
+	if GameManager.upgrade_stamina():
+		refresh_top_bar()
+		refresh_upgrade_buttons()
+
+func _on_special_pressed() -> void:
+	if GameManager.unlock_special_ability():
 		refresh_top_bar()
 		refresh_upgrade_buttons()
 

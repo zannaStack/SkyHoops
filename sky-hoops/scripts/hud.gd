@@ -7,8 +7,10 @@ extends CanvasLayer
 
 @onready var game_over_panel: Panel = $GameOverPanel
 @onready var game_over_label: Label = $GameOverPanel/GameOver
-@onready var power_button: Button = $GameOverPanel/PowerButton
-@onready var aim_button: Button = $GameOverPanel/AimButton
+@onready var power_button: Button = $GameOverPanel/UpgradesGrid/PowerButton
+@onready var aim_button: Button = $GameOverPanel/UpgradesGrid/AimButton
+@onready var jump_button: Button = $GameOverPanel/UpgradesGrid/JumpButton
+@onready var stamina_button: Button = $GameOverPanel/UpgradesGrid/StaminaButton
 @onready var retry_button: Button = $GameOverPanel/ButtonsRow/RetryButton
 @onready var menu_button: Button = $GameOverPanel/ButtonsRow/MenuButton
 
@@ -26,6 +28,10 @@ func _ready() -> void:
 		power_button.pressed.connect(_on_power_pressed)
 	if aim_button and not aim_button.pressed.is_connected(_on_aim_pressed):
 		aim_button.pressed.connect(_on_aim_pressed)
+	if jump_button and not jump_button.pressed.is_connected(_on_jump_pressed):
+		jump_button.pressed.connect(_on_jump_pressed)
+	if stamina_button and not stamina_button.pressed.is_connected(_on_stamina_pressed):
+		stamina_button.pressed.connect(_on_stamina_pressed)
 	
 	update_coins(GameManager.coins)
 
@@ -42,9 +48,13 @@ func _ensure_nodes() -> void:
 		if not game_over_label:
 			game_over_label = game_over_panel.get_node_or_null("GameOver")
 		if not power_button:
-			power_button = game_over_panel.get_node_or_null("PowerButton")
+			power_button = game_over_panel.get_node_or_null("UpgradesGrid/PowerButton")
 		if not aim_button:
-			aim_button = game_over_panel.get_node_or_null("AimButton")
+			aim_button = game_over_panel.get_node_or_null("UpgradesGrid/AimButton")
+		if not jump_button:
+			jump_button = game_over_panel.get_node_or_null("UpgradesGrid/JumpButton")
+		if not stamina_button:
+			stamina_button = game_over_panel.get_node_or_null("UpgradesGrid/StaminaButton")
 		if not retry_button:
 			retry_button = game_over_panel.get_node_or_null("ButtonsRow/RetryButton")
 		if not menu_button:
@@ -93,13 +103,39 @@ func refresh_upgrade_buttons() -> void:
 	_ensure_nodes()
 	if power_button:
 		var p_cost = GameManager.get_power_upgrade_cost()
-		power_button.text = "FORZA (Lv. " + str(GameManager.power_level) + ") - " + str(p_cost) + " 🪙"
-		power_button.disabled = (GameManager.coins < p_cost)
+		if p_cost == -1:
+			power_button.text = "FORZA (Lv. 10/10) - MAX"
+			power_button.disabled = true
+		else:
+			power_button.text = "FORZA (Lv. " + str(GameManager.power_level) + "/10) - " + str(p_cost) + " 🪙"
+			power_button.disabled = (GameManager.coins < p_cost)
 	
 	if aim_button:
 		var a_cost = GameManager.get_aim_upgrade_cost()
-		aim_button.text = "MIRINO (Lv. " + str(GameManager.aim_level) + ") - " + str(a_cost) + " 🪙"
-		aim_button.disabled = (GameManager.coins < a_cost)
+		if a_cost == -1:
+			aim_button.text = "MIRINO (Lv. 10/10) - MAX"
+			aim_button.disabled = true
+		else:
+			aim_button.text = "MIRINO (Lv. " + str(GameManager.aim_level) + "/10) - " + str(a_cost) + " 🪙"
+			aim_button.disabled = (GameManager.coins < a_cost)
+
+	if jump_button:
+		var j_cost = GameManager.get_jump_upgrade_cost()
+		if j_cost == -1:
+			jump_button.text = "SALTO (Lv. 10/10) - MAX"
+			jump_button.disabled = true
+		else:
+			jump_button.text = "SALTO (Lv. " + str(GameManager.jump_level) + "/10) - " + str(j_cost) + " 🪙"
+			jump_button.disabled = (GameManager.coins < j_cost)
+
+	if stamina_button:
+		var s_cost = GameManager.get_stamina_upgrade_cost()
+		if s_cost == -1:
+			stamina_button.text = "STAMINA (Lv. 10/10) - MAX"
+			stamina_button.disabled = true
+		else:
+			stamina_button.text = "STAMINA (Lv. " + str(GameManager.stamina_level) + "/10) - " + str(s_cost) + " 🪙"
+			stamina_button.disabled = (GameManager.coins < s_cost)
 
 func _on_power_pressed() -> void:
 	if GameManager.upgrade_power():
@@ -108,6 +144,16 @@ func _on_power_pressed() -> void:
 
 func _on_aim_pressed() -> void:
 	if GameManager.upgrade_aim():
+		update_coins(GameManager.coins)
+		refresh_upgrade_buttons()
+
+func _on_jump_pressed() -> void:
+	if GameManager.upgrade_jump():
+		update_coins(GameManager.coins)
+		refresh_upgrade_buttons()
+
+func _on_stamina_pressed() -> void:
+	if GameManager.upgrade_stamina():
 		update_coins(GameManager.coins)
 		refresh_upgrade_buttons()
 

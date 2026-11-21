@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://55820nx22tty"]
+
+[ext_resource type="Script" uid="uid://a3m7x1tq4d8sl" path="res://scripts/pickup_energy.gd" id="1_energy_script"]
+[ext_resource type="Texture2D" uid="uid://dx849wqm3d6lp" path="res://assets/energy_drink.svg" id="2_energy_tex"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_energy"]
+radius = 18.0
+height = 48.0
+
+[node name="PickupEnergy" type="Area2D" unique_id=1984210406]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_energy_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1984210407]
+shape = SubResource("CapsuleShape2D_energy")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1984210408]
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("2_energy_tex")
+
+[node name="GlowParticles" type="CPUParticles2D" parent="." unique_id=1984210409]
+emitting = false
+amount = 16
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+spread = 180.0
+gravity = Vector2(0, -60)
+initial_velocity_min = 60.0
+initial_velocity_max = 140.0
+scale_amount_min = 2.0
+scale_amount_max = 4.5
+color = Color(0.1, 1.0, 0.8, 0.9)

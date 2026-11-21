@@ -1,29 +1,69 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" width="100" height="120">
-  <!-- Ombra sotto i piedi -->
-  <ellipse cx="50" cy="115" rx="22" ry="5" fill="#000" opacity="0.2"/>
+  <defs>
+    <linearGradient id="jerseyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e63946" />
+      <stop offset="100%" stop-color="#b7094c" />
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f8d7b8" />
+      <stop offset="100%" stop-color="#e0a980" />
+    </linearGradient>
+    <linearGradient id="shoeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffb703" />
+      <stop offset="100%" stop-color="#fb8500" />
+    </linearGradient>
+  </defs>
+
+  <!-- Ombra a terra -->
+  <ellipse cx="50" cy="116" rx="24" ry="4" fill="#000000" opacity="0.25"/>
+
+  <!-- Braccio Posteriore slanciato -->
+  <path d="M 40 48 L 22 58 L 10 50" stroke="url(#skinGrad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Polsino posteriore -->
+  <rect x="18" y="52" width="6" height="5" rx="1.5" fill="#ffffff" transform="rotate(-25 18 52)"/>
+
+  <!-- Gamba Posteriore in estensione -->
+  <path d="M 46 76 L 28 94 L 14 88" stroke="#101935" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Scarpa da Basket posteriore (Sneaker con suola bianca) -->
+  <path d="M 8 85 L 20 85 L 22 93 L 6 93 Z" fill="url(#shoeGrad)"/>
+  <rect x="6" y="91" width="16" height="3" fill="#ffffff" rx="1"/>
+
+  <!-- Gamba Anteriore scattante in avanti -->
+  <path d="M 55 76 L 72 90 L 86 106" stroke="#101935" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Calzino bianco sportivo -->
+  <rect x="76" y="96" width="6" height="6" fill="#ffffff" rx="1.5" transform="rotate(35 76 96)"/>
+  <!-- Scarpa da Basket anteriore -->
+  <path d="M 76 102 L 94 102 L 96 110 L 74 110 Z" fill="url(#shoeGrad)"/>
+  <rect x="74" y="108" width="22" height="3" fill="#ffffff" rx="1"/>
+
+  <!-- Busto: Canotta da Basket Rossa sfumata -->
+  <path d="M 37 42 L 63 42 L 59 78 L 41 78 Z" fill="url(#jerseyGrad)" stroke="#1a1a24" stroke-width="2"/>
+  <!-- Bordo colletto e maniche dorato -->
+  <path d="M 43 42 Q 50 48 57 42" stroke="#ffb703" stroke-width="2" fill="none"/>
   
-  <!-- Gamba posteriore in corsa -->
-  <path d="M 46 75 L 30 95 L 20 90" stroke="#1d3557" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  <!-- Scarpa posteriore -->
-  <ellipse cx="18" cy="90" rx="7" ry="4" fill="#e63946"/>
+  <!-- Pantaloncini Basket scuri con striscia laterale rossa -->
+  <rect x="40" y="70" width="20" height="9" fill="#101935" rx="2"/>
+  <rect x="42" y="70" width="3" height="9" fill="#e63946"/>
+  <rect x="55" y="70" width="3" height="9" fill="#e63946"/>
 
-  <!-- Gamba anteriore in slancio -->
-  <path d="M 54 75 L 70 92 L 82 105" stroke="#1d3557" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  <!-- Scarpa anteriore -->
-  <ellipse cx="85" cy="106" rx="8" ry="4" fill="#e63946"/>
+  <!-- Numero di Maglia Iconico #23 (Michael Jordan vibe!) -->
+  <text x="50" y="63" font-family="'Impact', 'Arial Black', sans-serif" font-size="15" font-weight="900" fill="#ffffff" stroke="#ffb703" stroke-width="0.5" text-anchor="middle">23</text>
 
-  <!-- Busto / Canotta da Basket -->
-  <path d="M 38 42 L 62 42 L 58 78 L 42 78 Z" fill="#e63946" stroke="#222" stroke-width="2"/>
-  <rect x="42" y="70" width="16" height="8" fill="#1d3557"/>
-  <!-- Numero di maglia -->
-  <text x="50" y="62" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">7</text>
+  <!-- Collo -->
+  <rect x="46" y="36" width="8" height="8" fill="url(#skinGrad)"/>
 
-  <!-- Testa e Viso -->
-  <circle cx="50" cy="26" r="16" fill="#fbc4ab"/>
-  <!-- Capelli / Fascia sportiva -->
-  <path d="M 34 24 Q 50 10 66 24" fill="#2b2d42"/>
-  <rect x="34" y="21" width="32" height="5" fill="#457b9d" rx="2"/>
+  <!-- Testa e Viso atletico -->
+  <circle cx="51" cy="24" r="15" fill="url(#skinGrad)"/>
+  <!-- Linea del mento/profilo -->
+  <ellipse cx="58" cy="26" rx="4" ry="3" fill="#e0a980" opacity="0.5"/>
 
-  <!-- Braccio anteriore proteso -->
-  <path d="M 58 46 L 75 52 L 88 42" stroke="#fbc4ab" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Capelli moderni con taglio sfumato -->
+  <path d="M 36 22 Q 51 8 66 22 Q 62 14 46 14 Z" fill="#1f1d2b"/>
+  <!-- Fascia sportiva tergisudore celeste brillante -->
+  <rect x="36" y="19" width="30" height="5" fill="#00b4d8" rx="2" stroke="#0077b6" stroke-width="0.8"/>
+
+  <!-- Braccio Anteriore teso in avanti per palleggio/tiro -->
+  <path d="M 58 46 L 76 50 L 92 41" stroke="url(#skinGrad)" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Polsino sportivo bianco al polso -->
+  <rect x="80" y="42" width="5" height="6" fill="#ffffff" rx="1.5" transform="rotate(-30 80 42)"/>
 </svg>

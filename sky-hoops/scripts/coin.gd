@@ -10,6 +10,19 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	start_spin_animation()
 
+func _physics_process(delta: float) -> void:
+	if is_collected:
+		return
+	# Abilità Speciale 1: Calamita Monete
+	if GameManager.special_ability_level >= 1:
+		var player = get_tree().root.find_child("Player", true, false)
+		if player:
+			var dist = global_position.distance_to(player.global_position)
+			if dist < 280.0:
+				var dir = (player.global_position - global_position).normalized()
+				var speed = lerp(420.0, 950.0, 1.0 - (dist / 280.0))
+				global_position += dir * speed * delta
+
 func start_spin_animation() -> void:
 	# Finto 3D coin spin animando scale.x e leggera oscillazione verticale
 	var tween = create_tween().set_loops()

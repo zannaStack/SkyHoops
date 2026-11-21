@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 50" width="70" height="50">
+  <defs>
+    <linearGradient id="birdGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3a86ff" />
+      <stop offset="100%" stop-color="#023e8a" />
+    </linearGradient>
+    <linearGradient id="wingGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa" />
+      <stop offset="100%" stop-color="#1e40af" />
+    </linearGradient>
+  </defs>
+
+  <!-- Coda piumata -->
+  <polygon points="12,24 2,18 4,28 0,33 14,29" fill="#1e3a8a" />
+
+  <!-- Corpo affusolato -->
+  <ellipse cx="32" cy="25" rx="20" ry="11" fill="url(#birdGrad)" stroke="#0f172a" stroke-width="1.2" />
+
+  <!-- Occhio vigile -->
+  <circle cx="44" cy="22" r="3" fill="#ffffff" />
+  <circle cx="45" cy="22" r="1.5" fill="#000000" />
+
+  <!-- Becco arancione -->
+  <polygon points="50,21 64,25 50,28" fill="#fb8500" stroke="#d97706" stroke-width="1" />
+
+  <!-- Ala tesa in volo (apertura alare dinamica) -->
+  <path d="M 26 23 Q 22 4 36 2 Q 44 14 36 25 Z" fill="url(#wingGrad)" stroke="#0f172a" stroke-width="1.2" />
+  
+  <!-- Dettaglio piume sull'ala -->
+  <path d="M 30 18 Q 32 8 36 6" stroke="#93c5fd" stroke-width="1.5" fill="none" stroke-linecap="round" />
+</svg>

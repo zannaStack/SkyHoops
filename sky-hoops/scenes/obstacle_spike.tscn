@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://df84n2k7naplq"]
+
+[ext_resource type="Script" uid="uid://c3m7x1tq4d8sl" path="res://scripts/obstacle_spike.gd" id="1_spike_script"]
+[ext_resource type="Texture2D" uid="uid://bx849wqm3d6lp" path="res://assets/obstacle_spike.svg" id="2_spike_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_spike"]
+size = Vector2(48, 26)
+
+[node name="ObstacleSpike" type="Area2D" unique_id=1984210399]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_spike_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1984210400]
+position = Vector2(0, -13)
+shape = SubResource("RectangleShape2D_spike")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1984210401]
+position = Vector2(0, -20)
+texture = ExtResource("2_spike_tex")

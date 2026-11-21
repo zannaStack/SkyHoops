@@ -77,7 +77,11 @@ func _ready() -> void:
 func apply_upgrades_from_manager() -> void:
 	launch_force = 12.0 + (GameManager.power_level * 1.5)
 	boost_speed = 500.0 + (GameManager.power_level * 25.0)
-	max_visible_dots = clamp(GameManager.aim_level * 2, 2, 10)
+	max_visible_dots = clamp(GameManager.aim_level + 1, 2, 10)
+	jump_force = 480.0 + ((GameManager.jump_level - 1) * 32.0)
+	max_stamina = 100.0 + ((GameManager.stamina_level - 1) * 20.0)
+	stamina = max_stamina
+	stamina_decay_rate = 3.5 / (1.0 + (GameManager.stamina_level - 1) * 0.12)
 
 func _process(delta: float) -> void:
 	if not camera:
@@ -103,16 +107,33 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 
-	if not is_on_floor():
-		velocity += get_gravity() * delta
+	var distance_meters: int = max(0, int(global_position.x / 50.0))
+
+	# ABILITÀ SPECIALE 3: Volo Aereo per i primi 1000 metri!
+	var is_flying: bool = (GameManager.special_ability_level >= 3 and distance_meters < 1000)
+	if is_flying:
+		# Plana in quota fissa a mezz'aria fluttuando dolcemente
+		var target_flight_y: float = 330.0 + sin(Time.get_ticks_msec() * 0.003) * 20.0
+		global_position.y = lerp(global_position.y, target_flight_y, 4.0 * delta)
+		velocity.y = 0
+		current_speed = (boost_speed if is_boosting else base_speed) * 1.35
+		if fire_particles:
+			fire_particles.emitting = true
+	else:
+		if not is_on_floor():
+			velocity += get_gravity() * delta
+		if not is_on_fire and fire_particles:
+			fire_particles.emitting = false
 
 	if is_boosting:
 		boost_timer -= delta
 		if boost_timer <= 0:
 			is_boosting = false
-			current_speed = base_speed
+			if not is_flying:
+				current_speed = base_speed
 	else:
-		current_speed = base_speed
+		if not is_flying:
+			current_speed = base_speed
 
 	# Decadimento timer Combo / On Fire
 	if combo_timer > 0.0:
@@ -120,14 +141,17 @@ func _physics_process(delta: float) -> void:
 		if combo_timer <= 0.0:
 			reset_combo()
 
-	stamina -= stamina_decay_rate * delta
-	if stamina <= 0:
-		stamina = 0
-		trigger_game_over()
+	# ABILITÀ SPECIALE 2: Stamina sempre piena per i primi 1000 metri!
+	if GameManager.special_ability_level >= 2 and distance_meters < 1000:
+		stamina = max_stamina
+	else:
+		stamina -= stamina_decay_rate * delta
+		if stamina <= 0:
+			stamina = 0
+			trigger_game_over()
 
 	if hud:
 		hud.update_stamina(stamina)
-		var distance_meters: int = max(0, int(global_position.x / 50.0))
 		hud.update_distance(distance_meters)
 
 	# Se stiamo caricando col pulsante destro, disegna la traiettoria standard
@@ -137,6 +161,18 @@ func _physics_process(delta: float) -> void:
 	velocity.x = current_speed
 	floor_snap_length = 12.0
 	move_and_slide()
+
+	# Animazione Procedurale: allineamento pendenza colline e bobbing di corsa
+	if is_on_floor() and not is_game_over:
+		var floor_normal: Vector2 = get_floor_normal()
+		var target_rotation: float = floor_normal.angle() + PI / 2.0
+		rotation = lerp_angle(rotation, target_rotation, 14.0 * delta)
+		$Sprite2D.position.y = -6.0 + sin(global_position.x * 0.08) * 3.5
+		$Sprite2D.rotation = sin(global_position.x * 0.08) * 0.08
+	else:
+		rotation = lerp_angle(rotation, 0.0, 6.0 * delta)
+		$Sprite2D.position.y = lerp($Sprite2D.position.y, -6.0, 8.0 * delta)
+		$Sprite2D.rotation = lerp($Sprite2D.rotation, 0.0, 8.0 * delta)
 
 	# Gestione polvere ai piedi in base al contatto col suolo e movimento
 	if dust_particles:
@@ -247,7 +283,7 @@ func draw_trajectory() -> void:
 	
 	trajectory_dots.update_dots(dots_array)
 
-func trigger_boost(is_micro: bool) -> void:
+func trigger_boost(is_micro: bool, bonus_coins: int = 1) -> void:
 	if is_game_over:
 		return
 
@@ -267,7 +303,7 @@ func trigger_boost(is_micro: bool) -> void:
 	current_speed = boost_speed if not is_micro else boost_speed * 1.3
 	add_camera_trauma(0.45 if not is_micro else 0.70)
 	
-	var base_coins: int = 1 if not is_micro else 3
+	var base_coins: int = bonus_coins if bonus_coins > 1 else (1 if not is_micro else 3)
 	var earned_coins: int = base_coins * (2 if is_on_fire else 1)
 	GameManager.add_coins(earned_coins)
 	if hud:
@@ -299,5 +335,5 @@ func trigger_game_over() -> void:
 	if hud:
 		hud.show_game_over(distance_meters)
 
-func _on_hoop_goal_scored(is_micro: bool) -> void:
-	trigger_boost(is_micro)
+func _on_hoop_goal_scored(is_micro: bool, bonus_coins: int = 1) -> void:
+	trigger_boost(is_micro, bonus_coins)

@@ -2,6 +2,9 @@ extends Node2D
 
 const HOOP_SCENE: PackedScene = preload("res://scenes/hoop.tscn")
 const COIN_SCENE: PackedScene = preload("res://scenes/coin.tscn")
+const SPIKE_SCENE: PackedScene = preload("res://scenes/obstacle_spike.tscn")
+const BIRD_SCENE: PackedScene = preload("res://scenes/bird.tscn")
+const ENERGY_SCENE: PackedScene = preload("res://scenes/pickup_energy.tscn")
 
 @export var player_node: Node2D = null
 
@@ -90,6 +93,18 @@ func generate_next_chunk() -> void:
 	if start_x > 400.0:
 		spawn_coin_arc_in_chunk(chunk_root, start_x, end_x)
 
+	# 6. Spawna Ostacoli Spuntoni sul terreno (30% probabilità dopo 500m)
+	if start_x > 500.0 and randf() < 0.30:
+		spawn_spike_in_chunk(chunk_root, start_x, end_x)
+
+	# 7. Spawna Uccelli in volo che intercettano la palla (25% probabilità dopo 700m)
+	if start_x > 700.0 and randf() < 0.25:
+		spawn_bird_in_chunk(chunk_root, start_x, end_x)
+
+	# 8. Spawna Raro Power-Up Energetico (18% probabilità dopo 800m)
+	if start_x > 800.0 and randf() < 0.18:
+		spawn_energy_in_chunk(chunk_root, start_x, end_x)
+
 	current_generated_x = end_x
 
 func spawn_hoop_in_chunk(parent_chunk: Node2D, start_x: float, end_x: float) -> void:
@@ -109,7 +124,8 @@ func spawn_hoop_in_chunk(parent_chunk: Node2D, start_x: float, end_x: float) -> 
 		hoop.oscillation_amplitude = randf_range(35.0, 65.0)
 		hoop.oscillation_speed = randf_range(1.6, 2.6)
 	
-	var height_offset = randf_range(130.0, 210.0) if not is_micro_hoop else randf_range(170.0, 250.0)
+	# Quota aerea elevata per costringere a veri tiri a campana in cielo ("Sky Hoops")
+	var height_offset = randf_range(220.0, 320.0) if not is_micro_hoop else randf_range(280.0, 390.0)
 	hoop.position = Vector2(hoop_x, terrain_y - height_offset)
 	
 	# Collega il canestro al turbo del player
@@ -145,3 +161,24 @@ func spawn_coin_arc_in_chunk(parent_chunk: Node2D, start_x: float, end_x: float)
 		var coin = COIN_SCENE.instantiate()
 		coin.position = Vector2(x, terrain_y - base_clearance - parabola_offset)
 		parent_chunk.add_child(coin)
+
+func spawn_spike_in_chunk(parent_chunk: Node2D, start_x: float, end_x: float) -> void:
+	var spike = SPIKE_SCENE.instantiate()
+	var spike_x = randf_range(start_x + 180.0, end_x - 180.0)
+	var terrain_y = 520.0 + sin(spike_x * 0.003) * 90.0 + cos(spike_x * 0.006) * 40.0
+	spike.position = Vector2(spike_x, terrain_y)
+	parent_chunk.add_child(spike)
+
+func spawn_bird_in_chunk(parent_chunk: Node2D, start_x: float, end_x: float) -> void:
+	var bird = BIRD_SCENE.instantiate()
+	var bird_x = end_x + randf_range(50.0, 200.0)
+	var bird_y = randf_range(200.0, 320.0)
+	bird.position = Vector2(bird_x, bird_y)
+	parent_chunk.add_child(bird)
+
+func spawn_energy_in_chunk(parent_chunk: Node2D, start_x: float, end_x: float) -> void:
+	var energy = ENERGY_SCENE.instantiate()
+	var en_x = randf_range(start_x + 220.0, end_x - 220.0)
+	var terrain_y = 520.0 + sin(en_x * 0.003) * 90.0 + cos(en_x * 0.006) * 40.0
+	energy.position = Vector2(en_x, terrain_y - 75.0)
+	parent_chunk.add_child(energy)

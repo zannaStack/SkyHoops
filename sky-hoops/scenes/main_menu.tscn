@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_menu_script"]
 [ext_resource type="PackedScene" uid="uid://ci8w88w08m3a" path="res://scenes/background.tscn" id="1_l6cm7"]
 [ext_resource type="Texture2D" uid="uid://df238a0b0b83b" path="res://assets/preview_basket.svg" id="2_prev_basket"]
+[ext_resource type="Texture2D" uid="uid://bhx85wqm3d6lp" path="res://assets/coin.svg" id="3_coin_icon"]
 
 [node name="MainMenu" type="Control" unique_id=1512297604]
 layout_mode = 3
@@ -22,18 +23,30 @@ anchor_right = 1.0
 offset_bottom = 70.0
 grow_horizontal = 2
 
-[node name="CoinLabel" type="Label" parent="TopBar" unique_id=1029384752]
+[node name="CoinContainer" type="HBoxContainer" parent="TopBar" unique_id=1029384750]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 35.0
-offset_top = -18.0
-offset_right = 200.0
-offset_bottom = 18.0
+offset_left = 32.0
+offset_top = -20.0
+offset_right = 220.0
+offset_bottom = 20.0
 grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 0
+
+[node name="CoinIcon" type="TextureRect" parent="TopBar/CoinContainer" unique_id=1029384749]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+texture = ExtResource("3_coin_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CoinLabel" type="Label" parent="TopBar/CoinContainer" unique_id=1029384752]
+layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "🪙 0"
+text = "0"
 vertical_alignment = 1
 
 [node name="HeaderTitle" type="Label" parent="TopBar" unique_id=1029384753]
@@ -158,10 +171,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -230.0
-offset_top = -170.0
-offset_right = 230.0
-offset_bottom = 130.0
+offset_left = -370.0
+offset_top = -210.0
+offset_right = 370.0
+offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -170,40 +183,89 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -150.0
-offset_top = 20.0
-offset_right = 150.0
-offset_bottom = 60.0
+offset_left = -200.0
+offset_top = 14.0
+offset_right = 200.0
+offset_bottom = 48.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 22
-text = "OFFICINA POTENZIAMENTI"
+text = "🔧 OFFICINA POTENZIAMENTI"
 horizontal_alignment = 1
 
-[node name="BtnPower" type="Button" parent="UpgradeArea" unique_id=1029384764]
+[node name="StatsGrid" type="GridContainer" parent="UpgradeArea" unique_id=1029384771]
 layout_mode = 1
-anchors_preset = 5
+anchors_preset = 8
 anchor_left = 0.5
+anchor_top = 0.5
 anchor_right = 0.5
-offset_left = -170.0
-offset_top = 80.0
-offset_right = 170.0
-offset_bottom = 130.0
+anchor_bottom = 0.5
+offset_left = -340.0
+offset_top = -120.0
+offset_right = 340.0
+offset_bottom = 10.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 18
-text = "FORZA (Lv. 1) - 5 🪙"
+grow_vertical = 2
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 14
+columns = 2
 
-[node name="BtnAim" type="Button" parent="UpgradeArea" unique_id=1029384765]
+[node name="BtnPower" type="Button" parent="UpgradeArea/StatsGrid" unique_id=1029384764]
+custom_minimum_size = Vector2(330, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "FORZA (Lv. 1/10) - 100 🪙"
+
+[node name="BtnAim" type="Button" parent="UpgradeArea/StatsGrid" unique_id=1029384765]
+custom_minimum_size = Vector2(330, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "MIRINO (Lv. 1/10) - 100 🪙"
+
+[node name="BtnJump" type="Button" parent="UpgradeArea/StatsGrid" unique_id=1029384772]
+custom_minimum_size = Vector2(330, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "SALTO (Lv. 1/10) - 100 🪙"
+
+[node name="BtnStamina" type="Button" parent="UpgradeArea/StatsGrid" unique_id=1029384773]
+custom_minimum_size = Vector2(330, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "STAMINA (Lv. 1/10) - 100 🪙"
+
+[node name="BtnSpecial" type="Button" parent="UpgradeArea" unique_id=1029384774]
 layout_mode = 1
-anchors_preset = 5
+anchors_preset = 7
 anchor_left = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-offset_left = -170.0
-offset_top = 150.0
-offset_right = 170.0
-offset_bottom = 200.0
+anchor_bottom = 1.0
+offset_left = -340.0
+offset_top = -115.0
+offset_right = 340.0
+offset_bottom = -60.0
 grow_horizontal = 2
+grow_vertical = 0
 theme_override_font_sizes/font_size = 18
-text = "MIRINO (Lv. 1) - 5 🪙"
+text = "⭐ SPECIAL: 🧲 CALAMITA MONETE - 5000 🪙"
+
+[node name="SpecialDesc" type="Label" parent="UpgradeArea" unique_id=1029384775]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -340.0
+offset_top = -54.0
+offset_right = 340.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 14
+text = "Attira automaticamente le monete fluttuanti vicine!"
+horizontal_alignment = 1
 
 [node name="BottomNavBar" type="HBoxContainer" parent="." unique_id=1029384766]
 layout_mode = 1
