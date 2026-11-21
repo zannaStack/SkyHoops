@@ -149,8 +149,16 @@ func start_aim(screen_pos: Vector2) -> void:
 	Engine.time_scale = 0.2
 
 func update_aim(screen_pos: Vector2) -> void:
-	var raw_drag: Vector2 = drag_start_position - screen_pos
+	# Punta e Spara Diretto: trascini nella direzione esatta in cui vuoi tirare!
+	var raw_drag: Vector2 = screen_pos - drag_start_position
 	current_drag_vector = raw_drag.limit_length(max_drag_distance)
+	
+	# Orienta la palla in mano in avanti o all'indietro a seconda di dove miri
+	if current_drag_vector.x < -10.0:
+		ball_visual.position.x = -24.0
+	else:
+		ball_visual.position.x = 24.0
+		
 	draw_trajectory()
 
 func release_shot() -> void:
@@ -171,7 +179,7 @@ func shoot_ball() -> void:
 	ball.global_position = ball_visual.global_position
 	get_parent().add_child(ball)
 	
-	var impulse: Vector2 = (current_drag_vector * launch_force) + Vector2(velocity.x * 0.5, 0)
+	var impulse: Vector2 = current_drag_vector * launch_force
 	ball.apply_central_impulse(impulse)
 	get_tree().create_timer(1.5).timeout.connect(reload_ball)
 
@@ -184,7 +192,7 @@ func reload_ball() -> void:
 func draw_trajectory() -> void:
 	var dots_array: Array[Vector2] = []
 	var gravity: Vector2 = get_gravity()
-	var initial_velocity: Vector2 = current_drag_vector * launch_force + Vector2(velocity.x * 0.5, 0)
+	var initial_velocity: Vector2 = current_drag_vector * launch_force
 	var start_pos: Vector2 = ball_visual.global_position
 	
 	for i in range(max_visible_dots):
