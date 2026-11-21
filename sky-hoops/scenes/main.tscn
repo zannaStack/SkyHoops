@@ -1,21 +1,24 @@
 [gd_scene format=3 uid="uid://bsd78lqo0lwov"]
 
-[ext_resource type="PackedScene" uid="uid://5q0llfh6o84w" path="res://scenes/ball.tscn" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://8shnvnc2raqs" path="res://scenes/hoop.tscn" id="2_0wfyh"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_7fw7d"]
-size = Vector2(1280, 40)
+[ext_resource type="PackedScene" uid="uid://y1nae216ywf6" path="res://scenes/player.tscn" id="3_sugp2"]
 
 [node name="Main" type="Node2D" unique_id=1691075669]
 
-[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=790684832]
+[node name="Terrain" type="StaticBody2D" parent="." unique_id=926174340]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1390515887]
-position = Vector2(640, 650)
-shape = SubResource("RectangleShape2D_7fw7d")
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Terrain" unique_id=1028433701]
+polygon = PackedVector2Array(0, 500, 400, 500, 800, 350, 1200, 500, 1600, 600, 2000, 400, 2500, 550, 3000, 550, 3000, 1200, 0, 1200)
 
-[node name="Ball" parent="." unique_id=1967342746 instance=ExtResource("1_o5qli")]
-position = Vector2(219, 209)
+[node name="Line2D" type="Line2D" parent="Terrain" unique_id=380948519]
+points = PackedVector2Array(0, 500, 400, 500, 800, 350, 1200, 500, 1600, 600, 2000, 400, 2500, 550, 3000, 550)
+width = 6.0
+default_color = Color(0, 0.6156863, 0, 1)
+
+[node name="Player" parent="." unique_id=1473768364 instance=ExtResource("3_sugp2")]
+position = Vector2(86, 411)
 
 [node name="Hoop" parent="." unique_id=1457214946 instance=ExtResource("2_0wfyh")]
-position = Vector2(676, 195)
+position = Vector2(1400, 350)
+
+[connection signal="goal_scored" from="Hoop" to="Player" method="_on_hoop_goal_scored"]

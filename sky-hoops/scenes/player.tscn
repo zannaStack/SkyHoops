@@ -1,11 +1,16 @@
 [gd_scene format=3 uid="uid://y1nae216ywf6"]
 
 [ext_resource type="Texture2D" uid="uid://dtjdww120xehc" path="res://icon.svg" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://ddcu67cqiy2l3" path="res://scripts/player.gd" id="1_g2els"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7fw7d"]
 radius = 24.0
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_g2els"]
+load_path = "res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex"
+
 [node name="Player" type="CharacterBody2D" unique_id=1473768364]
+script = ExtResource("1_g2els")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1061178099]
 shape = SubResource("CircleShape2D_7fw7d")
@@ -16,3 +21,16 @@ texture = ExtResource("1_3vyb7")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1296315634]
 position_smoothing_enabled = true
+
+[node name="BallVisual" type="Sprite2D" parent="." unique_id=1659212538]
+modulate = Color(1, 0.3254902, 0, 1)
+position = Vector2(20, -10)
+scale = Vector2(0.18, 0.18)
+texture = SubResource("CompressedTexture2D_g2els")
+
+[node name="TrajectoryLine" type="Line2D" parent="." unique_id=970373984]
+top_level = true
+z_index = 1
+points = PackedVector2Array(-31, -162)
+width = 4.0
+default_color = Color(1, 0.8627451, 0, 1)
