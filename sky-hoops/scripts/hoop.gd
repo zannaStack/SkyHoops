@@ -6,6 +6,7 @@ signal goal_scored(is_micro: bool)
 
 var has_scored: bool = false
 @onready var visual_sprite: Sprite2D = $VisualSprite
+@onready var goal_particles: CPUParticles2D = $GoalParticles
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
@@ -21,7 +22,12 @@ func _on_body_entered(body: Node2D) -> void:
 			has_scored = true
 			print("🏀 GOAL! Canestro effettuato! Micro: ", is_micro)
 			goal_scored.emit(is_micro)
-			
+			if goal_particles:
+				if is_micro:
+					goal_particles.color = Color(1.0, 0.85, 0.1) # Oro brillante per i micro
+				else:
+					goal_particles.color = Color(1.0, 0.55, 0.1) # Arancione per i normali
+				goal_particles.restart() # Riavvia il ciclo one-shot da zero
 			# Testo fluttuante sopra il canestro
 			show_floating_text()
 			

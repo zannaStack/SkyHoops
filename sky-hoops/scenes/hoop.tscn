@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://8shnvnc2raqs"]
 
 [ext_resource type="Script" uid="uid://ddoy3enq8x4u4" path="res://scripts/hoop.gd" id="1_kqfn8"]
-[ext_resource type="Texture2D" uid="uid://b23f8a0b0b83b" path="res://assets/hoop_backboard.svg" id="2_hoop_tex"]
+[ext_resource type="Texture2D" uid="uid://c7pgen0h0clcg" path="res://assets/hoop_backboard.svg" id="2_hoop_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sensor"]
 size = Vector2(56, 32)
@@ -19,19 +19,18 @@ size = Vector2(14, 115)
 collision_layer = 0
 collision_mask = 7
 script = ExtResource("1_kqfn8")
+is_micro = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=987441805]
 position = Vector2(0, 4)
 shape = SubResource("RectangleShape2D_sensor")
 
 [node name="VisualSprite" type="Sprite2D" parent="." unique_id=772711558]
-position = Vector2(0, 0)
 texture = ExtResource("2_hoop_tex")
 offset = Vector2(-7, 3)
 
 [node name="RimLeft" type="StaticBody2D" parent="." unique_id=1971157256]
 position = Vector2(-34, 0)
-collision_layer = 1
 collision_mask = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RimLeft" unique_id=37198135]
@@ -39,7 +38,6 @@ shape = SubResource("CircleShape2D_rim")
 
 [node name="RimRight" type="StaticBody2D" parent="." unique_id=554700612]
 position = Vector2(34, 0)
-collision_layer = 1
 collision_mask = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RimRight" unique_id=1637186649]
@@ -47,9 +45,23 @@ shape = SubResource("CircleShape2D_rim")
 
 [node name="Backboard" type="StaticBody2D" parent="." unique_id=554700613]
 position = Vector2(50, -5)
-collision_layer = 1
 collision_mask = 7
 physics_material_override = SubResource("PhysicsMaterial_backboard")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Backboard" unique_id=1637186650]
 shape = SubResource("RectangleShape2D_backboard")
+
+[node name="GoalParticles" type="CPUParticles2D" parent="." unique_id=1968904260]
+emitting = false
+amount = 30
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+direction = Vector2(0, -1)
+spread = 55.0
+gravity = Vector2(0, 600)
+initial_velocity_min = 180.0
+initial_velocity_max = 280.0
+scale_amount_min = 3.0
+scale_amount_max = 6.0
+color = Color(1, 0.5647059, 0.101960786, 1)

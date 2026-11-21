@@ -17,6 +17,14 @@ var max_visible_dots: int = 2
 
 @onready var ball_visual: Sprite2D = $BallVisual
 @onready var trajectory_dots: Node2D = $TrajectoryDots
+@onready var dust_particles: CPUParticles2D = $DustParticles
+@onready var camera: Camera2D = $Camera2D
+
+# Parametri Camera Shake (Trauma-based model)
+var base_camera_offset: Vector2 = Vector2(180, -120)
+var trauma: float = 0.0
+var trauma_decay: float = 2.2
+var max_shake_offset: Vector2 = Vector2(14.0, 8.0)
 
 var current_speed: float = 280.0
 var is_boosting: bool = false
@@ -34,6 +42,8 @@ var current_drag_vector: Vector2 = Vector2.ZERO
 var hud: CanvasLayer = null
 
 func _ready() -> void:
+	if camera:
+		base_camera_offset = camera.offset
 	stamina = max_stamina
 	apply_upgrades_from_manager()
 	
@@ -60,6 +70,22 @@ func apply_upgrades_from_manager() -> void:
 	launch_force = 12.0 + (GameManager.power_level * 1.5)
 	boost_speed = 500.0 + (GameManager.power_level * 25.0)
 	max_visible_dots = clamp(GameManager.aim_level * 2, 2, 10)
+
+func _process(delta: float) -> void:
+	if not camera:
+		return
+	if trauma > 0.0:
+		trauma = max(trauma - trauma_decay * delta, 0.0)
+		var shake: float = trauma * trauma
+		camera.offset = base_camera_offset + Vector2(
+			randf_range(-1.0, 1.0) * max_shake_offset.x * shake,
+			randf_range(-1.0, 1.0) * max_shake_offset.y * shake
+		)
+	elif camera.offset != base_camera_offset:
+		camera.offset = base_camera_offset
+
+func add_camera_trauma(amount: float) -> void:
+	trauma = clamp(trauma + amount, 0.0, 1.0)
 
 func _physics_process(delta: float) -> void:
 	if is_game_over:
@@ -97,6 +123,11 @@ func _physics_process(delta: float) -> void:
 	velocity.x = current_speed
 	floor_snap_length = 12.0
 	move_and_slide()
+
+	# Gestione polvere ai piedi in base al contatto col suolo e movimento
+	if dust_particles:
+		var is_running_on_ground: bool = is_on_floor() and not is_game_over and velocity.x > 10.0
+		dust_particles.emitting = is_running_on_ground
 
 # Supporto salto da tastiera
 func _unhandled_input(event: InputEvent) -> void:
@@ -209,6 +240,7 @@ func trigger_boost(is_micro: bool) -> void:
 	is_boosting = true
 	boost_timer = 2.0 if not is_micro else 3.5
 	current_speed = boost_speed if not is_micro else boost_speed * 1.3
+	add_camera_trauma(0.45 if not is_micro else 0.70)
 	
 	var earned_coins: int = 1 if not is_micro else 3
 	GameManager.add_coins(earned_coins)
