@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://ci8w88w08m3a"]
+
+[ext_resource type="Texture2D" uid="uid://c6s7f4a4p6hqa" path="res://assets/sky_clouds.svg" id="1_sky"]
+[ext_resource type="Texture2D" uid="uid://d3m8n7u6h2ywa" path="res://assets/distant_mountains.svg" id="2_mount"]
+[ext_resource type="Texture2D" uid="uid://b2k8f4a2p8hqa" path="res://assets/mid_hills.svg" id="3_hills"]
+
+[node name="Background" type="ParallaxBackground" unique_id=1849182001]
+layer = -10
+
+[node name="LayerSky" type="ParallaxLayer" parent="." unique_id=1849182002]
+motion_scale = Vector2(0.05, 0.02)
+motion_mirroring = Vector2(1280, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="LayerSky" unique_id=1849182003]
+position = Vector2(640, 360)
+texture = ExtResource("1_sky")
+
+[node name="LayerMountains" type="ParallaxLayer" parent="." unique_id=1849182004]
+motion_scale = Vector2(0.2, 0.06)
+motion_mirroring = Vector2(1280, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="LayerMountains" unique_id=1849182005]
+position = Vector2(640, 480)
+texture = ExtResource("2_mount")
+
+[node name="LayerHills" type="ParallaxLayer" parent="." unique_id=1849182006]
+motion_scale = Vector2(0.45, 0.12)
+motion_mirroring = Vector2(1280, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="LayerHills" unique_id=1849182007]
+position = Vector2(640, 560)
+texture = ExtResource("3_hills")

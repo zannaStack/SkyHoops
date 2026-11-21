@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#48cae4"/>
+      <stop offset="60%" stop-color="#90e0ef"/>
+      <stop offset="100%" stop-color="#caf0f8"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Cielo con gradiente limpido -->
+  <rect width="1280" height="720" fill="url(#skyGrad)"/>
+
+  <!-- Sole stilizzato -->
+  <circle cx="180" cy="140" r="55" fill="#ffb703" opacity="0.3"/>
+  <circle cx="180" cy="140" r="42" fill="#ffb703"/>
+
+  <!-- Nuvole Cartoon Fluffy (seamless loop) -->
+  <!-- Nuvola 1 -->
+  <g fill="#ffffff" opacity="0.85">
+    <ellipse cx="320" cy="160" rx="60" ry="24"/>
+    <circle cx="300" cy="146" r="30"/>
+    <circle cx="340" cy="144" r="24"/>
+  </g>
+
+  <!-- Nuvola 2 -->
+  <g fill="#ffffff" opacity="0.75">
+    <ellipse cx="780" cy="120" rx="75" ry="28"/>
+    <circle cx="750" cy="106" r="36"/>
+    <circle cx="805" cy="104" r="30"/>
+  </g>
+
+  <!-- Nuvola 3 -->
+  <g fill="#ffffff" opacity="0.8">
+    <ellipse cx="1120" cy="200" rx="55" ry="22"/>
+    <circle cx="1105" cy="188" r="26"/>
+    <circle cx="1135" cy="188" r="20"/>
+  </g>
+</svg>

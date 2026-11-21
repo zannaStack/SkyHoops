@@ -20,6 +20,7 @@ scale = Vector2(0.45, 0.45)
 texture = ExtResource("2_qhqgy")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1296315634]
+offset = Vector2(180, -120)
 position_smoothing_enabled = true
 
 [node name="BallVisual" type="Sprite2D" parent="." unique_id=1659212538]

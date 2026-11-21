@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" width="400" height="240">
+  <defs>
+    <linearGradient id="bgSoccer" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#264653"/>
+      <stop offset="100%" stop-color="#2a9d8f"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="240" rx="16" fill="url(#bgSoccer)" stroke="#e76f51" stroke-width="3" opacity="0.85"/>
+
+  <!-- Porta Calcio -->
+  <rect x="70" y="50" width="260" height="130" rx="4" fill="none" stroke="#ffffff" stroke-width="5" opacity="0.4"/>
+  <path d="M 70 50 L 100 20 L 300 20 L 330 50" stroke="#ffffff" stroke-width="4" fill="none" opacity="0.3"/>
+  
+  <!-- Pallone Calcio -->
+  <circle cx="200" cy="120" r="45" fill="#f8f9fa" stroke="#111" stroke-width="3" opacity="0.5"/>
+  <polygon points="200,95 215,108 209,128 191,128 185,108" fill="#111" opacity="0.6"/>
+
+  <!-- Overlay Lucchetto Locked -->
+  <rect x="0" y="0" width="400" height="240" rx="16" fill="#000000" opacity="0.45"/>
+  
+  <!-- Icona Lucchetto -->
+  <rect x="180" y="90" width="40" height="32" rx="4" fill="#e76f51"/>
+  <path d="M 188 90 L 188 78 Q 200 66 212 78 L 212 90" stroke="#e76f51" stroke-width="6" fill="none"/>
+  <circle cx="200" cy="106" r="4" fill="#fff"/>
+  
+  <!-- Scritta COMING SOON -->
+  <rect x="125" y="145" width="150" height="30" rx="8" fill="#e76f51"/>
+  <text x="200" y="165" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">COMING SOON</text>
+</svg>

@@ -1,15 +1,18 @@
 [gd_scene format=3 uid="uid://bsd78lqo0lwov"]
 
-[ext_resource type="Script" path="res://scripts/terrain_generator.gd" id="1_terrg"]
-[ext_resource type="PackedScene" uid="uid://y1nae216ywf6" path="res://scenes/player.tscn" id="2_sugp2"]
-[ext_resource type="PackedScene" uid="uid://364idiygpdit" path="res://scenes/hud.tscn" id="3_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://ci8w88w08m3a" path="res://scenes/background.tscn" id="1_bg"]
+[ext_resource type="Script" uid="uid://bn26cng6kgjm0" path="res://scripts/terrain_generator.gd" id="2_terrg"]
+[ext_resource type="PackedScene" uid="uid://y1nae216ywf6" path="res://scenes/player.tscn" id="3_sugp2"]
+[ext_resource type="PackedScene" uid="uid://364idiygpdit" path="res://scenes/hud.tscn" id="4_jyhfs"]
 
 [node name="Main" type="Node2D" unique_id=1691075669]
 
-[node name="TerrainGenerator" type="Node2D" parent="." unique_id=926174340]
-script = ExtResource("1_terrg")
+[node name="Background" parent="." unique_id=1068890653 instance=ExtResource("1_bg")]
 
-[node name="Player" parent="." unique_id=1473768364 instance=ExtResource("2_sugp2")]
+[node name="TerrainGenerator" type="Node2D" parent="." unique_id=926174340]
+script = ExtResource("2_terrg")
+
+[node name="Player" parent="." unique_id=1473768364 instance=ExtResource("3_sugp2")]
 position = Vector2(86, 380)
 
-[node name="HUD" parent="." unique_id=1406803294 instance=ExtResource("3_jyhfs")]
+[node name="HUD" parent="." unique_id=1406803294 instance=ExtResource("4_jyhfs")]

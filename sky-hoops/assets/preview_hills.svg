@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" width="400" height="240">
+  <defs>
+    <linearGradient id="skyHills" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#48cae4"/>
+      <stop offset="100%" stop-color="#caf0f8"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="240" rx="16" fill="url(#skyHills)" stroke="#f1faee" stroke-width="4"/>
+  
+  <!-- Sole -->
+  <circle cx="80" cy="70" r="25" fill="#ffb703"/>
+
+  <!-- Montagne sfondo -->
+  <polygon points="40,240 140,110 240,240" fill="#5e60ce" opacity="0.4"/>
+  <polygon points="180,240 270,130 360,240" fill="#48bfe3" opacity="0.35"/>
+
+  <!-- Colline verdi ondulate -->
+  <path d="M 0 170 Q 100 120 200 160 Q 300 110 400 150 L 400 240 L 0 240 Z" fill="#2ec4b6"/>
+  <path d="M 0 190 Q 120 140 240 180 Q 340 150 400 180 L 400 240 L 0 240 Z" fill="#2a9d8f"/>
+
+  <!-- Badge ATTIVO -->
+  <rect x="20" y="20" width="85" height="26" rx="6" fill="#2a9d8f"/>
+  <text x="62" y="38" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">ATTIVO</text>
+</svg>

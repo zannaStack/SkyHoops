@@ -6,7 +6,7 @@ const HOOP_SCENE: PackedScene = preload("res://scenes/hoop.tscn")
 
 # Parametri matematici del terreno ondulato
 var chunk_width: float = 1200.0
-var step_x: float = 40.0 # Risoluzione della curva
+var step_x: float = 35.0 # Risoluzione della curva per renderla ancora più morbida
 var current_generated_x: float = 0.0
 
 var active_chunks: Array[Node2D] = []
@@ -41,7 +41,7 @@ func generate_next_chunk() -> void:
 	
 	var chunk_root = Node2D.new()
 	chunk_root.name = "Chunk_" + str(int(start_x))
-	chunk_root.set_meta("end_x", end_x) # <-- Aggiungi questa riga per memorizzare la coordinata reale!
+	chunk_root.set_meta("end_x", end_x)
 	add_child(chunk_root)
 	active_chunks.append(chunk_root)
 
@@ -49,8 +49,8 @@ func generate_next_chunk() -> void:
 	var surface_points: Array[Vector2] = []
 	var x = start_x
 	while x <= end_x:
-		# Combinazione di onde per generare colline armoniche e dossi naturali
-		var y = 500.0 + sin(x * 0.003) * 110.0 + cos(x * 0.007) * 45.0
+		# Pendenze fluide e naturali
+		var y = 520.0 + sin(x * 0.003) * 90.0 + cos(x * 0.006) * 40.0
 		surface_points.append(Vector2(x, y))
 		x += step_x
 
@@ -60,22 +60,28 @@ func generate_next_chunk() -> void:
 	
 	var polygon_points: Array[Vector2] = []
 	polygon_points.append_array(surface_points)
-	# Chiude il poligono in basso per dare massa solida
-	polygon_points.append(Vector2(end_x, 1400.0))
-	polygon_points.append(Vector2(start_x, 1400.0))
+	# Chiude il poligono in basso per dare massa solida fino a y=1800
+	polygon_points.append(Vector2(end_x, 1800.0))
+	polygon_points.append(Vector2(start_x, 1800.0))
 	col_poly.polygon = PackedVector2Array(polygon_points)
 	
 	static_body.add_child(col_poly)
 	chunk_root.add_child(static_body)
 
-	# 2. Linea Visiva Verde della Collina (Line2D)
-	var line = Line2D.new()
-	line.points = PackedVector2Array(surface_points)
-	line.width = 6.0
-	line.default_color = Color(0.18, 0.65, 0.25)
-	chunk_root.add_child(line)
+	# 2. Riempimento Marrone Terra Sotteso al Percorso (Polygon2D)
+	var ground_fill = Polygon2D.new()
+	ground_fill.polygon = PackedVector2Array(polygon_points)
+	ground_fill.color = Color(0.38, 0.22, 0.13) # Marrone terra caldo
+	chunk_root.add_child(ground_fill)
 
-	# 3. Spawna un Canestro in questo Chunk (eccetto nei primissimi 800 pixel)
+	# 3. Linea Visiva Verde dell'Erba in superficie (Line2D)
+	var grass_line = Line2D.new()
+	grass_line.points = PackedVector2Array(surface_points)
+	grass_line.width = 8.0
+	grass_line.default_color = Color(0.24, 0.72, 0.30) # Verde erba brillante
+	chunk_root.add_child(grass_line)
+
+	# 4. Spawna un Canestro in questo Chunk (eccetto nei primissimi 800 pixel)
 	if start_x > 800.0:
 		spawn_hoop_in_chunk(chunk_root, start_x, end_x)
 
@@ -86,14 +92,13 @@ func spawn_hoop_in_chunk(parent_chunk: Node2D, start_x: float, end_x: float) -> 
 	
 	# Posizione casuale lungo il chunk
 	var hoop_x = randf_range(start_x + 300.0, end_x - 200.0)
-	var terrain_y = 500.0 + sin(hoop_x * 0.003) * 110.0 + cos(hoop_x * 0.007) * 45.0
+	var terrain_y = 520.0 + sin(hoop_x * 0.003) * 90.0 + cos(hoop_x * 0.006) * 40.0
 	
-	# 25% di probabilità che sia un canestro Micro (più alto e sfidante!)
+	# 25% di probabilità che sia un canestro Micro (dorato, più piccolo e più alto)
 	var is_micro_hoop = randf() < 0.25
 	hoop.is_micro = is_micro_hoop
 	
-	# Canestro sospeso tra 120 e 240 pixel sopra il terreno
-	var height_offset = randf_range(130.0, 220.0) if not is_micro_hoop else randf_range(180.0, 260.0)
+	var height_offset = randf_range(130.0, 210.0) if not is_micro_hoop else randf_range(170.0, 250.0)
 	hoop.position = Vector2(hoop_x, terrain_y - height_offset)
 	
 	# Collega il canestro al turbo del player

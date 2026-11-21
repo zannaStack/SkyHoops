@@ -1,0 +1,246 @@
+[gd_scene format=3 uid="uid://bij876dwfp1l3"]
+
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_menu_script"]
+[ext_resource type="PackedScene" uid="uid://ci8w88w08m3a" path="res://scenes/background.tscn" id="1_l6cm7"]
+[ext_resource type="Texture2D" uid="uid://df238a0b0b83b" path="res://assets/preview_basket.svg" id="2_prev_basket"]
+
+[node name="MainMenu" type="Control" unique_id=1512297604]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu_script")
+
+[node name="Background" parent="." unique_id=1849182001 instance=ExtResource("1_l6cm7")]
+
+[node name="TopBar" type="Panel" parent="." unique_id=1029384751]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 70.0
+grow_horizontal = 2
+
+[node name="CoinLabel" type="Label" parent="TopBar" unique_id=1029384752]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 35.0
+offset_top = -18.0
+offset_right = 200.0
+offset_bottom = 18.0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 24
+text = "🪙 0"
+vertical_alignment = 1
+
+[node name="HeaderTitle" type="Label" parent="TopBar" unique_id=1029384753]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -20.0
+offset_right = 200.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 28
+text = "SELEZIONE SPORT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RecordLabel" type="Label" parent="TopBar" unique_id=1029384754]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -18.0
+offset_right = -35.0
+offset_bottom = 18.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 22
+text = "🏆 Record: 0 m"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="CenterCardArea" type="Control" parent="." unique_id=1029384755]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -190.0
+offset_right = 300.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BtnPrev" type="Button" parent="CenterCardArea" unique_id=1029384756]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -35.0
+offset_right = 50.0
+offset_bottom = 35.0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "◀"
+
+[node name="CardFrame" type="VBoxContainer" parent="CenterCardArea" unique_id=1029384757]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="CardImage" type="TextureRect" parent="CenterCardArea/CardFrame" unique_id=1029384758]
+custom_minimum_size = Vector2(400, 240)
+layout_mode = 2
+texture = ExtResource("2_prev_basket")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CardTitle" type="Label" parent="CenterCardArea/CardFrame" unique_id=1029384759]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "BASKET"
+horizontal_alignment = 1
+
+[node name="CardSubtitle" type="Label" parent="CenterCardArea/CardFrame" unique_id=1029384760]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.8, 0.44, 1)
+theme_override_font_sizes/font_size = 16
+text = "DISPONIBILE"
+horizontal_alignment = 1
+
+[node name="BtnNext" type="Button" parent="CenterCardArea" unique_id=1029384761]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -35.0
+offset_right = 10.0
+offset_bottom = 35.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "▶"
+
+[node name="UpgradeArea" type="Panel" parent="." unique_id=1029384762]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -230.0
+offset_top = -170.0
+offset_right = 230.0
+offset_bottom = 130.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UpgradeTitle" type="Label" parent="UpgradeArea" unique_id=1029384763]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 20.0
+offset_right = 150.0
+offset_bottom = 60.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 22
+text = "OFFICINA POTENZIAMENTI"
+horizontal_alignment = 1
+
+[node name="BtnPower" type="Button" parent="UpgradeArea" unique_id=1029384764]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -170.0
+offset_top = 80.0
+offset_right = 170.0
+offset_bottom = 130.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 18
+text = "FORZA (Lv. 1) - 5 🪙"
+
+[node name="BtnAim" type="Button" parent="UpgradeArea" unique_id=1029384765]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -170.0
+offset_top = 150.0
+offset_right = 170.0
+offset_bottom = 200.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 18
+text = "MIRINO (Lv. 1) - 5 🪙"
+
+[node name="BottomNavBar" type="HBoxContainer" parent="." unique_id=1029384766]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = -90.0
+offset_right = -60.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TabSport" type="Button" parent="BottomNavBar" unique_id=1029384767]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "🏀 SPORT"
+
+[node name="TabStage" type="Button" parent="BottomNavBar" unique_id=1029384768]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "🌄 CAMPO"
+
+[node name="TabTune" type="Button" parent="BottomNavBar" unique_id=1029384769]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "🔧 UPGRADES"
+
+[node name="BtnStart" type="Button" parent="BottomNavBar" unique_id=1029384770]
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "▶ GIOCA"

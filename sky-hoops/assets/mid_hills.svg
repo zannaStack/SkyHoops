@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 300" width="1280" height="300">
+  <!-- Colline intermedie arrotondate (tonalità verde pastello atmosferica) -->
+  <!-- Seamless: inizio a (0, 160) e fine a (1280, 160) -->
+  <path d="M 0 160 
+           Q 220 70 420 170 
+           Q 640 60 840 180 
+           Q 1060 90 1280 160 
+           L 1280 300 
+           L 0 300 Z" 
+        fill="#2ec4b6" opacity="0.45"/>
+
+  <!-- Sagome di alberelli decorativi stilizzati -->
+  <circle cx="210" cy="115" r="14" fill="#0f4c5c" opacity="0.5"/>
+  <rect x="208" y="125" width="4" height="15" fill="#0f4c5c" opacity="0.5"/>
+  <circle cx="630" cy="110" r="16" fill="#0f4c5c" opacity="0.5"/>
+  <rect x="628" y="120" width="4" height="16" fill="#0f4c5c" opacity="0.5"/>
+  <circle cx="1050" cy="130" r="12" fill="#0f4c5c" opacity="0.5"/>
+  <rect x="1048" y="140" width="4" height="12" fill="#0f4c5c" opacity="0.5"/>
+</svg>

@@ -113,17 +113,28 @@ offset_bottom = 205.0
 grow_horizontal = 2
 text = "MIRINO (Lv. 1) - 5 🪙"
 
-[node name="RetryButton" type="Button" parent="GameOverPanel" unique_id=923242519]
+[node name="ButtonsRow" type="HBoxContainer" parent="GameOverPanel" unique_id=923242518]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -100.0
+offset_left = -150.0
 offset_top = -75.0
-offset_right = 100.0
+offset_right = 150.0
 offset_bottom = -30.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "RIPROVA"
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="RetryButton" type="Button" parent="GameOverPanel/ButtonsRow" unique_id=923242519]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+text = "🔄 RIPROVA"
+
+[node name="MenuButton" type="Button" parent="GameOverPanel/ButtonsRow" unique_id=923242520]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+text = "🏠 MENU"

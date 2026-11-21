@@ -8,10 +8,10 @@ extends CanvasLayer
 @onready var game_over_label: Label = $GameOverPanel/GameOver
 @onready var power_button: Button = $GameOverPanel/PowerButton
 @onready var aim_button: Button = $GameOverPanel/AimButton
-@onready var retry_button: Button = $GameOverPanel/RetryButton
+@onready var retry_button: Button = $GameOverPanel/ButtonsRow/RetryButton
+@onready var menu_button: Button = $GameOverPanel/ButtonsRow/MenuButton
 
 func _ready() -> void:
-	# Recupero difensivo in caso di accesso prima dell'_onready
 	_ensure_nodes()
 	
 	if game_over_panel:
@@ -19,6 +19,8 @@ func _ready() -> void:
 	
 	if retry_button and not retry_button.pressed.is_connected(_on_retry_pressed):
 		retry_button.pressed.connect(_on_retry_pressed)
+	if menu_button and not menu_button.pressed.is_connected(_on_menu_pressed):
+		menu_button.pressed.connect(_on_menu_pressed)
 	if power_button and not power_button.pressed.is_connected(_on_power_pressed):
 		power_button.pressed.connect(_on_power_pressed)
 	if aim_button and not aim_button.pressed.is_connected(_on_aim_pressed):
@@ -43,7 +45,9 @@ func _ensure_nodes() -> void:
 		if not aim_button:
 			aim_button = game_over_panel.get_node_or_null("AimButton")
 		if not retry_button:
-			retry_button = game_over_panel.get_node_or_null("RetryButton")
+			retry_button = game_over_panel.get_node_or_null("ButtonsRow/RetryButton")
+		if not menu_button:
+			menu_button = game_over_panel.get_node_or_null("ButtonsRow/MenuButton")
 
 func update_stamina(value: float) -> void:
 	_ensure_nodes()
@@ -93,3 +97,7 @@ func _on_aim_pressed() -> void:
 func _on_retry_pressed() -> void:
 	Engine.time_scale = 1.0
 	get_tree().reload_current_scene()
+
+func _on_menu_pressed() -> void:
+	Engine.time_scale = 1.0
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
