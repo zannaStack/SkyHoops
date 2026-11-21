@@ -42,6 +42,7 @@ func _on_body_entered(body: Node2D) -> void:
 
 		var total_coins: int = value * multiplier
 		GameManager.add_coins(total_coins)
+		GameManager.vibrate_light()
 		
 		# Aggiorna la HUD se presente
 		var hud = get_tree().root.find_child("HUD", true, false)

@@ -39,6 +39,9 @@ func _on_body_entered(body: Node2D) -> void:
 		
 		# Devia con forza il pallone respingendolo verso il basso/indietro
 		body.apply_central_impulse(Vector2(-280.0, 260.0))
+		if "hit_bird" in body:
+			body.hit_bird = true
+		GameManager.vibrate_light()
 		
 		if feather_particles:
 			feather_particles.emitting = true

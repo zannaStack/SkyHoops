@@ -19,6 +19,7 @@ func _on_body_entered(body: Node2D) -> void:
 		# Camera shake per impatto doloroso
 		if body.has_method("add_camera_trauma"):
 			body.add_camera_trauma(0.55)
+		GameManager.vibrate_heavy()
 			
 		# Flash rosso del player per segnalare il danno
 		var player_sprite = body.get_node_or_null("Sprite2D")

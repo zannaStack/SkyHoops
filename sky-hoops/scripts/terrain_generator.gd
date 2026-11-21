@@ -49,41 +49,43 @@ func generate_next_chunk() -> void:
 	add_child(chunk_root)
 	active_chunks.append(chunk_root)
 
-	# Calcola i punti della superficie ondulata
-	var surface_points: Array[Vector2] = []
-	var x = start_x
-	while x <= end_x:
-		# Pendenze fluide e naturali
-		var y = 520.0 + sin(x * 0.003) * 90.0 + cos(x * 0.006) * 40.0
-		surface_points.append(Vector2(x, y))
-		x += step_x
+	# Decide se in questo chunk c'è un baratro (25% di probabilità oltre 900m)
+	var has_gap: bool = (start_x > 900.0 and randf() < 0.25)
+	var gap_width: float = 170.0
+	var gap_center_x: float = start_x + (chunk_width * 0.5)
+	var gap_start_x: float = gap_center_x - (gap_width * 0.5)
+	var gap_end_x: float = gap_center_x + (gap_width * 0.5)
 
-	# 1. Corpo Fisico del Terreno (CollisionPolygon2D)
-	var static_body = StaticBody2D.new()
-	var col_poly = CollisionPolygon2D.new()
-	
-	var polygon_points: Array[Vector2] = []
-	polygon_points.append_array(surface_points)
-	# Chiude il poligono in basso per dare massa solida fino a y=1800
-	polygon_points.append(Vector2(end_x, 1800.0))
-	polygon_points.append(Vector2(start_x, 1800.0))
-	col_poly.polygon = PackedVector2Array(polygon_points)
-	
-	static_body.add_child(col_poly)
-	chunk_root.add_child(static_body)
+	if not has_gap:
+		# Calcola i punti continui della superficie ondulata
+		var surface_points: Array[Vector2] = []
+		var x = start_x
+		while x <= end_x:
+			var y = 520.0 + sin(x * 0.003) * 90.0 + cos(x * 0.006) * 40.0
+			surface_points.append(Vector2(x, y))
+			x += step_x
+		create_ground_segment(chunk_root, surface_points, start_x, end_x)
+	else:
+		# Sezione A (prima del baratro)
+		var surface_A: Array[Vector2] = []
+		var x_A = start_x
+		while x_A <= gap_start_x:
+			var y = 520.0 + sin(x_A * 0.003) * 90.0 + cos(x_A * 0.006) * 40.0
+			surface_A.append(Vector2(x_A, y))
+			x_A += step_x
+		create_ground_segment(chunk_root, surface_A, start_x, gap_start_x)
 
-	# 2. Riempimento Marrone Terra Sotteso al Percorso (Polygon2D)
-	var ground_fill = Polygon2D.new()
-	ground_fill.polygon = PackedVector2Array(polygon_points)
-	ground_fill.color = Color(0.38, 0.22, 0.13) # Marrone terra caldo
-	chunk_root.add_child(ground_fill)
+		# Sezione B (dopo il baratro)
+		var surface_B: Array[Vector2] = []
+		var x_B = gap_end_x
+		while x_B <= end_x:
+			var y = 520.0 + sin(x_B * 0.003) * 90.0 + cos(x_B * 0.006) * 40.0
+			surface_B.append(Vector2(x_B, y))
+			x_B += step_x
+		create_ground_segment(chunk_root, surface_B, gap_end_x, end_x)
 
-	# 3. Linea Visiva Verde dell'Erba in superficie (Line2D)
-	var grass_line = Line2D.new()
-	grass_line.points = PackedVector2Array(surface_points)
-	grass_line.width = 8.0
-	grass_line.default_color = Color(0.24, 0.72, 0.30) # Verde erba brillante
-	chunk_root.add_child(grass_line)
+		# Spawna un arco guida di monete direttamente sopra il baratro
+		spawn_gap_coin_arc(chunk_root, gap_start_x, gap_end_x)
 
 	# 4. Spawna un Canestro in questo Chunk (eccetto nei primissimi 800 pixel)
 	if start_x > 800.0:
@@ -182,3 +184,43 @@ func spawn_energy_in_chunk(parent_chunk: Node2D, start_x: float, end_x: float) -
 	var terrain_y = 520.0 + sin(en_x * 0.003) * 90.0 + cos(en_x * 0.006) * 40.0
 	energy.position = Vector2(en_x, terrain_y - 75.0)
 	parent_chunk.add_child(energy)
+
+func create_ground_segment(parent: Node2D, points: Array[Vector2], seg_start: float, seg_end: float) -> void:
+	if points.size() < 2:
+		return
+	var static_body = StaticBody2D.new()
+	var col_poly = CollisionPolygon2D.new()
+	var poly: Array[Vector2] = []
+	poly.append_array(points)
+	poly.append(Vector2(seg_end, 1800.0))
+	poly.append(Vector2(seg_start, 1800.0))
+	col_poly.polygon = PackedVector2Array(poly)
+	static_body.add_child(col_poly)
+	parent.add_child(static_body)
+
+	var ground_fill = Polygon2D.new()
+	ground_fill.polygon = PackedVector2Array(poly)
+	ground_fill.color = Color(0.38, 0.22, 0.13)
+	parent.add_child(ground_fill)
+
+	var grass_line = Line2D.new()
+	grass_line.points = PackedVector2Array(points)
+	grass_line.width = 8.0
+	grass_line.default_color = Color(0.24, 0.72, 0.30)
+	parent.add_child(grass_line)
+
+func spawn_gap_coin_arc(parent_chunk: Node2D, gap_start: float, gap_end: float) -> void:
+	var num_coins: int = 5
+	var gap_dist = gap_end - gap_start
+	var start_y = 520.0 + sin(gap_start * 0.003) * 90.0 + cos(gap_start * 0.006) * 40.0
+	var end_y = 520.0 + sin(gap_end * 0.003) * 90.0 + cos(gap_end * 0.006) * 40.0
+
+	for i in range(num_coins):
+		var t = float(i) / float(num_coins - 1)
+		var x = gap_start + (t * gap_dist)
+		var base_y = lerp(start_y, end_y, t)
+		# Parabola guida del salto sopra il burrone
+		var arc_h = 70.0 * 4.0 * t * (1.0 - t)
+		var coin = COIN_SCENE.instantiate()
+		coin.position = Vector2(x, base_y - 45.0 - arc_h)
+		parent_chunk.add_child(coin)

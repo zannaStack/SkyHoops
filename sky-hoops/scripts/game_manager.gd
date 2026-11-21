@@ -141,3 +141,24 @@ func load_game() -> void:
 			stamina_level = clamp(data.get("stamina_level", 1), 1, MAX_STAT_LEVEL)
 			special_ability_level = clamp(data.get("special_ability_level", 0), 0, 3)
 			high_score = data.get("high_score", 0)
+
+# --- FEEDBACK APTICO / VIBRAZIONE MOBILE (Android / iOS) ---
+func vibrate(duration_ms: int = 25) -> void:
+	if OS.has_feature("mobile") or OS.get_name() in ["Android", "iOS"]:
+		Input.vibrate_handheld(duration_ms)
+
+func vibrate_light() -> void:
+	vibrate(15)
+
+func vibrate_medium() -> void:
+	vibrate(35)
+
+func vibrate_heavy() -> void:
+	vibrate(65)
+
+func vibrate_double() -> void:
+	vibrate(30)
+	var tree = Engine.get_main_loop() as SceneTree
+	if tree:
+		var timer = tree.create_timer(0.08)
+		timer.timeout.connect(func(): vibrate(35))

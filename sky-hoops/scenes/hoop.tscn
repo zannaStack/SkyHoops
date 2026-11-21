@@ -21,6 +21,15 @@ size = Vector2(14, 120)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bb_sensor"]
 size = Vector2(18, 120)
 
+[sub_resource type="Gradient" id="Gradient_hoop_light"]
+colors = PackedColorArray(1, 0.75, 0.2, 0.75, 1, 0.4, 0.1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_hoop_light"]
+gradient = SubResource("Gradient_hoop_light")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.85, 0.85)
+
 [node name="Hoop" type="Area2D" unique_id=2129366597]
 collision_layer = 0
 collision_mask = 4
@@ -82,3 +91,8 @@ initial_velocity_max = 280.0
 scale_amount_min = 3.0
 scale_amount_max = 6.0
 color = Color(1, 0.564706, 0.101961, 1)
+
+[node name="HoopLight" type="PointLight2D" parent="." unique_id=1968904261]
+energy = 0.9
+texture = SubResource("GradientTexture2D_hoop_light")
+texture_scale = 3.2

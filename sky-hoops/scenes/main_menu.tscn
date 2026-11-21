@@ -212,26 +212,38 @@ columns = 2
 [node name="BtnPower" type="Button" parent="UpgradeArea/StatsGrid" unique_id=1029384764]
 custom_minimum_size = Vector2(330, 52)
 layout_mode = 2
+theme_override_constants/icon_max_width = 22
 theme_override_font_sizes/font_size = 17
-text = "FORZA (Lv. 1/10) - 100 🪙"
+text = "FORZA (Lv. 1/10) - 100"
+icon = ExtResource("3_coin_icon")
+icon_alignment = 2
 
 [node name="BtnAim" type="Button" parent="UpgradeArea/StatsGrid" unique_id=1029384765]
 custom_minimum_size = Vector2(330, 52)
 layout_mode = 2
+theme_override_constants/icon_max_width = 22
 theme_override_font_sizes/font_size = 17
-text = "MIRINO (Lv. 1/10) - 100 🪙"
+text = "MIRINO (Lv. 1/10) - 100"
+icon = ExtResource("3_coin_icon")
+icon_alignment = 2
 
 [node name="BtnJump" type="Button" parent="UpgradeArea/StatsGrid" unique_id=1029384772]
 custom_minimum_size = Vector2(330, 52)
 layout_mode = 2
+theme_override_constants/icon_max_width = 22
 theme_override_font_sizes/font_size = 17
-text = "SALTO (Lv. 1/10) - 100 🪙"
+text = "SALTO (Lv. 1/10) - 100"
+icon = ExtResource("3_coin_icon")
+icon_alignment = 2
 
 [node name="BtnStamina" type="Button" parent="UpgradeArea/StatsGrid" unique_id=1029384773]
 custom_minimum_size = Vector2(330, 52)
 layout_mode = 2
+theme_override_constants/icon_max_width = 22
 theme_override_font_sizes/font_size = 17
-text = "STAMINA (Lv. 1/10) - 100 🪙"
+text = "STAMINA (Lv. 1/10) - 100"
+icon = ExtResource("3_coin_icon")
+icon_alignment = 2
 
 [node name="BtnSpecial" type="Button" parent="UpgradeArea" unique_id=1029384774]
 layout_mode = 1
@@ -246,8 +258,11 @@ offset_right = 340.0
 offset_bottom = -60.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_constants/icon_max_width = 24
 theme_override_font_sizes/font_size = 18
-text = "⭐ SPECIAL: 🧲 CALAMITA MONETE - 5000 🪙"
+text = "⭐ SPECIAL: 🧲 CALAMITA - 5000"
+icon = ExtResource("3_coin_icon")
+icon_alignment = 2
 
 [node name="SpecialDesc" type="Label" parent="UpgradeArea" unique_id=1029384775]
 layout_mode = 1

@@ -19,7 +19,12 @@ var max_visible_dots: int = 2
 @onready var trajectory_dots: Node2D = $TrajectoryDots
 @onready var dust_particles: CPUParticles2D = $DustParticles
 @onready var fire_particles: CPUParticles2D = $FireParticles
+@onready var fire_light: PointLight2D = get_node_or_null("FireLight")
 @onready var camera: Camera2D = $Camera2D
+
+var can_dunk: bool = false
+var current_dunk_hoop: Node2D = null
+var was_on_floor: bool = true
 
 # Parametri Combo e modalità "On Fire"
 var combo_count: int = 0
@@ -41,6 +46,16 @@ var boost_timer: float = 0.0
 var stamina: float = 100.0
 var is_game_over: bool = false
 
+# Statistiche partita corrente (per resoconto post-partita)
+var shots_taken: int = 0
+var shots_scored: int = 0
+var perfect_swishes: int = 0
+var coins_earned_this_run: int = 0
+
+# Rilevamento Nuovo Record in corsa
+var old_high_score: int = 0
+var record_celebrated: bool = false
+
 var has_ball: bool = true
 var is_dragging: bool = false
 var is_button_charging: bool = false
@@ -50,6 +65,7 @@ var current_drag_vector: Vector2 = Vector2.ZERO
 var hud: CanvasLayer = null
 
 func _ready() -> void:
+	old_high_score = GameManager.high_score
 	if camera:
 		base_camera_offset = camera.offset
 	stamina = max_stamina
@@ -57,7 +73,7 @@ func _ready() -> void:
 	
 	hud = get_parent().get_node_or_null("HUD")
 	if hud:
-		hud.update_stamina(stamina)
+		hud.update_stamina(stamina, max_stamina)
 		hud.update_distance(0)
 		hud.update_coins(GameManager.coins)
 		
@@ -100,6 +116,11 @@ func add_camera_trauma(amount: float) -> void:
 	trauma = clamp(trauma + amount, 0.0, 1.0)
 
 func _physics_process(delta: float) -> void:
+	# Caduta nel baratro
+	if global_position.y > 850.0 and not is_game_over:
+		stamina = 0
+		trigger_game_over()
+
 	if is_game_over:
 		velocity.x = 0
 		if not is_on_floor():
@@ -151,16 +172,38 @@ func _physics_process(delta: float) -> void:
 			trigger_game_over()
 
 	if hud:
-		hud.update_stamina(stamina)
+		hud.update_stamina(stamina, max_stamina)
 		hud.update_distance(distance_meters)
+
+	# Celebrazione Nuovo Record in tempo reale durante la corsa!
+	if old_high_score > 0 and distance_meters > old_high_score and not record_celebrated:
+		record_celebrated = true
+		add_camera_trauma(0.5)
+		if hud and hud.has_method("show_new_record_banner"):
+			hud.show_new_record_banner(distance_meters)
 
 	# Se stiamo caricando col pulsante destro, disegna la traiettoria standard
 	if is_button_charging and has_ball:
 		draw_trajectory()
 
+	# Luce On Fire dinamica
+	if fire_light:
+		fire_light.enabled = (is_on_fire or is_flying)
+
+	# Controllo opportunità di Schiacciata (Slam Dunk)
+	check_dunk_opportunity()
+
 	velocity.x = current_speed
 	floor_snap_length = 12.0
 	move_and_slide()
+
+	# Squash & Stretch all'atterraggio dopo un salto
+	if not was_on_floor and is_on_floor() and not is_game_over:
+		var land_tween = create_tween()
+		land_tween.tween_property($Sprite2D, "scale", Vector2(0.52, 0.38), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		land_tween.tween_property($Sprite2D, "scale", Vector2(0.45, 0.45), 0.12).set_trans(Tween.TRANS_SINE)
+		GameManager.vibrate_light()
+	was_on_floor = is_on_floor()
 
 	# Animazione Procedurale: allineamento pendenza colline e bobbing di corsa
 	if is_on_floor() and not is_game_over:
@@ -192,9 +235,86 @@ func jump() -> void:
 		tween.tween_property($Sprite2D, "scale", Vector2(0.35, 0.55), 0.08)
 		tween.tween_property($Sprite2D, "scale", Vector2(0.45, 0.45), 0.15)
 
+# --- SISTEMA SCHIACCIATA (SLAM DUNK) & CONTROLLI ---
+func check_dunk_opportunity() -> void:
+	if is_game_over or not has_ball or is_on_floor():
+		set_dunk_available(null)
+		return
+
+	var hoops = get_tree().get_nodes_in_group("hoops")
+	var best_hoop: Node2D = null
+	var min_dist: float = 999999.0
+
+	for hoop in hoops:
+		if not is_instance_valid(hoop) or hoop.has_scored:
+			continue
+		var dx: float = hoop.global_position.x - global_position.x
+		var dy: float = hoop.global_position.y - global_position.y
+		# Raggio di schiacciata: da -30 a 240px orizzontali e tra -140 e 150px verticali
+		if dx > -30.0 and dx < 240.0 and abs(dy) < 160.0:
+			var dist = Vector2(dx, dy).length()
+			if dist < min_dist:
+				min_dist = dist
+				best_hoop = hoop
+
+	set_dunk_available(best_hoop)
+
+func set_dunk_available(hoop: Node2D) -> void:
+	current_dunk_hoop = hoop
+	var now_can_dunk: bool = (hoop != null)
+	if now_can_dunk != can_dunk:
+		can_dunk = now_can_dunk
+		if hud and hud.has_method("set_dunk_mode"):
+			hud.set_dunk_mode(can_dunk)
+
+func perform_slam_dunk(hoop: Node2D) -> void:
+	if not is_instance_valid(hoop) or is_game_over or not has_ball:
+		return
+
+	has_ball = false
+	ball_visual.visible = false
+	can_dunk = false
+	if hud and hud.has_method("set_dunk_mode"):
+		hud.set_dunk_mode(false)
+	if hud and hud.has_method("trigger_impact_flash"):
+		hud.trigger_impact_flash(Color(1.0, 0.88, 0.2, 0.45))
+
+	# Hitstop (Freeze Frame cinematico reale a mezz'aria)
+	Engine.time_scale = 0.08
+	get_tree().create_timer(0.12, true, false, true).timeout.connect(func():
+		Engine.time_scale = 1.0
+	)
+
+	add_camera_trauma(0.85)
+	GameManager.vibrate_double()
+
+	# Posa atletica schiacciata: scatto acrobatico sopra il ferro
+	var dunk_target: Vector2 = hoop.global_position + Vector2(-24.0, -38.0)
+	var tween = create_tween()
+	tween.tween_property(self, "global_position", dunk_target, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property($Sprite2D, "rotation", 0.35, 0.08)
+	tween.parallel().tween_property($Sprite2D, "scale", Vector2(0.55, 0.38), 0.08)
+
+	# Istanzia il pallone ad altissima velocità verso il basso
+	var ball: RigidBody2D = BALL_SCENE.instantiate()
+	ball.global_position = hoop.global_position + Vector2(0.0, -22.0)
+	ball.is_dunk = true
+	get_parent().add_child(ball)
+	ball.linear_velocity = Vector2(10.0, 750.0)
+
+	# Rebound acrobatico del corridore
+	tween.tween_property($Sprite2D, "rotation", 0.0, 0.2)
+	tween.parallel().tween_property($Sprite2D, "scale", Vector2(0.45, 0.45), 0.2)
+	velocity.y = -220.0
+
+	get_tree().create_timer(1.2).timeout.connect(reload_ball)
+
 # --- GESTIONE PULSANTE TIRO DESTRO ---
 func _on_shoot_button_down() -> void:
 	if is_game_over or not has_ball:
+		return
+	if can_dunk and current_dunk_hoop:
+		perform_slam_dunk(current_dunk_hoop)
 		return
 	is_button_charging = true
 	Engine.time_scale = 0.2 # Bullet Time immediato!
@@ -215,6 +335,9 @@ func _input(event: InputEvent) -> void:
 		if event.is_pressed():
 			# Evita zone pulsanti in basso
 			if event.position.y > 580 and (event.position.x < 180 or event.position.x > 1100):
+				return
+			if can_dunk and current_dunk_hoop:
+				perform_slam_dunk(current_dunk_hoop)
 				return
 			start_aim(event.position)
 		else:
@@ -253,6 +376,7 @@ func release_shot() -> void:
 	current_drag_vector = Vector2.ZERO
 
 func shoot_ball() -> void:
+	shots_taken += 1
 	has_ball = false
 	ball_visual.visible = false
 	
@@ -287,6 +411,11 @@ func trigger_boost(is_micro: bool, bonus_coins: int = 1) -> void:
 	if is_game_over:
 		return
 
+	# Statistiche tiri e canestri
+	shots_scored += 1
+	if bonus_coins >= 2:
+		perfect_swishes += 1
+
 	# Incrementa la serie di canestri consecutivi
 	combo_count += 1
 	combo_timer = COMBO_TIMEOUT
@@ -305,6 +434,7 @@ func trigger_boost(is_micro: bool, bonus_coins: int = 1) -> void:
 	
 	var base_coins: int = bonus_coins if bonus_coins > 1 else (1 if not is_micro else 3)
 	var earned_coins: int = base_coins * (2 if is_on_fire else 1)
+	coins_earned_this_run += earned_coins
 	GameManager.add_coins(earned_coins)
 	if hud:
 		hud.update_coins(GameManager.coins)
@@ -333,7 +463,13 @@ func trigger_game_over() -> void:
 	var distance_meters: int = max(0, int(global_position.x / 50.0))
 	GameManager.update_high_score(distance_meters)
 	if hud:
-		hud.show_game_over(distance_meters)
+		var stats: Dictionary = {
+			"shots_taken": shots_taken,
+			"shots_scored": shots_scored,
+			"perfect_swishes": perfect_swishes,
+			"coins_earned": coins_earned_this_run
+		}
+		hud.show_game_over(distance_meters, stats)
 
 func _on_hoop_goal_scored(is_micro: bool, bonus_coins: int = 1) -> void:
 	trigger_boost(is_micro, bonus_coins)

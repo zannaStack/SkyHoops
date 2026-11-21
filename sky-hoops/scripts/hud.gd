@@ -1,12 +1,23 @@
 extends CanvasLayer
 
+const COIN_ICON: Texture2D = preload("res://assets/coin.svg")
+
 @onready var stamina_bar: ProgressBar = $StaminaBar
 @onready var distance_label: Label = $DistanceLabel
-@onready var coin_label: Label = $CoinLabel
+@onready var coin_label: Label = $CoinContainer/CoinLabel
 @onready var combo_label: Label = $ComboLabel
+@onready var pause_button: Button = $PauseButton
+@onready var pause_panel: Panel = $PausePanel
+@onready var resume_button: Button = $PausePanel/PauseButtons/ResumeButton
+@onready var pause_menu_button: Button = $PausePanel/PauseButtons/PauseMenuButton
+@onready var record_banner: Label = $RecordBanner
+@onready var impact_flash: ColorRect = get_node_or_null("ImpactFlash")
+@onready var fire_border: Panel = get_node_or_null("FireBorder")
+@onready var shoot_button: Button = get_node_or_null("ShootButton")
 
 @onready var game_over_panel: Panel = $GameOverPanel
 @onready var game_over_label: Label = $GameOverPanel/GameOver
+@onready var stats_label: Label = $GameOverPanel/StatsLabel
 @onready var power_button: Button = $GameOverPanel/UpgradesGrid/PowerButton
 @onready var aim_button: Button = $GameOverPanel/UpgradesGrid/AimButton
 @onready var jump_button: Button = $GameOverPanel/UpgradesGrid/JumpButton
@@ -20,6 +31,18 @@ func _ready() -> void:
 	if game_over_panel:
 		game_over_panel.visible = false
 	
+	if pause_panel:
+		pause_panel.visible = false
+	if record_banner:
+		record_banner.visible = false
+
+	if pause_button and not pause_button.pressed.is_connected(_on_pause_pressed):
+		pause_button.pressed.connect(_on_pause_pressed)
+	if resume_button and not resume_button.pressed.is_connected(_on_resume_pressed):
+		resume_button.pressed.connect(_on_resume_pressed)
+	if pause_menu_button and not pause_menu_button.pressed.is_connected(_on_menu_pressed):
+		pause_menu_button.pressed.connect(_on_menu_pressed)
+
 	if retry_button and not retry_button.pressed.is_connected(_on_retry_pressed):
 		retry_button.pressed.connect(_on_retry_pressed)
 	if menu_button and not menu_button.pressed.is_connected(_on_menu_pressed):
@@ -41,12 +64,31 @@ func _ensure_nodes() -> void:
 	if not distance_label:
 		distance_label = get_node_or_null("DistanceLabel")
 	if not coin_label:
-		coin_label = get_node_or_null("CoinLabel")
+		coin_label = find_child("CoinLabel", true, false)
+	if not pause_button:
+		pause_button = get_node_or_null("PauseButton")
+	if not pause_panel:
+		pause_panel = get_node_or_null("PausePanel")
+	if pause_panel:
+		if not resume_button:
+			resume_button = pause_panel.get_node_or_null("PauseButtons/ResumeButton")
+		if not pause_menu_button:
+			pause_menu_button = pause_panel.get_node_or_null("PauseButtons/PauseMenuButton")
+	if not record_banner:
+		record_banner = get_node_or_null("RecordBanner")
+	if not impact_flash:
+		impact_flash = get_node_or_null("ImpactFlash")
+	if not fire_border:
+		fire_border = get_node_or_null("FireBorder")
+	if not shoot_button:
+		shoot_button = get_node_or_null("ShootButton")
 	if not game_over_panel:
 		game_over_panel = get_node_or_null("GameOverPanel")
 	if game_over_panel:
 		if not game_over_label:
 			game_over_label = game_over_panel.get_node_or_null("GameOver")
+		if not stats_label:
+			stats_label = game_over_panel.get_node_or_null("StatsLabel")
 		if not power_button:
 			power_button = game_over_panel.get_node_or_null("UpgradesGrid/PowerButton")
 		if not aim_button:
@@ -60,9 +102,11 @@ func _ensure_nodes() -> void:
 		if not menu_button:
 			menu_button = game_over_panel.get_node_or_null("ButtonsRow/MenuButton")
 
-func update_stamina(value: float) -> void:
+func update_stamina(value: float, max_val: float = -1.0) -> void:
 	_ensure_nodes()
 	if stamina_bar:
+		if max_val > 0.0:
+			stamina_bar.max_value = max_val
 		stamina_bar.value = value
 
 func update_distance(distance_meters: int) -> void:
@@ -73,15 +117,43 @@ func update_distance(distance_meters: int) -> void:
 func update_coins(total_coins: int) -> void:
 	_ensure_nodes()
 	if coin_label:
-		coin_label.text = "🪙 " + str(total_coins)
+		coin_label.text = str(total_coins)
+
+func trigger_impact_flash(color: Color = Color(1.0, 0.88, 0.35, 0.35)) -> void:
+	_ensure_nodes()
+	if not impact_flash:
+		return
+	impact_flash.color = color
+	var tween = create_tween()
+	tween.tween_property(impact_flash, "color:a", 0.0, 0.22).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func set_dunk_mode(active: bool) -> void:
+	_ensure_nodes()
+	if not shoot_button:
+		return
+	if active:
+		shoot_button.text = "💥 DUNK!"
+		shoot_button.modulate = Color(1.0, 0.35, 0.2)
+	else:
+		shoot_button.text = "TIRO 🎯"
+		shoot_button.modulate = Color(1.0, 1.0, 1.0)
 
 func update_combo(combo_count: int, is_on_fire: bool) -> void:
 	_ensure_nodes()
 	if not combo_label:
 		combo_label = get_node_or_null("ComboLabel")
+	
+	if fire_border:
+		if is_on_fire:
+			fire_border.visible = true
+		else:
+			fire_border.visible = false
+			
 	if not combo_label:
 		return
 	if is_on_fire and combo_count >= 2:
+		if not combo_label.visible:
+			trigger_impact_flash(Color(1.0, 0.45, 0.1, 0.35))
 		combo_label.visible = true
 		combo_label.text = "🔥 ON FIRE! x" + str(combo_count) + " (x2 🪙)"
 		combo_label.modulate = Color(1.0, 0.85, 0.2)
@@ -91,13 +163,54 @@ func update_combo(combo_count: int, is_on_fire: bool) -> void:
 	else:
 		combo_label.visible = false
 
-func show_game_over(final_distance: int) -> void:
+func show_new_record_banner(distance: int) -> void:
+	_ensure_nodes()
+	if not record_banner:
+		return
+	GameManager.vibrate_double()
+	trigger_impact_flash(Color(1.0, 0.9, 0.2, 0.4))
+	record_banner.text = "🏆 NUOVO RECORD: " + str(distance) + " m! 🏆"
+	record_banner.visible = true
+	record_banner.modulate.a = 1.0
+	record_banner.scale = Vector2(0.7, 0.7)
+	
+	var tween = create_tween()
+	tween.tween_property(record_banner, "scale", Vector2(1.15, 1.15), 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(record_banner, "scale", Vector2(1.0, 1.0), 0.2)
+	tween.tween_interval(1.8)
+	tween.tween_property(record_banner, "modulate:a", 0.0, 0.6)
+	tween.tween_callback(func(): record_banner.visible = false)
+
+func show_game_over(final_distance: int, stats: Dictionary = {}) -> void:
 	_ensure_nodes()
 	if game_over_panel:
 		game_over_panel.visible = true
 	if game_over_label:
-		game_over_label.text = "GAME OVER!\nMetri: " + str(final_distance) + " m | Record: " + str(GameManager.high_score) + " m"
+		game_over_label.text = "GAME OVER!"
+	
+	if stats_label:
+		var shots_taken = stats.get("shots_taken", 0)
+		var shots_scored = stats.get("shots_scored", 0)
+		var swishes = stats.get("perfect_swishes", 0)
+		var coins_earned = stats.get("coins_earned", 0)
+		var accuracy = int((float(shots_scored) / float(max(1, shots_taken))) * 100.0) if shots_taken > 0 else 0
+		
+		stats_label.text = "Metri: " + str(final_distance) + " m | Record: " + str(GameManager.high_score) + " m\n"
+		stats_label.text += "Canestri: " + str(shots_scored) + "/" + str(shots_taken) + " (" + str(accuracy) + "%) | Swish: " + str(swishes) + " | Monete: +" + str(coins_earned) + " 🪙"
+		
 	refresh_upgrade_buttons()
+
+func _on_pause_pressed() -> void:
+	_ensure_nodes()
+	get_tree().paused = true
+	if pause_panel:
+		pause_panel.visible = true
+
+func _on_resume_pressed() -> void:
+	_ensure_nodes()
+	get_tree().paused = false
+	if pause_panel:
+		pause_panel.visible = false
 
 func refresh_upgrade_buttons() -> void:
 	_ensure_nodes()
@@ -105,36 +218,44 @@ func refresh_upgrade_buttons() -> void:
 		var p_cost = GameManager.get_power_upgrade_cost()
 		if p_cost == -1:
 			power_button.text = "FORZA (Lv. 10/10) - MAX"
+			power_button.icon = null
 			power_button.disabled = true
 		else:
-			power_button.text = "FORZA (Lv. " + str(GameManager.power_level) + "/10) - " + str(p_cost) + " 🪙"
+			power_button.text = "FORZA (Lv. " + str(GameManager.power_level) + "/10) - " + str(p_cost)
+			power_button.icon = COIN_ICON
 			power_button.disabled = (GameManager.coins < p_cost)
 	
 	if aim_button:
 		var a_cost = GameManager.get_aim_upgrade_cost()
 		if a_cost == -1:
 			aim_button.text = "MIRINO (Lv. 10/10) - MAX"
+			aim_button.icon = null
 			aim_button.disabled = true
 		else:
-			aim_button.text = "MIRINO (Lv. " + str(GameManager.aim_level) + "/10) - " + str(a_cost) + " 🪙"
+			aim_button.text = "MIRINO (Lv. " + str(GameManager.aim_level) + "/10) - " + str(a_cost)
+			aim_button.icon = COIN_ICON
 			aim_button.disabled = (GameManager.coins < a_cost)
 
 	if jump_button:
 		var j_cost = GameManager.get_jump_upgrade_cost()
 		if j_cost == -1:
 			jump_button.text = "SALTO (Lv. 10/10) - MAX"
+			jump_button.icon = null
 			jump_button.disabled = true
 		else:
-			jump_button.text = "SALTO (Lv. " + str(GameManager.jump_level) + "/10) - " + str(j_cost) + " 🪙"
+			jump_button.text = "SALTO (Lv. " + str(GameManager.jump_level) + "/10) - " + str(j_cost)
+			jump_button.icon = COIN_ICON
 			jump_button.disabled = (GameManager.coins < j_cost)
 
 	if stamina_button:
 		var s_cost = GameManager.get_stamina_upgrade_cost()
 		if s_cost == -1:
 			stamina_button.text = "STAMINA (Lv. 10/10) - MAX"
+			stamina_button.icon = null
 			stamina_button.disabled = true
 		else:
-			stamina_button.text = "STAMINA (Lv. " + str(GameManager.stamina_level) + "/10) - " + str(s_cost) + " 🪙"
+			stamina_button.text = "STAMINA (Lv. " + str(GameManager.stamina_level) + "/10) - " + str(s_cost)
+			stamina_button.icon = COIN_ICON
 			stamina_button.disabled = (GameManager.coins < s_cost)
 
 func _on_power_pressed() -> void:
@@ -158,9 +279,11 @@ func _on_stamina_pressed() -> void:
 		refresh_upgrade_buttons()
 
 func _on_retry_pressed() -> void:
+	get_tree().paused = false
 	Engine.time_scale = 1.0
 	get_tree().reload_current_scene()
 
 func _on_menu_pressed() -> void:
+	get_tree().paused = false
 	Engine.time_scale = 1.0
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

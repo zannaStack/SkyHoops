@@ -1,9 +1,42 @@
 [gd_scene format=3 uid="uid://364idiygpdit"]
 
 [ext_resource type="Script" uid="uid://kcq2ry20ctb4" path="res://scripts/hud.gd" id="1_ahhtf"]
+[ext_resource type="Texture2D" uid="uid://bhx85wqm3d6lp" path="res://assets/coin.svg" id="2_coin_icon"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fire_border"]
+draw_center = false
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(1, 0.45, 0.1, 0.85)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [node name="HUD" type="CanvasLayer" unique_id=1406803294]
+process_mode = 3
 script = ExtResource("1_ahhtf")
+
+[node name="ImpactFlash" type="ColorRect" parent="." unique_id=1406803295]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 0.9, 0.4, 0)
+
+[node name="FireBorder" type="Panel" parent="." unique_id=1406803296]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fire_border")
 
 [node name="StaminaBar" type="ProgressBar" parent="." unique_id=1710761575]
 anchors_preset = 5
@@ -24,17 +57,42 @@ offset_right = 150.0
 offset_bottom = 50.0
 text = "0 m"
 
-[node name="CoinLabel" type="Label" parent="." unique_id=1849182741]
+[node name="CoinContainer" type="HBoxContainer" parent="." unique_id=1849182740]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -170.0
-offset_top = 20.0
-offset_right = -30.0
-offset_bottom = 50.0
+offset_left = -225.0
+offset_top = 18.0
+offset_right = -85.0
+offset_bottom = 54.0
 grow_horizontal = 0
-text = "🪙 0"
-horizontal_alignment = 2
+theme_override_constants/separation = 8
+alignment = 2
+
+[node name="CoinIcon" type="TextureRect" parent="CoinContainer" unique_id=1849182742]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("2_coin_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CoinLabel" type="Label" parent="CoinContainer" unique_id=1849182741]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "0"
+vertical_alignment = 1
+
+[node name="PauseButton" type="Button" parent="." unique_id=1849182745]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -75.0
+offset_top = 16.0
+offset_right = -25.0
+offset_bottom = 56.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 20
+text = "⏸"
 
 [node name="ComboLabel" type="Label" parent="." unique_id=2081239840]
 visible = false
@@ -75,6 +133,80 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "TIRO 🎯"
 
+[node name="RecordBanner" type="Label" parent="." unique_id=2081239850]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -140.0
+offset_right = 280.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(280, 30)
+theme_override_colors/font_color = Color(1, 0.88, 0.15, 1)
+theme_override_font_sizes/font_size = 28
+text = "🏆 NUOVO RECORD PERSONALE! 🏆"
+horizontal_alignment = 1
+
+[node name="PausePanel" type="Panel" parent="." unique_id=1228689680]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -130.0
+offset_right = 180.0
+offset_bottom = 130.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PauseTitle" type="Label" parent="PausePanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 20.0
+offset_right = 100.0
+offset_bottom = 55.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 24
+text = "⏸ IN PAUSA"
+horizontal_alignment = 1
+
+[node name="PauseButtons" type="VBoxContainer" parent="PausePanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -20.0
+offset_right = 120.0
+offset_bottom = 95.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="ResumeButton" type="Button" parent="PausePanel/PauseButtons" unique_id=1228689681]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "▶ RIPRENDI"
+
+[node name="PauseMenuButton" type="Button" parent="PausePanel/PauseButtons" unique_id=1228689682]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "🏠 MENU"
+
 [node name="GameOverPanel" type="Panel" parent="." unique_id=1228689674]
 visible = false
 anchors_preset = 8
@@ -83,9 +215,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -320.0
-offset_top = -210.0
+offset_top = -230.0
 offset_right = 320.0
-offset_bottom = 210.0
+offset_bottom = 230.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -95,13 +227,28 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -280.0
-offset_top = 20.0
+offset_top = 16.0
 offset_right = 280.0
-offset_bottom = 75.0
+offset_bottom = 60.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 20
-text = "GAME OVER!
-Metri: 0 m | Record: 0 m"
+theme_override_font_sizes/font_size = 22
+text = "GAME OVER!"
+horizontal_alignment = 1
+
+[node name="StatsLabel" type="Label" parent="GameOverPanel" unique_id=636277769]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -290.0
+offset_top = 62.0
+offset_right = 290.0
+offset_bottom = 115.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.88, 0.35, 1)
+theme_override_font_sizes/font_size = 14
+text = "Metri: 0 m | Record: 0 m
+Canestri: 0/0 (0%) | Swish: 0 | Monete: +0 🪙"
 horizontal_alignment = 1
 
 [node name="UpgradesGrid" type="GridContainer" parent="GameOverPanel" unique_id=1984210394]
@@ -124,26 +271,38 @@ columns = 2
 [node name="PowerButton" type="Button" parent="GameOverPanel/UpgradesGrid" unique_id=1984210395]
 custom_minimum_size = Vector2(280, 48)
 layout_mode = 2
+theme_override_constants/icon_max_width = 20
 theme_override_font_sizes/font_size = 15
-text = "FORZA (Lv. 1/10) - 100 🪙"
+text = "FORZA (Lv. 1/10) - 100"
+icon = ExtResource("2_coin_icon")
+icon_alignment = 2
 
 [node name="AimButton" type="Button" parent="GameOverPanel/UpgradesGrid" unique_id=1984210396]
 custom_minimum_size = Vector2(280, 48)
 layout_mode = 2
+theme_override_constants/icon_max_width = 20
 theme_override_font_sizes/font_size = 15
-text = "MIRINO (Lv. 1/10) - 100 🪙"
+text = "MIRINO (Lv. 1/10) - 100"
+icon = ExtResource("2_coin_icon")
+icon_alignment = 2
 
 [node name="JumpButton" type="Button" parent="GameOverPanel/UpgradesGrid" unique_id=1984210397]
 custom_minimum_size = Vector2(280, 48)
 layout_mode = 2
+theme_override_constants/icon_max_width = 20
 theme_override_font_sizes/font_size = 15
-text = "SALTO (Lv. 1/10) - 100 🪙"
+text = "SALTO (Lv. 1/10) - 100"
+icon = ExtResource("2_coin_icon")
+icon_alignment = 2
 
 [node name="StaminaButton" type="Button" parent="GameOverPanel/UpgradesGrid" unique_id=1984210398]
 custom_minimum_size = Vector2(280, 48)
 layout_mode = 2
+theme_override_constants/icon_max_width = 20
 theme_override_font_sizes/font_size = 15
-text = "STAMINA (Lv. 1/10) - 100 🪙"
+text = "STAMINA (Lv. 1/10) - 100"
+icon = ExtResource("2_coin_icon")
+icon_alignment = 2
 
 [node name="ButtonsRow" type="HBoxContainer" parent="GameOverPanel" unique_id=923242518]
 layout_mode = 1

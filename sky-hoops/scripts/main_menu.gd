@@ -1,5 +1,7 @@
 extends Control
 
+const COIN_ICON: Texture2D = preload("res://assets/coin.svg")
+
 # Dati per il carosello degli Sport
 var sports_data: Array[Dictionary] = [
 	{
@@ -212,9 +214,11 @@ func refresh_upgrade_buttons() -> void:
 		var p_cost = GameManager.get_power_upgrade_cost()
 		if p_cost == -1:
 			btn_power.text = "FORZA (Lv. 10/10) - MAX"
+			btn_power.icon = null
 			btn_power.disabled = true
 		else:
-			btn_power.text = "FORZA (Lv. " + str(GameManager.power_level) + "/10) - " + str(p_cost) + " 🪙"
+			btn_power.text = "FORZA (Lv. " + str(GameManager.power_level) + "/10) - " + str(p_cost)
+			btn_power.icon = COIN_ICON
 			btn_power.disabled = (GameManager.coins < p_cost)
 
 	# 2. MIRINO
@@ -222,9 +226,11 @@ func refresh_upgrade_buttons() -> void:
 		var a_cost = GameManager.get_aim_upgrade_cost()
 		if a_cost == -1:
 			btn_aim.text = "MIRINO (Lv. 10/10) - MAX"
+			btn_aim.icon = null
 			btn_aim.disabled = true
 		else:
-			btn_aim.text = "MIRINO (Lv. " + str(GameManager.aim_level) + "/10) - " + str(a_cost) + " 🪙"
+			btn_aim.text = "MIRINO (Lv. " + str(GameManager.aim_level) + "/10) - " + str(a_cost)
+			btn_aim.icon = COIN_ICON
 			btn_aim.disabled = (GameManager.coins < a_cost)
 
 	# 3. SALTO
@@ -232,9 +238,11 @@ func refresh_upgrade_buttons() -> void:
 		var j_cost = GameManager.get_jump_upgrade_cost()
 		if j_cost == -1:
 			btn_jump.text = "SALTO (Lv. 10/10) - MAX"
+			btn_jump.icon = null
 			btn_jump.disabled = true
 		else:
-			btn_jump.text = "SALTO (Lv. " + str(GameManager.jump_level) + "/10) - " + str(j_cost) + " 🪙"
+			btn_jump.text = "SALTO (Lv. " + str(GameManager.jump_level) + "/10) - " + str(j_cost)
+			btn_jump.icon = COIN_ICON
 			btn_jump.disabled = (GameManager.coins < j_cost)
 
 	# 4. STAMINA
@@ -242,9 +250,11 @@ func refresh_upgrade_buttons() -> void:
 		var s_cost = GameManager.get_stamina_upgrade_cost()
 		if s_cost == -1:
 			btn_stamina.text = "STAMINA (Lv. 10/10) - MAX"
+			btn_stamina.icon = null
 			btn_stamina.disabled = true
 		else:
-			btn_stamina.text = "STAMINA (Lv. " + str(GameManager.stamina_level) + "/10) - " + str(s_cost) + " 🪙"
+			btn_stamina.text = "STAMINA (Lv. " + str(GameManager.stamina_level) + "/10) - " + str(s_cost)
+			btn_stamina.icon = COIN_ICON
 			btn_stamina.disabled = (GameManager.coins < s_cost)
 
 	# 5. SPECIAL ABILITY
@@ -253,9 +263,11 @@ func refresh_upgrade_buttons() -> void:
 		var sp_name = GameManager.get_special_ability_name()
 		if sp_cost == -1:
 			btn_special.text = sp_name
+			btn_special.icon = null
 			btn_special.disabled = true
 		else:
-			btn_special.text = "⭐ SBLOCCA: " + sp_name + " - " + str(sp_cost) + " 🪙"
+			btn_special.text = "⭐ SBLOCCA: " + sp_name + " - " + str(sp_cost)
+			btn_special.icon = COIN_ICON
 			btn_special.disabled = (GameManager.coins < sp_cost)
 
 	if special_desc:

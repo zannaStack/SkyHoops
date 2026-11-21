@@ -1,11 +1,13 @@
 [gd_scene format=3 uid="uid://ci8w88w08m3a"]
 
+[ext_resource type="Script" path="res://scripts/background.gd" id="1_bg_script"]
 [ext_resource type="Texture2D" uid="uid://c6s7f4a4p6hqa" path="res://assets/sky_clouds.svg" id="1_sky"]
 [ext_resource type="Texture2D" uid="uid://d3m8n7u6h2ywa" path="res://assets/distant_mountains.svg" id="2_mount"]
 [ext_resource type="Texture2D" uid="uid://b2k8f4a2p8hqa" path="res://assets/mid_hills.svg" id="3_hills"]
 
 [node name="Background" type="ParallaxBackground" unique_id=1849182001]
 layer = -10
+script = ExtResource("1_bg_script")
 
 [node name="LayerSky" type="ParallaxLayer" parent="." unique_id=1849182002]
 motion_scale = Vector2(0.05, 0.02)
