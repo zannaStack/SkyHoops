@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bsd78lqo0lwov"]
 
 [ext_resource type="PackedScene" uid="uid://8shnvnc2raqs" path="res://scenes/hoop.tscn" id="2_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://364idiygpdit" path="res://scenes/hud.tscn" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://y1nae216ywf6" path="res://scenes/player.tscn" id="3_sugp2"]
 
 [node name="Main" type="Node2D" unique_id=1691075669]
@@ -20,5 +21,7 @@ position = Vector2(86, 411)
 
 [node name="Hoop" parent="." unique_id=1457214946 instance=ExtResource("2_0wfyh")]
 position = Vector2(1400, 350)
+
+[node name="HUD" parent="." unique_id=1406803294 instance=ExtResource("3_jyhfs")]
 
 [connection signal="goal_scored" from="Hoop" to="Player" method="_on_hoop_goal_scored"]
