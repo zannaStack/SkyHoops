@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://5q0llfh6o84w"]
 
-[ext_resource type="Texture2D" uid="uid://dtjdww120xehc" path="res://icon.svg" id="1_7s4qf"]
 [ext_resource type="Script" uid="uid://dnkoncqxy04xk" path="res://scripts/ball.gd" id="1_cxlvu"]
+[ext_resource type="Texture2D" uid="uid://djkgcvybmdopo" path="res://assets/basketball.svg" id="2_cxlvu"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7fw7d"]
 bounce = 0.75
@@ -10,6 +10,7 @@ bounce = 0.75
 radius = 20.0
 
 [node name="Ball" type="RigidBody2D" unique_id=1967342746]
+collision_layer = 4
 physics_material_override = SubResource("PhysicsMaterial_7fw7d")
 script = ExtResource("1_cxlvu")
 
@@ -17,7 +18,5 @@ script = ExtResource("1_cxlvu")
 shape = SubResource("CircleShape2D_4b3kd")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1975210533]
-scale = Vector2(0.3, 0.3)
-texture = ExtResource("1_7s4qf")
-
-
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("2_cxlvu")

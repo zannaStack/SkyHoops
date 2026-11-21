@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" width="100" height="120">
+  <!-- Ombra sotto i piedi -->
+  <ellipse cx="50" cy="115" rx="22" ry="5" fill="#000" opacity="0.2"/>
+  
+  <!-- Gamba posteriore in corsa -->
+  <path d="M 46 75 L 30 95 L 20 90" stroke="#1d3557" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Scarpa posteriore -->
+  <ellipse cx="18" cy="90" rx="7" ry="4" fill="#e63946"/>
+
+  <!-- Gamba anteriore in slancio -->
+  <path d="M 54 75 L 70 92 L 82 105" stroke="#1d3557" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Scarpa anteriore -->
+  <ellipse cx="85" cy="106" rx="8" ry="4" fill="#e63946"/>
+
+  <!-- Busto / Canotta da Basket -->
+  <path d="M 38 42 L 62 42 L 58 78 L 42 78 Z" fill="#e63946" stroke="#222" stroke-width="2"/>
+  <rect x="42" y="70" width="16" height="8" fill="#1d3557"/>
+  <!-- Numero di maglia -->
+  <text x="50" y="62" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">7</text>
+
+  <!-- Testa e Viso -->
+  <circle cx="50" cy="26" r="16" fill="#fbc4ab"/>
+  <!-- Capelli / Fascia sportiva -->
+  <path d="M 34 24 Q 50 10 66 24" fill="#2b2d42"/>
+  <rect x="34" y="21" width="32" height="5" fill="#457b9d" rx="2"/>
+
+  <!-- Braccio anteriore proteso -->
+  <path d="M 58 46 L 75 52 L 88 42" stroke="#fbc4ab" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

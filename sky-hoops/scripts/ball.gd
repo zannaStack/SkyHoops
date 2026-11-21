@@ -1,6 +1,11 @@
 extends RigidBody2D
 
-# La palla è ora un puro proiettile fisico lanciato dal Player.
-# Si autodistrugge dopo 6 secondi per liberare memoria se finisce fuori mappa.
 func _ready() -> void:
-	get_tree().create_timer(6.0).timeout.connect(queue_free)
+	# Dopo 2.5 secondi dal tiro, avvia la dissolvenza
+	get_tree().create_timer(2.5).timeout.connect(fade_out_and_destroy)
+
+func fade_out_and_destroy() -> void:
+	# Effetto elegante: riduce l'opacità a zero in 0.5 secondi e poi elimina la palla
+	var tween = create_tween()
+	tween.tween_property(self, "modulate:a", 0.0, 0.5)
+	tween.tween_callback(queue_free)
