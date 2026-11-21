@@ -2,6 +2,14 @@ extends CanvasLayer
 
 const COIN_ICON: Texture2D = preload("res://assets/coin.svg")
 
+const COLOR_STAMINA_GREEN: Color = Color(0.2, 0.85, 0.35)
+const COLOR_STAMINA_YELLOW: Color = Color(0.96, 0.82, 0.16)
+const COLOR_STAMINA_RED: Color = Color(0.95, 0.22, 0.22)
+const COLOR_DAMAGE_FLASH: Color = Color(1.0, 0.1, 0.1)
+
+var stamina_fill_style: StyleBoxFlat = null
+var damage_flash_timer: float = 0.0
+
 @onready var stamina_bar: ProgressBar = $StaminaBar
 @onready var distance_label: Label = $DistanceLabel
 @onready var coin_label: Label = $CoinContainer/CoinLabel
@@ -28,6 +36,13 @@ const COIN_ICON: Texture2D = preload("res://assets/coin.svg")
 func _ready() -> void:
 	_ensure_nodes()
 	
+	if stamina_bar:
+		stamina_bar.pivot_offset = Vector2(200, 12)
+		var fill_box = stamina_bar.get_theme_stylebox("fill")
+		if fill_box is StyleBoxFlat:
+			stamina_fill_style = fill_box.duplicate()
+			stamina_bar.add_theme_stylebox_override("fill", stamina_fill_style)
+
 	if game_over_panel:
 		game_over_panel.visible = false
 	
@@ -102,12 +117,42 @@ func _ensure_nodes() -> void:
 		if not menu_button:
 			menu_button = game_over_panel.get_node_or_null("ButtonsRow/MenuButton")
 
+func _process(delta: float) -> void:
+	if damage_flash_timer > 0.0:
+		damage_flash_timer -= delta
+		if stamina_fill_style:
+			stamina_fill_style.bg_color = COLOR_DAMAGE_FLASH
+		if damage_flash_timer <= 0.0:
+			update_stamina_color()
+
 func update_stamina(value: float, max_val: float = -1.0) -> void:
 	_ensure_nodes()
 	if stamina_bar:
 		if max_val > 0.0:
 			stamina_bar.max_value = max_val
 		stamina_bar.value = value
+		if damage_flash_timer <= 0.0:
+			update_stamina_color()
+
+func update_stamina_color() -> void:
+	if not stamina_bar or not stamina_fill_style:
+		return
+	var pct: float = stamina_bar.value / max(stamina_bar.max_value, 1.0)
+	if pct > 0.50:
+		stamina_fill_style.bg_color = COLOR_STAMINA_GREEN
+	elif pct > 0.15:
+		stamina_fill_style.bg_color = COLOR_STAMINA_YELLOW
+	else:
+		stamina_fill_style.bg_color = COLOR_STAMINA_RED
+
+func flash_stamina_damage(duration: float = 0.5) -> void:
+	damage_flash_timer = duration
+	if stamina_fill_style:
+		stamina_fill_style.bg_color = COLOR_DAMAGE_FLASH
+	if stamina_bar:
+		var tween = create_tween()
+		tween.tween_property(stamina_bar, "scale", Vector2(1.04, 1.16), 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tween.tween_property(stamina_bar, "scale", Vector2(1.0, 1.0), 0.14)
 
 func update_distance(distance_meters: int) -> void:
 	_ensure_nodes()

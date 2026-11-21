@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://cbx0takj8dufj" path="res://scripts/trajectory_dots.gd" id="4_dqkch"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7fw7d"]
-radius = 24.0
+radius = 26.0
 
 [sub_resource type="Gradient" id="Gradient_player_fire"]
 colors = PackedColorArray(1, 0.5, 0.1, 0.85, 1, 0.2, 0, 0)
@@ -27,7 +27,7 @@ shape = SubResource("CircleShape2D_7fw7d")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=497611058]
 position = Vector2(0, -6)
-scale = Vector2(0.45, 0.45)
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_qhqgy")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1296315634]
@@ -35,8 +35,8 @@ offset = Vector2(180, -120)
 position_smoothing_enabled = true
 
 [node name="BallVisual" type="Sprite2D" parent="." unique_id=1659212538]
-position = Vector2(22, 4)
-scale = Vector2(0.38, 0.38)
+position = Vector2(24, 4)
+scale = Vector2(0.4, 0.4)
 texture = ExtResource("3_dqkch")
 
 [node name="BallLight" type="PointLight2D" parent="BallVisual" unique_id=1659212539]

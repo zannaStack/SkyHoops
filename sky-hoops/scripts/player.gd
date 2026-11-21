@@ -26,7 +26,8 @@ var can_dunk: bool = false
 var current_dunk_hoop: Node2D = null
 var was_on_floor: bool = true
 var dribble_timer: float = 0.0
-var base_ball_scale: Vector2 = Vector2(0.38, 0.38)
+const BASE_PLAYER_SCALE: Vector2 = Vector2(0.50, 0.50)
+var base_ball_scale: Vector2 = Vector2(0.40, 0.40)
 
 # Parametri Combo e modalità "On Fire"
 var combo_count: int = 0
@@ -205,8 +206,8 @@ func _physics_process(delta: float) -> void:
 	# Squash & Stretch all'atterraggio dopo un salto
 	if not was_on_floor and is_on_floor() and not is_game_over:
 		var land_tween = create_tween()
-		land_tween.tween_property($Sprite2D, "scale", Vector2(0.52, 0.38), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		land_tween.tween_property($Sprite2D, "scale", Vector2(0.45, 0.45), 0.12).set_trans(Tween.TRANS_SINE)
+		land_tween.tween_property($Sprite2D, "scale", Vector2(0.58, 0.42), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		land_tween.tween_property($Sprite2D, "scale", BASE_PLAYER_SCALE, 0.12).set_trans(Tween.TRANS_SINE)
 		GameManager.vibrate_light()
 	was_on_floor = is_on_floor()
 
@@ -237,8 +238,8 @@ func jump() -> void:
 	if is_on_floor() and not is_game_over:
 		velocity.y = -jump_force
 		var tween = create_tween()
-		tween.tween_property($Sprite2D, "scale", Vector2(0.35, 0.55), 0.08)
-		tween.tween_property($Sprite2D, "scale", Vector2(0.45, 0.45), 0.15)
+		tween.tween_property($Sprite2D, "scale", Vector2(0.40, 0.62), 0.08)
+		tween.tween_property($Sprite2D, "scale", BASE_PLAYER_SCALE, 0.15)
 
 # --- SISTEMA PALLEGGIO FISICO REALISTICO (DRIBBLING) ---
 func update_ball_dribble(delta: float) -> void:
@@ -348,7 +349,7 @@ func perform_slam_dunk(hoop: Node2D) -> void:
 	var tween = create_tween()
 	tween.tween_property(self, "global_position", dunk_target, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.parallel().tween_property($Sprite2D, "rotation", 0.35, 0.08)
-	tween.parallel().tween_property($Sprite2D, "scale", Vector2(0.55, 0.38), 0.08)
+	tween.parallel().tween_property($Sprite2D, "scale", Vector2(0.62, 0.42), 0.08)
 
 	# Istanzia il pallone ad altissima velocità verso il basso
 	var ball: RigidBody2D = BALL_SCENE.instantiate()
@@ -359,7 +360,7 @@ func perform_slam_dunk(hoop: Node2D) -> void:
 
 	# Rebound acrobatico del corridore
 	tween.tween_property($Sprite2D, "rotation", 0.0, 0.2)
-	tween.parallel().tween_property($Sprite2D, "scale", Vector2(0.45, 0.45), 0.2)
+	tween.parallel().tween_property($Sprite2D, "scale", BASE_PLAYER_SCALE, 0.2)
 	velocity.y = -220.0
 
 	get_tree().create_timer(1.2).timeout.connect(reload_ball)
@@ -491,8 +492,8 @@ func trigger_boost(is_micro: bool, bonus_coins: int = 1) -> void:
 	reload_ball()
 	
 	var tween = create_tween()
-	tween.tween_property($Sprite2D, "scale", Vector2(0.55, 0.35), 0.1)
-	tween.tween_property($Sprite2D, "scale", Vector2(0.45, 0.45), 0.2)
+	tween.tween_property($Sprite2D, "scale", Vector2(0.62, 0.40), 0.1)
+	tween.tween_property($Sprite2D, "scale", BASE_PLAYER_SCALE, 0.2)
 
 func reset_combo() -> void:
 	combo_count = 0

@@ -15,6 +15,8 @@ func _on_body_entered(body: Node2D) -> void:
 		# Sottrae 25 punti stamina
 		if "stamina" in body:
 			body.stamina = max(0.0, body.stamina - 25.0)
+			if "hud" in body and body.hud and body.hud.has_method("flash_stamina_damage"):
+				body.hud.flash_stamina_damage(0.5)
 		
 		# Camera shake per impatto doloroso
 		if body.has_method("add_camera_trauma"):
