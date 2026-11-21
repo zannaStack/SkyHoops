@@ -1,6 +1,7 @@
 extends Node2D
 
 const HOOP_SCENE: PackedScene = preload("res://scenes/hoop.tscn")
+const COIN_SCENE: PackedScene = preload("res://scenes/coin.tscn")
 
 @export var player_node: Node2D = null
 
@@ -85,6 +86,10 @@ func generate_next_chunk() -> void:
 	if start_x > 800.0:
 		spawn_hoop_in_chunk(chunk_root, start_x, end_x)
 
+	# 5. Spawna archi parabolici di monetine fluttuanti
+	if start_x > 400.0:
+		spawn_coin_arc_in_chunk(chunk_root, start_x, end_x)
+
 	current_generated_x = end_x
 
 func spawn_hoop_in_chunk(parent_chunk: Node2D, start_x: float, end_x: float) -> void:
@@ -98,6 +103,12 @@ func spawn_hoop_in_chunk(parent_chunk: Node2D, start_x: float, end_x: float) -> 
 	var is_micro_hoop = randf() < 0.25
 	hoop.is_micro = is_micro_hoop
 	
+	# Oltre 1500px, 35% di probabilità che il canestro sia mobile/oscillante verticalmente
+	if start_x > 1500.0 and randf() < 0.35:
+		hoop.is_oscillating = true
+		hoop.oscillation_amplitude = randf_range(35.0, 65.0)
+		hoop.oscillation_speed = randf_range(1.6, 2.6)
+	
 	var height_offset = randf_range(130.0, 210.0) if not is_micro_hoop else randf_range(170.0, 250.0)
 	hoop.position = Vector2(hoop_x, terrain_y - height_offset)
 	
@@ -106,3 +117,31 @@ func spawn_hoop_in_chunk(parent_chunk: Node2D, start_x: float, end_x: float) -> 
 		hoop.goal_scored.connect(player_node._on_hoop_goal_scored)
 		
 	parent_chunk.add_child(hoop)
+
+func spawn_coin_arc_in_chunk(parent_chunk: Node2D, start_x: float, end_x: float) -> void:
+	# 80% di probabilità di avere un arco di monete in questo chunk
+	if randf() > 0.80:
+		return
+
+	var num_coins: int = randi_range(5, 7)
+	var arc_width: float = randf_range(240.0, 320.0)
+	var arc_height: float = randf_range(70.0, 110.0)
+	
+	# Centro dell'arco ben posizionato all'interno del chunk
+	var arc_center_x: float = randf_range(start_x + arc_width * 0.6, end_x - arc_width * 0.6)
+	var arc_start_x: float = arc_center_x - (arc_width * 0.5)
+	
+	for i in range(num_coins):
+		var t: float = float(i) / float(num_coins - 1) # Normalizzato tra 0.0 e 1.0
+		var x: float = arc_start_x + (t * arc_width)
+		
+		# Quota base del terreno in quel punto
+		var terrain_y: float = 520.0 + sin(x * 0.003) * 90.0 + cos(x * 0.006) * 40.0
+		
+		# Parabola standard invertita: 4 * h * t * (1 - t)
+		var parabola_offset: float = 4.0 * arc_height * t * (1.0 - t)
+		var base_clearance: float = 45.0 # Altezza da terra per il punto più basso
+		
+		var coin = COIN_SCENE.instantiate()
+		coin.position = Vector2(x, terrain_y - base_clearance - parabola_offset)
+		parent_chunk.add_child(coin)

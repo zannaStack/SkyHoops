@@ -3,16 +3,29 @@ extends Area2D
 signal goal_scored(is_micro: bool)
 
 @export var is_micro: bool = false
+@export var is_oscillating: bool = false
+@export var oscillation_amplitude: float = 45.0
+@export var oscillation_speed: float = 2.0
 
+var initial_y: float = 0.0
+var time_passed: float = 0.0
 var has_scored: bool = false
 @onready var visual_sprite: Sprite2D = $VisualSprite
 @onready var goal_particles: CPUParticles2D = $GoalParticles
 
 func _ready() -> void:
+	initial_y = position.y
+	# Randomizza leggermente la fase iniziale per non farli oscillare tutti all'unisono
+	time_passed = randf_range(0.0, PI * 2)
 	body_entered.connect(_on_body_entered)
 	if is_micro:
 		scale = Vector2(0.65, 0.65)
 		modulate = Color(1.0, 0.82, 0.15) # Tinta dorata brillante per i canestri micro
+
+func _process(delta: float) -> void:
+	if is_oscillating:
+		time_passed += delta
+		position.y = initial_y + sin(time_passed * oscillation_speed) * oscillation_amplitude
 
 func _on_body_entered(body: Node2D) -> void:
 	# Controlla che sia la palla fisica e che non abbiamo già segnato in questo canestro

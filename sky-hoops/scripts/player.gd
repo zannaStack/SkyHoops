@@ -18,7 +18,15 @@ var max_visible_dots: int = 2
 @onready var ball_visual: Sprite2D = $BallVisual
 @onready var trajectory_dots: Node2D = $TrajectoryDots
 @onready var dust_particles: CPUParticles2D = $DustParticles
+@onready var fire_particles: CPUParticles2D = $FireParticles
 @onready var camera: Camera2D = $Camera2D
+
+# Parametri Combo e modalità "On Fire"
+var combo_count: int = 0
+var combo_timer: float = 0.0
+const COMBO_TIMEOUT: float = 7.5
+var is_on_fire: bool = false
+const ON_FIRE_THRESHOLD: int = 2
 
 # Parametri Camera Shake (Trauma-based model)
 var base_camera_offset: Vector2 = Vector2(180, -120)
@@ -105,6 +113,12 @@ func _physics_process(delta: float) -> void:
 			current_speed = base_speed
 	else:
 		current_speed = base_speed
+
+	# Decadimento timer Combo / On Fire
+	if combo_timer > 0.0:
+		combo_timer -= delta
+		if combo_timer <= 0.0:
+			reset_combo()
 
 	stamina -= stamina_decay_rate * delta
 	if stamina <= 0:
@@ -237,12 +251,24 @@ func trigger_boost(is_micro: bool) -> void:
 	if is_game_over:
 		return
 
+	# Incrementa la serie di canestri consecutivi
+	combo_count += 1
+	combo_timer = COMBO_TIMEOUT
+	if combo_count >= ON_FIRE_THRESHOLD:
+		is_on_fire = true
+		if fire_particles:
+			fire_particles.emitting = true
+	
+	if hud and hud.has_method("update_combo"):
+		hud.update_combo(combo_count, is_on_fire)
+
 	is_boosting = true
 	boost_timer = 2.0 if not is_micro else 3.5
 	current_speed = boost_speed if not is_micro else boost_speed * 1.3
 	add_camera_trauma(0.45 if not is_micro else 0.70)
 	
-	var earned_coins: int = 1 if not is_micro else 3
+	var base_coins: int = 1 if not is_micro else 3
+	var earned_coins: int = base_coins * (2 if is_on_fire else 1)
 	GameManager.add_coins(earned_coins)
 	if hud:
 		hud.update_coins(GameManager.coins)
@@ -254,9 +280,19 @@ func trigger_boost(is_micro: bool) -> void:
 	tween.tween_property($Sprite2D, "scale", Vector2(0.55, 0.35), 0.1)
 	tween.tween_property($Sprite2D, "scale", Vector2(0.45, 0.45), 0.2)
 
+func reset_combo() -> void:
+	combo_count = 0
+	combo_timer = 0.0
+	is_on_fire = false
+	if fire_particles:
+		fire_particles.emitting = false
+	if hud and hud.has_method("update_combo"):
+		hud.update_combo(0, false)
+
 func trigger_game_over() -> void:
 	is_game_over = true
 	Engine.time_scale = 1.0
+	reset_combo()
 	trajectory_dots.clear_dots()
 	var distance_meters: int = max(0, int(global_position.x / 50.0))
 	GameManager.update_high_score(distance_meters)
