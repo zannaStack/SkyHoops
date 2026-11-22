@@ -13,7 +13,8 @@ var damage_flash_timer: float = 0.0
 @onready var stamina_bar: ProgressBar = $StaminaBar
 @onready var distance_label: Label = $DistanceLabel
 @onready var coin_label: Label = $CoinContainer/CoinLabel
-@onready var combo_label: Label = $ComboLabel
+@onready var combo_container: HBoxContainer = get_node_or_null("ComboContainer")
+@onready var combo_label: Label = get_node_or_null("ComboContainer/ComboLabel") if has_node("ComboContainer/ComboLabel") else get_node_or_null("ComboLabel")
 @onready var pause_button: Button = $PauseButton
 @onready var pause_panel: Panel = $PausePanel
 @onready var resume_button: Button = $PausePanel/PauseButtons/ResumeButton
@@ -25,7 +26,8 @@ var damage_flash_timer: float = 0.0
 
 @onready var game_over_panel: Panel = $GameOverPanel
 @onready var game_over_label: Label = $GameOverPanel/GameOver
-@onready var stats_label: Label = $GameOverPanel/StatsLabel
+@onready var game_over_coin_label: Label = get_node_or_null("GameOverPanel/GameOverCoinContainer/GameOverCoinLabel")
+@onready var stats_label: Control = $GameOverPanel/StatsLabel
 @onready var power_button: Button = $GameOverPanel/UpgradesGrid/PowerButton
 @onready var aim_button: Button = $GameOverPanel/UpgradesGrid/AimButton
 @onready var jump_button: Button = $GameOverPanel/UpgradesGrid/JumpButton
@@ -96,6 +98,13 @@ func _ensure_nodes() -> void:
 			pause_menu_button = pause_panel.get_node_or_null("PauseButtons/PauseMenuButton")
 	if not record_banner:
 		record_banner = get_node_or_null("RecordBanner")
+	if not combo_container:
+		combo_container = get_node_or_null("ComboContainer")
+	if not combo_label:
+		if combo_container:
+			combo_label = combo_container.get_node_or_null("ComboLabel")
+		else:
+			combo_label = get_node_or_null("ComboLabel")
 	if not impact_flash:
 		impact_flash = get_node_or_null("ImpactFlash")
 	if not fire_border:
@@ -107,6 +116,8 @@ func _ensure_nodes() -> void:
 	if game_over_panel:
 		if not game_over_label:
 			game_over_label = game_over_panel.get_node_or_null("GameOver")
+		if not game_over_coin_label:
+			game_over_coin_label = game_over_panel.get_node_or_null("GameOverCoinContainer/GameOverCoinLabel")
 		if not stats_label:
 			stats_label = game_over_panel.get_node_or_null("StatsLabel")
 		if not power_button:
@@ -190,28 +201,25 @@ func set_dunk_mode(active: bool) -> void:
 
 func update_combo(combo_count: int, is_on_fire: bool) -> void:
 	_ensure_nodes()
-	if not combo_label:
-		combo_label = get_node_or_null("ComboLabel")
 	
 	if fire_border:
-		if is_on_fire:
-			fire_border.visible = true
-		else:
-			fire_border.visible = false
+		fire_border.visible = is_on_fire
 			
-	if not combo_label:
+	var target_display: CanvasItem = combo_container if combo_container else combo_label
+	if not target_display:
 		return
-	if is_on_fire and combo_count >= 2:
-		if not combo_label.visible:
+		
+	if is_on_fire and combo_count >= 1:
+		if not target_display.visible:
 			trigger_impact_flash(Color(1.0, 0.45, 0.1, 0.35))
-		combo_label.visible = true
-		combo_label.text = "🔥 ON FIRE! x" + str(combo_count) + " (x2 🪙)"
-		combo_label.modulate = Color(1.0, 0.85, 0.2)
+		target_display.visible = true
+		if combo_label:
+			combo_label.text = "🔥 ON FIRE! x" + str(combo_count) + " (2x"
 		var tween = create_tween()
-		tween.tween_property(combo_label, "scale", Vector2(1.25, 1.25), 0.1)
-		tween.tween_property(combo_label, "scale", Vector2(1.0, 1.0), 0.15)
+		tween.tween_property(target_display, "scale", Vector2(1.22, 1.22), 0.08)
+		tween.tween_property(target_display, "scale", Vector2(1.0, 1.0), 0.14)
 	else:
-		combo_label.visible = false
+		target_display.visible = false
 
 func show_new_record_banner(distance: int) -> void:
 	_ensure_nodes()
@@ -237,6 +245,9 @@ func show_game_over(final_distance: int, stats: Dictionary = {}) -> void:
 		game_over_panel.visible = true
 	if game_over_label:
 		game_over_label.text = "GAME OVER!"
+		
+	if game_over_coin_label:
+		game_over_coin_label.text = str(GameManager.coins)
 	
 	if stats_label:
 		var shots_taken = stats.get("shots_taken", 0)
@@ -245,8 +256,11 @@ func show_game_over(final_distance: int, stats: Dictionary = {}) -> void:
 		var coins_earned = stats.get("coins_earned", 0)
 		var accuracy = int((float(shots_scored) / float(max(1, shots_taken))) * 100.0) if shots_taken > 0 else 0
 		
-		stats_label.text = "Metri: " + str(final_distance) + " m | Record: " + str(GameManager.high_score) + " m\n"
-		stats_label.text += "Canestri: " + str(shots_scored) + "/" + str(shots_taken) + " (" + str(accuracy) + "%) | Swish: " + str(swishes) + " | Monete: +" + str(coins_earned) + " 🪙"
+		var stats_text = "[center]Metri: " + str(final_distance) + " m | Record: " + str(GameManager.high_score) + " m\n"
+		stats_text += "Canestri: " + str(shots_scored) + "/" + str(shots_taken) + " (" + str(accuracy) + "%) | Swish: " + str(swishes) + " | Monete: +" + str(coins_earned) + " [img=16]res://assets/coin.svg[/img][/center]"
+		
+		if "text" in stats_label:
+			stats_label.text = stats_text
 		
 	refresh_upgrade_buttons()
 
@@ -311,21 +325,29 @@ func refresh_upgrade_buttons() -> void:
 func _on_power_pressed() -> void:
 	if GameManager.upgrade_power():
 		update_coins(GameManager.coins)
+		if game_over_coin_label:
+			game_over_coin_label.text = str(GameManager.coins)
 		refresh_upgrade_buttons()
 
 func _on_aim_pressed() -> void:
 	if GameManager.upgrade_aim():
 		update_coins(GameManager.coins)
+		if game_over_coin_label:
+			game_over_coin_label.text = str(GameManager.coins)
 		refresh_upgrade_buttons()
 
 func _on_jump_pressed() -> void:
 	if GameManager.upgrade_jump():
 		update_coins(GameManager.coins)
+		if game_over_coin_label:
+			game_over_coin_label.text = str(GameManager.coins)
 		refresh_upgrade_buttons()
 
 func _on_stamina_pressed() -> void:
 	if GameManager.upgrade_stamina():
 		update_coins(GameManager.coins)
+		if game_over_coin_label:
+			game_over_coin_label.text = str(GameManager.coins)
 		refresh_upgrade_buttons()
 
 func _on_retry_pressed() -> void:

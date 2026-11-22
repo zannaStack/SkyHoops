@@ -116,19 +116,46 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 20
 text = "⏸"
 
-[node name="ComboLabel" type="Label" parent="." unique_id=2081239840]
+[node name="ComboContainer" type="HBoxContainer" parent="." unique_id=2081239840]
 visible = false
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -160.0
+offset_left = -170.0
 offset_top = 52.0
-offset_right = 160.0
-offset_bottom = 82.0
+offset_right = 170.0
+offset_bottom = 86.0
 grow_horizontal = 2
-pivot_offset = Vector2(160, 15)
-text = "🔥 ON FIRE! x2 (x2 🪙)"
-horizontal_alignment = 1
+pivot_offset = Vector2(170, 17)
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="ComboLabel" type="Label" parent="ComboContainer" unique_id=2081239848]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 20
+text = "🔥 ON FIRE! x1 (2x"
+vertical_alignment = 1
+
+[node name="ComboCoinIcon" type="TextureRect" parent="ComboContainer" unique_id=2081239849]
+custom_minimum_size = Vector2(22, 22)
+layout_mode = 2
+texture = ExtResource("2_coin_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ComboClose" type="Label" parent="ComboContainer" unique_id=2081239851]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 20
+text = ")"
+vertical_alignment = 1
 
 [node name="JumpButton" type="Button" parent="." unique_id=2081239841]
 anchors_preset = 2
@@ -259,7 +286,34 @@ theme_override_font_sizes/font_size = 22
 text = "GAME OVER!"
 horizontal_alignment = 1
 
-[node name="StatsLabel" type="Label" parent="GameOverPanel" unique_id=636277769]
+[node name="GameOverCoinContainer" type="HBoxContainer" parent="GameOverPanel" unique_id=636277770]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -170.0
+offset_top = 16.0
+offset_right = -20.0
+offset_bottom = 48.0
+grow_horizontal = 0
+theme_override_constants/separation = 6
+alignment = 2
+
+[node name="CoinIcon" type="TextureRect" parent="GameOverPanel/GameOverCoinContainer" unique_id=636277772]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("2_coin_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GameOverCoinLabel" type="Label" parent="GameOverPanel/GameOverCoinContainer" unique_id=636277771]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.35, 1)
+theme_override_font_sizes/font_size = 18
+text = "0"
+vertical_alignment = 1
+
+[node name="StatsLabel" type="RichTextLabel" parent="GameOverPanel" unique_id=636277769]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -267,13 +321,15 @@ anchor_right = 0.5
 offset_left = -290.0
 offset_top = 62.0
 offset_right = 290.0
-offset_bottom = 115.0
+offset_bottom = 120.0
 grow_horizontal = 2
-theme_override_colors/font_color = Color(1, 0.88, 0.35, 1)
-theme_override_font_sizes/font_size = 14
-text = "Metri: 0 m | Record: 0 m
-Canestri: 0/0 (0%) | Swish: 0 | Monete: +0 🪙"
-horizontal_alignment = 1
+theme_override_colors/default_color = Color(1, 0.88, 0.35, 1)
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "[center]Metri: 0 m | Record: 0 m
+Canestri: 0/0 (0%) | Swish: 0 | Monete: +0 [img=16]res://assets/coin.svg[/img][/center]"
+fit_content = true
+scroll_active = false
 
 [node name="UpgradesGrid" type="GridContainer" parent="GameOverPanel" unique_id=1984210394]
 layout_mode = 1

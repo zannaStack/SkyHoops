@@ -47,6 +47,10 @@ func _on_body_entered(body: Node2D) -> void:
 		
 		if (body.linear_velocity.y > -20.0 and rel_x < 34.0) or is_dunk:
 			has_scored = true
+			if "has_scored" in body:
+				body.has_scored = true
+			if "has_reported_result" in body:
+				body.has_reported_result = true
 			
 			# FISICA DELLA RETINA: frena l'inerzia orizzontale e accompagna la palla verso il basso
 			body.linear_velocity.x *= 0.15

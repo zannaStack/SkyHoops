@@ -162,12 +162,6 @@ func _physics_process(delta: float) -> void:
 		if not is_flying:
 			current_speed = base_speed
 
-	# Decadimento timer Combo / On Fire
-	if combo_timer > 0.0:
-		combo_timer -= delta
-		if combo_timer <= 0.0:
-			reset_combo()
-
 	# ABILITÀ SPECIALE 2: Stamina sempre piena per i primi 1000 metri!
 	if GameManager.special_ability_level >= 2 and distance_meters < 1000:
 		stamina = max_stamina
@@ -405,8 +399,6 @@ func perform_slam_dunk(hoop: Node2D) -> void:
 
 	get_tree().create_timer(1.2).timeout.connect(reload_ball)
 
-	get_tree().create_timer(1.2).timeout.connect(reload_ball)
-
 # --- GESTIONE PULSANTE TIRO DESTRO ---
 func _on_shoot_button_down() -> void:
 	if is_game_over or not has_ball:
@@ -473,11 +465,16 @@ func shoot_ball() -> void:
 	
 	var ball: RigidBody2D = BALL_SCENE.instantiate()
 	ball.global_position = ball_visual.global_position
+	ball.shot_missed.connect(_on_shot_missed)
 	get_parent().add_child(ball)
 	
 	var impulse: Vector2 = current_drag_vector * launch_force
 	ball.apply_central_impulse(impulse)
 	get_tree().create_timer(1.5).timeout.connect(reload_ball)
+
+func _on_shot_missed() -> void:
+	if not is_game_over:
+		reset_combo()
 
 func reload_ball() -> void:
 	if is_game_over:
@@ -507,13 +504,11 @@ func trigger_boost(is_micro: bool, bonus_coins: int = 1) -> void:
 	if bonus_coins >= 2:
 		perfect_swishes += 1
 
-	# Incrementa la serie di canestri consecutivi
+	# Incrementa la serie di canestri consecutivi (On Fire attivo fin dal 1° canestro)
 	combo_count += 1
-	combo_timer = COMBO_TIMEOUT
-	if combo_count >= ON_FIRE_THRESHOLD:
-		is_on_fire = true
-		if fire_particles:
-			fire_particles.emitting = true
+	is_on_fire = true
+	if fire_particles:
+		fire_particles.emitting = true
 	
 	if hud and hud.has_method("update_combo"):
 		hud.update_combo(combo_count, is_on_fire)
@@ -523,8 +518,9 @@ func trigger_boost(is_micro: bool, bonus_coins: int = 1) -> void:
 	current_speed = boost_speed if not is_micro else boost_speed * 1.3
 	add_camera_trauma(0.45 if not is_micro else 0.70)
 	
+	# Monete raddoppiate per ogni canestro con successo in modalità On Fire
 	var base_coins: int = bonus_coins if bonus_coins > 1 else (1 if not is_micro else 3)
-	var earned_coins: int = base_coins * (2 if is_on_fire else 1)
+	var earned_coins: int = base_coins * 2
 	coins_earned_this_run += earned_coins
 	GameManager.add_coins(earned_coins)
 	if hud:
