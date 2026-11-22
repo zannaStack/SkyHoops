@@ -203,7 +203,7 @@ func _physics_process(delta: float) -> void:
 	update_ball_dribble(delta)
 
 	velocity.x = current_speed
-	floor_snap_length = 20.0
+	floor_snap_length = 24.0 if is_on_floor() else 0.0
 	floor_constant_speed = true
 	move_and_slide()
 

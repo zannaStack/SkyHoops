@@ -187,20 +187,20 @@ func create_ground_segment(parent: Node2D, points: Array[Vector2], seg_start: fl
 	if points.size() < 2:
 		return
 
-	# 1. Collisione fisica continua (BUILD_SEGMENTS evita spigoli verticali interni tra chunk)
-	var static_body = StaticBody2D.new()
-	var col_poly = CollisionPolygon2D.new()
-	col_poly.build_mode = CollisionPolygon2D.BUILD_SEGMENTS
-	col_poly.polygon = PackedVector2Array(points)
-	static_body.add_child(col_poly)
-	parent.add_child(static_body)
-
-	# 2. Riempimento visivo terra sottostante
+	# Poligono solido continuo con fondo a 1800 (fondamentale per aderenza e floor snap di Godot 4)
 	var poly: Array[Vector2] = []
 	poly.append_array(points)
 	poly.append(Vector2(seg_end, 1800.0))
 	poly.append(Vector2(seg_start, 1800.0))
 
+	# 1. Collisione solida affidabile
+	var static_body = StaticBody2D.new()
+	var col_poly = CollisionPolygon2D.new()
+	col_poly.polygon = PackedVector2Array(poly)
+	static_body.add_child(col_poly)
+	parent.add_child(static_body)
+
+	# 2. Riempimento visivo terra sottostante
 	var ground_fill = Polygon2D.new()
 	ground_fill.polygon = PackedVector2Array(poly)
 	ground_fill.color = Color(0.38, 0.22, 0.13)
