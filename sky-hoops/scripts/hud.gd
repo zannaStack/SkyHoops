@@ -51,8 +51,13 @@ func _ready() -> void:
 	if record_banner:
 		record_banner.visible = false
 
-	if pause_button and not pause_button.pressed.is_connected(_on_pause_pressed):
-		pause_button.pressed.connect(_on_pause_pressed)
+	if pause_button:
+		pause_button.focus_mode = Control.FOCUS_NONE
+		if not pause_button.pressed.is_connected(_on_pause_pressed):
+			pause_button.pressed.connect(_on_pause_pressed)
+	var j_btn = get_node_or_null("JumpButton")
+	if j_btn: j_btn.focus_mode = Control.FOCUS_NONE
+	if shoot_button: shoot_button.focus_mode = Control.FOCUS_NONE
 	if resume_button and not resume_button.pressed.is_connected(_on_resume_pressed):
 		resume_button.pressed.connect(_on_resume_pressed)
 	if pause_menu_button and not pause_menu_button.pressed.is_connected(_on_menu_pressed):

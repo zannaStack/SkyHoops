@@ -82,12 +82,15 @@ func _ready() -> void:
 		
 		# Pulsante Salto (sinistra)
 		var jump_btn = hud.get_node_or_null("JumpButton")
-		if jump_btn and not jump_btn.pressed.is_connected(jump):
-			jump_btn.pressed.connect(jump)
+		if jump_btn:
+			jump_btn.focus_mode = Control.FOCUS_NONE
+			if not jump_btn.pressed.is_connected(jump):
+				jump_btn.pressed.connect(jump)
 			
 		# Pulsante Tiro + Slow Motion (destra)
 		var shoot_btn = hud.get_node_or_null("ShootButton")
 		if shoot_btn:
+			shoot_btn.focus_mode = Control.FOCUS_NONE
 			if not shoot_btn.button_down.is_connected(_on_shoot_button_down):
 				shoot_btn.button_down.connect(_on_shoot_button_down)
 			if not shoot_btn.button_up.is_connected(_on_shoot_button_up):
@@ -228,11 +231,20 @@ func _physics_process(delta: float) -> void:
 		var is_running_on_ground: bool = is_on_floor() and not is_game_over and velocity.x > 10.0
 		dust_particles.emitting = is_running_on_ground
 
-# Supporto salto da tastiera
+# Supporto tastiera (Salto con Spazio/Su/W, Tiro con F/E)
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_SPACE or event.keycode == KEY_UP:
+		if event.keycode == KEY_SPACE or event.keycode == KEY_UP or event.keycode == KEY_W:
 			jump()
+		elif event.keycode == KEY_F or event.keycode == KEY_E:
+			if can_dunk and current_dunk_hoop:
+				perform_slam_dunk(current_dunk_hoop)
+			elif has_ball and not is_button_charging:
+				_on_shoot_button_down()
+	elif event is InputEventKey and not event.pressed:
+		if event.keycode == KEY_F or event.keycode == KEY_E:
+			if is_button_charging:
+				_on_shoot_button_up()
 
 func jump() -> void:
 	if is_on_floor() and not is_game_over:
@@ -330,10 +342,19 @@ func perform_slam_dunk(hoop: Node2D) -> void:
 	has_ball = false
 	ball_visual.visible = false
 	can_dunk = false
-	if hud and hud.has_method("set_dunk_mode"):
-		hud.set_dunk_mode(false)
-	if hud and hud.has_method("trigger_impact_flash"):
-		hud.trigger_impact_flash(Color(1.0, 0.88, 0.2, 0.45))
+	is_button_charging = false
+	is_dragging = false
+	current_drag_vector = Vector2.ZERO
+	if trajectory_dots:
+		trajectory_dots.clear_dots()
+	if hud:
+		if hud.has_method("set_dunk_mode"):
+			hud.set_dunk_mode(false)
+		if hud.has_method("trigger_impact_flash"):
+			hud.trigger_impact_flash(Color(1.0, 0.88, 0.2, 0.45))
+		var shoot_btn = hud.get_node_or_null("ShootButton")
+		if shoot_btn:
+			shoot_btn.release_focus()
 
 	# Hitstop (Freeze Frame cinematico reale a mezz'aria)
 	Engine.time_scale = 0.08
