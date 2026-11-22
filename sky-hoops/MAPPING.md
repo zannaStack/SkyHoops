@@ -115,10 +115,12 @@ flowchart TD
 4. **Grafica Vettoriale e Icone UI**:
    - Non usare emoji unicode (es. `🪙`) per valute e asset di gioco. Usare sempre `res://assets/coin.svg` tramite `TextureRect` (`expand_mode = 1`, `stretch_mode = 5`) o tramite tag BBCode `[img=16]res://assets/coin.svg[/img]` nei nodi `RichTextLabel`.
 5. **Condizioni Slam Dunk (Schiacciata)**:
-   - Si attiva solo se il player è in volo, entro $dx \in [-15, 85]\text{ px}$, $dy \in [-130, 130]\text{ px}$ e la palla si trova fisicamente al di sopra del ferro (`ball_visual.y < hoop.y - 10`).
-   - La schiacciata esegue una piroetta a 360° e scavalca il ferro atterrando oltre il tabellone a $x + 55\text{ px}$.
+   - Si attiva solo se il player è in volo, entro $dx \in [-20, 105]\text{ px}$, $dy \in [-145, 145]\text{ px}$ e la palla si trova fisicamente al di sopra del ferro (`ball_visual.y < hoop.y - 10`).
+   - La schiacciata esegue una piroetta a 360° e scavalca il ferro atterrando oltre il tabellone a $x + 65\text{ px}$.
 6. **Animazione Scheletrica 2D (Rig Cutout & AnimationPlayer)**:
    - Il player usa una gerarchia `Rig` (`Node2D`) con componenti modulari SVG ad alta definizione in `assets/player_rig/`.
+   - Scala base atleta: `Vector2(0.75, 0.75)` (150% della scala originale per massima leggibilità su schermo 720p/1080p).
+   - Scala pallone da basket coordinata: `Vector2(0.55, 0.55)`.
    - `AnimationPlayer` controlla i cicli `run`, `jump`, `fall`, `dunk`, `idle` con interpolazione fluida a 60 FPS.
    - La cadenza della corsa si adatta dinamicamente: `anim_player.speed_scale = (current_speed / base_speed) * 1.15`.
    - L'inclinazione su salite e discese è gestita con `lerp_angle(rotation, floor_normal.angle() + PI / 2.0, 14.0 * delta)`.

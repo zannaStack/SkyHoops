@@ -28,8 +28,8 @@ var can_dunk: bool = false
 var current_dunk_hoop: Node2D = null
 var was_on_floor: bool = true
 var dribble_timer: float = 0.0
-const BASE_PLAYER_SCALE: Vector2 = Vector2(0.50, 0.50)
-var base_ball_scale: Vector2 = Vector2(0.40, 0.40)
+const BASE_PLAYER_SCALE: Vector2 = Vector2(0.75, 0.75)
+var base_ball_scale: Vector2 = Vector2(0.55, 0.55)
 
 # Parametri Combo e modalità "On Fire"
 var combo_count: int = 0
@@ -225,7 +225,7 @@ func _physics_process(delta: float) -> void:
 	if not was_on_floor and is_on_floor() and not is_game_over:
 		if rig:
 			var land_tween = create_tween()
-			land_tween.tween_property(rig, "scale", Vector2(0.58, 0.42), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			land_tween.tween_property(rig, "scale", BASE_PLAYER_SCALE * Vector2(1.16, 0.84), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 			land_tween.tween_property(rig, "scale", BASE_PLAYER_SCALE, 0.12).set_trans(Tween.TRANS_SINE)
 		GameManager.vibrate_light()
 	was_on_floor = is_on_floor()
@@ -265,7 +265,7 @@ func jump() -> void:
 			anim_player.play("jump", 0.08)
 		if rig:
 			var tween = create_tween()
-			tween.tween_property(rig, "scale", Vector2(0.40, 0.62), 0.08)
+			tween.tween_property(rig, "scale", BASE_PLAYER_SCALE * Vector2(0.80, 1.24), 0.08)
 			tween.tween_property(rig, "scale", BASE_PLAYER_SCALE, 0.15)
 
 # --- SISTEMA PALLEGGIO FISICO REALISTICO (DRIBBLING) ---
@@ -278,15 +278,15 @@ func update_ball_dribble(delta: float) -> void:
 
 	# 1. In fase di caricamento tiro (Aim con slow-motion)
 	if is_dragging or is_button_charging:
-		var aim_x = -18.0 if current_drag_vector.x < -10.0 else 22.0
-		var target_aim_pos = Vector2(aim_x, -24.0)
+		var aim_x = -24.0 if current_drag_vector.x < -10.0 else 30.0
+		var target_aim_pos = Vector2(aim_x, -32.0)
 		ball_visual.position = ball_visual.position.lerp(target_aim_pos, 16.0 * delta)
 		ball_visual.scale = ball_visual.scale.lerp(base_ball_scale, 14.0 * delta)
 		return
 
 	# 2. In Schiacciata pronta (Slam Dunk range)
 	if can_dunk:
-		var target_dunk_pos = Vector2(16.0, -32.0)
+		var target_dunk_pos = Vector2(22.0, -42.0)
 		ball_visual.position = ball_visual.position.lerp(target_dunk_pos, 14.0 * delta)
 		ball_visual.scale = ball_visual.scale.lerp(base_ball_scale, 14.0 * delta)
 		return
@@ -295,7 +295,7 @@ func update_ball_dribble(delta: float) -> void:
 	var is_flying: bool = (GameManager.special_ability_level >= 3 and int(global_position.x / 50.0) < 1000)
 	if not is_on_floor() or is_flying:
 		# Palla raccolta al petto/in controllo durante il balzo
-		var air_pos = Vector2(20.0, -8.0 + sin(Time.get_ticks_msec() * 0.007) * 3.0)
+		var air_pos = Vector2(26.0, -10.0 + sin(Time.get_ticks_msec() * 0.007) * 4.0)
 		ball_visual.position = ball_visual.position.lerp(air_pos, 12.0 * delta)
 		ball_visual.scale = ball_visual.scale.lerp(base_ball_scale, 12.0 * delta)
 		return
@@ -306,8 +306,8 @@ func update_ball_dribble(delta: float) -> void:
 
 	# Ciclo rimbalzo: 0 = mano in alto, 1 = tocco del suolo in basso
 	var cycle: float = abs(sin(dribble_timer))
-	var dribble_y: float = lerp(-2.0, 22.0, cycle)
-	var dribble_x: float = lerp(18.0, 26.0, cycle)
+	var dribble_y: float = lerp(-3.0, 30.0, cycle)
+	var dribble_x: float = lerp(24.0, 36.0, cycle)
 
 	ball_visual.position.x = dribble_x
 	ball_visual.position.y = dribble_y
@@ -334,11 +334,11 @@ func check_dunk_opportunity() -> void:
 		var dx: float = hoop.global_position.x - global_position.x
 		var dy: float = hoop.global_position.y - global_position.y
 
-		# CONDIZIONI PRECISE SCHIACCIATA:
-		# 1. Molto vicino orizzontalmente (da -15px a 85px dal ferro)
-		var is_close_x: bool = dx > -15.0 and dx < 85.0
+		# CONDIZIONI PRECISE SCHIACCIATA (adattate alle proporzioni del player 150%):
+		# 1. Molto vicino orizzontalmente (da -20px a 105px dal ferro)
+		var is_close_x: bool = dx > -20.0 and dx < 105.0
 		# 2. Vicino verticalmente alla quota canestro
-		var is_close_y: bool = abs(dy) < 130.0
+		var is_close_y: bool = abs(dy) < 145.0
 		# 3. La palla si trova INTERAMENTE SOPRA il canestro (Y minore = più in alto)
 		var is_ball_above_hoop: bool = ball_visual.global_position.y < (hoop.global_position.y - 10.0)
 
@@ -399,15 +399,15 @@ func perform_slam_dunk(hoop: Node2D) -> void:
 		anim_player.play("dunk", 0.05)
 
 	# FASE 1: Scatto atletico e inchiodata a due mani sul ferro
-	var slam_pos: Vector2 = hoop.global_position + Vector2(-10.0, -32.0)
+	var slam_pos: Vector2 = hoop.global_position + Vector2(-12.0, -40.0)
 	var tween = create_tween()
 	tween.tween_property(self, "global_position", slam_pos, 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	if rig:
 		tween.parallel().tween_property(rig, "rotation", 0.35, 0.06)
-		tween.parallel().tween_property(rig, "scale", Vector2(0.64, 0.40), 0.06)
+		tween.parallel().tween_property(rig, "scale", BASE_PLAYER_SCALE * Vector2(1.28, 0.80), 0.06)
 
 	# FASE 2: PIROETTA ACROBATICA (360° spin somersault) e proiezione fluida oltre il canestro
-	var exit_pos_x: float = hoop.global_position.x + 55.0 # Oltre il tabellone
+	var exit_pos_x: float = hoop.global_position.x + 65.0 # Oltre il tabellone
 	tween.tween_property(self, "global_position:x", exit_pos_x, 0.32).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	if rig:
 		tween.parallel().tween_property(rig, "rotation", 0.35 + TAU, 0.38).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
@@ -557,7 +557,7 @@ func trigger_boost(is_micro: bool, bonus_coins: int = 1) -> void:
 	
 	if rig:
 		var tween = create_tween()
-		tween.tween_property(rig, "scale", Vector2(0.62, 0.40), 0.1)
+		tween.tween_property(rig, "scale", BASE_PLAYER_SCALE * Vector2(1.24, 0.80), 0.1)
 		tween.tween_property(rig, "scale", BASE_PLAYER_SCALE, 0.2)
 
 func reset_combo() -> void:

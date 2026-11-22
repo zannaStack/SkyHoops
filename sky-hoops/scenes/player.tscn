@@ -14,7 +14,7 @@
 [ext_resource type="Texture2D" path="res://assets/player_rig/arm_forearm_front.svg" id="13_arm_forearm_front"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7fw7d"]
-radius = 26.0
+radius = 34.0
 
 [sub_resource type="Gradient" id="Gradient_player_fire"]
 colors = PackedColorArray(1, 0.5, 0.1, 0.85, 1, 0.2, 0, 0)
@@ -674,8 +674,8 @@ script = ExtResource("1_g2els")
 shape = SubResource("CircleShape2D_7fw7d")
 
 [node name="Rig" type="Node2D" parent="." unique_id=497611058]
-position = Vector2(0, -6)
-scale = Vector2(0.5, 0.5)
+position = Vector2(0, -9)
+scale = Vector2(0.75, 0.75)
 
 [node name="Shadow" type="Polygon2D" parent="Rig"]
 position = Vector2(0, 48)
@@ -761,17 +761,17 @@ offset = Vector2(180, -120)
 position_smoothing_enabled = true
 
 [node name="BallVisual" type="Sprite2D" parent="." unique_id=1659212538]
-position = Vector2(24, 4)
-scale = Vector2(0.4, 0.4)
+position = Vector2(34, 6)
+scale = Vector2(0.55, 0.55)
 texture = ExtResource("3_dqkch")
 
 [node name="BallLight" type="PointLight2D" parent="BallVisual" unique_id=1659212539]
 energy = 1.1
 texture = SubResource("GradientTexture2D_player_fire")
-texture_scale = 2.4
+texture_scale = 3.2
 
 [node name="DustParticles" type="CPUParticles2D" parent="." unique_id=1849201948]
-position = Vector2(-12, 22)
+position = Vector2(-16, 28)
 emitting = false
 amount = 16
 lifetime = 0.35
@@ -785,7 +785,7 @@ scale_amount_max = 4.5
 color = Color(0.85, 0.82, 0.75, 0.6)
 
 [node name="FireParticles" type="CPUParticles2D" parent="." unique_id=1849201949]
-position = Vector2(-14, -6)
+position = Vector2(-18, -10)
 emitting = false
 amount = 26
 lifetime = 0.45
