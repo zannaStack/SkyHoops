@@ -22,7 +22,17 @@ sky-hoops/
 ├── MAPPING.md                        # Questa mappa architetturale
 ├── assets/                           # Risorse grafiche vettoriali (SVG)
 │   ├── coin.svg                      # Icona moneta oro ad alta risoluzione
-│   ├── player_runner.svg             # Sprite atleta runner (corpo slanciato, sneakers rosse)
+│   ├── player_runner.svg             # Sprite atleta runner originale
+│   ├── player_rig/                   # Componenti modulari dello scheletro 2D (Skeletal Cutout)
+│   │   ├── torso.svg                 # Busto con canotta #23 e pantaloncini
+│   │   ├── head.svg                  # Testa, headband celeste, capelli, profilo concentrato
+│   │   ├── thigh_front.svg           # Coscia anteriore con compression sleeve nero
+│   │   ├── shin_front.svg            # Polpaccio, calzino a coste e sneaker Jordan anteriore
+│   │   ├── thigh_back.svg            # Coscia posteriore in ombra
+│   │   ├── shin_back.svg             # Polpaccio e sneaker posteriore con Air Bubble
+│   │   ├── arm_upper_front.svg       # Spalla e bicipite anteriore
+│   │   ├── arm_forearm_front.svg     # Avambraccio, polsino e mano aperta che guida il palleggio
+│   │   └── arm_back.svg              # Braccio posteriore per bilanciamento della corsa
 │   ├── basketball.svg                # Texture realistica del pallone da basket
 │   ├── hoop.svg                      # Tabellone, ferro e retina del canestro
 │   └── spike.svg                     # Ostacoli aculei a terra
@@ -30,7 +40,7 @@ sky-hoops/
 │   ├── game.tscn                     # Scena principale di gameplay (assembla Player, Terrain, Camera, HUD)
 │   ├── main_menu.tscn                # Menu iniziale, selezione shop/upgrade, record
 │   ├── hud.tscn                      # Overlay UI in-game (stamina, monete, combo on fire, controlli touch, game over)
-│   ├── player.tscn                   # CharacterBody2D del giocatore runner con visual palla e luci
+│   ├── player.tscn                   # CharacterBody2D del runner: Rig scheletrico 2D + AnimationPlayer + palla
 │   ├── hoop.tscn                     # Canestro interattivo (Area2D goal + corpi statici ferro/tabellone)
 │   ├── ball.tscn                     # RigidBody2D pallone tirato dal giocatore
 │   ├── bird.tscn                     # Uccello in volo (bersaglio per Trick Shot "Off the bird")
@@ -107,3 +117,8 @@ flowchart TD
 5. **Condizioni Slam Dunk (Schiacciata)**:
    - Si attiva solo se il player è in volo, entro $dx \in [-15, 85]\text{ px}$, $dy \in [-130, 130]\text{ px}$ e la palla si trova fisicamente al di sopra del ferro (`ball_visual.y < hoop.y - 10`).
    - La schiacciata esegue una piroetta a 360° e scavalca il ferro atterrando oltre il tabellone a $x + 55\text{ px}$.
+6. **Animazione Scheletrica 2D (Rig Cutout & AnimationPlayer)**:
+   - Il player usa una gerarchia `Rig` (`Node2D`) con componenti modulari SVG ad alta definizione in `assets/player_rig/`.
+   - `AnimationPlayer` controlla i cicli `run`, `jump`, `fall`, `dunk`, `idle` con interpolazione fluida a 60 FPS.
+   - La cadenza della corsa si adatta dinamicamente: `anim_player.speed_scale = (current_speed / base_speed) * 1.15`.
+   - L'inclinazione su salite e discese è gestita con `lerp_angle(rotation, floor_normal.angle() + PI / 2.0, 14.0 * delta)`.

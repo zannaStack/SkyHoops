@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 42" width="44" height="42">
+<defs>
+  <linearGradient id="skinBase" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#f5d0b0" />
+    <stop offset="50%" stop-color="#e2ab82" />
+    <stop offset="100%" stop-color="#c6855b" />
+  </linearGradient>
+  <linearGradient id="skinShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#d4976c" />
+    <stop offset="100%" stop-color="#a8653e" />
+  </linearGradient>
+  <linearGradient id="jerseyRed" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#f94144" />
+    <stop offset="45%" stop-color="#d90429" />
+    <stop offset="100%" stop-color="#900c27" />
+  </linearGradient>
+  <linearGradient id="jerseyFold" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#900c27" stop-opacity="0.6"/>
+    <stop offset="50%" stop-color="#d90429" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#ff758f" stop-opacity="0.3"/>
+  </linearGradient>
+  <linearGradient id="shortsDark" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#2b2d42" />
+    <stop offset="60%" stop-color="#1b1c29" />
+    <stop offset="100%" stop-color="#0e0f17" />
+  </linearGradient>
+  <linearGradient id="sneakerUpper" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#ffb703" />
+    <stop offset="50%" stop-color="#fb8500" />
+    <stop offset="100%" stop-color="#d90429" />
+  </linearGradient>
+  <linearGradient id="soleWhite" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#ffffff" />
+    <stop offset="70%" stop-color="#edf2f4" />
+    <stop offset="100%" stop-color="#8d99ae" />
+  </linearGradient>
+  <linearGradient id="compressionSleeve" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#1a1c23"/>
+    <stop offset="50%" stop-color="#323644"/>
+    <stop offset="100%" stop-color="#14151b"/>
+  </linearGradient>
+  <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#ffd166"/>
+    <stop offset="100%" stop-color="#f77f00"/>
+  </linearGradient>
+  <linearGradient id="hairFade" x1="0%" y1="100%" x2="0%" y2="0%">
+    <stop offset="0%" stop-color="#1b1a20" />
+    <stop offset="70%" stop-color="#100f14" />
+    <stop offset="100%" stop-color="#2a2734" />
+  </linearGradient>
+</defs>
+  <!-- Giunto ginocchio arrotondato -->
+  <circle cx="8" cy="6" r="5" fill="url(#skinBase)"/>
+  <!-- Polpaccio atletico sagomato -->
+  <path d="M 4 6 Q 13 14 16 23 Q 11 26 4 23 Q 2 16 4 6 Z" fill="url(#skinBase)"/>
+  <path d="M 7 10 Q 12 16 11 21" stroke="#d4976c" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  
+  <!-- Calzino alto sportivo con doppie strisce rosse -->
+  <path d="M 4 21 L 16 23 L 14 29 L 3 27 Z" fill="#ffffff" stroke="#ced4da" stroke-width="0.6"/>
+  <line x1="6" y1="23" x2="8" y2="27" stroke="#d90429" stroke-width="1.2"/>
+  <line x1="9" y1="24" x2="11" y2="28" stroke="#d90429" stroke-width="1.2"/>
+  
+  <!-- Sneaker Jordan High-Top Anteriore -->
+  <path d="M 3 27 L 17 28 Q 26 27 38 29 L 39 35 Q 26 37 4 35 L 2 31 Z" fill="url(#sneakerUpper)"/>
+  <path d="M 16 27 Q 22 29 28 30" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+  <path d="M 12 28 L 17 30" stroke="#1b1c29" stroke-width="1"/>
+  <!-- Suola bianca ammortizzata con inserto oro -->
+  <path d="M 2 34 L 39 35 L 38 38 L 1 37 Z" fill="url(#soleWhite)"/>
+  <line x1="10" y1="37" x2="30" y2="37.5" stroke="#ffb703" stroke-width="1.5"/>
+</svg>

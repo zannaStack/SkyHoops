@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 30" width="28" height="30">
+<defs>
+  <linearGradient id="skinBase" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#f5d0b0" />
+    <stop offset="50%" stop-color="#e2ab82" />
+    <stop offset="100%" stop-color="#c6855b" />
+  </linearGradient>
+  <linearGradient id="skinShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#d4976c" />
+    <stop offset="100%" stop-color="#a8653e" />
+  </linearGradient>
+  <linearGradient id="jerseyRed" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#f94144" />
+    <stop offset="45%" stop-color="#d90429" />
+    <stop offset="100%" stop-color="#900c27" />
+  </linearGradient>
+  <linearGradient id="jerseyFold" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#900c27" stop-opacity="0.6"/>
+    <stop offset="50%" stop-color="#d90429" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#ff758f" stop-opacity="0.3"/>
+  </linearGradient>
+  <linearGradient id="shortsDark" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#2b2d42" />
+    <stop offset="60%" stop-color="#1b1c29" />
+    <stop offset="100%" stop-color="#0e0f17" />
+  </linearGradient>
+  <linearGradient id="sneakerUpper" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#ffb703" />
+    <stop offset="50%" stop-color="#fb8500" />
+    <stop offset="100%" stop-color="#d90429" />
+  </linearGradient>
+  <linearGradient id="soleWhite" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#ffffff" />
+    <stop offset="70%" stop-color="#edf2f4" />
+    <stop offset="100%" stop-color="#8d99ae" />
+  </linearGradient>
+  <linearGradient id="compressionSleeve" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#1a1c23"/>
+    <stop offset="50%" stop-color="#323644"/>
+    <stop offset="100%" stop-color="#14151b"/>
+  </linearGradient>
+  <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#ffd166"/>
+    <stop offset="100%" stop-color="#f77f00"/>
+  </linearGradient>
+  <linearGradient id="hairFade" x1="0%" y1="100%" x2="0%" y2="0%">
+    <stop offset="0%" stop-color="#1b1a20" />
+    <stop offset="70%" stop-color="#100f14" />
+    <stop offset="100%" stop-color="#2a2734" />
+  </linearGradient>
+</defs>
+  <circle cx="10" cy="4" r="5.5" fill="#1b1c29"/>
+  <path d="M 5 4 L 16 4 L 22 23 Q 17 27 11 26 L 5 14 Z" fill="url(#skinShadow)"/>
+  <circle cx="16" cy="23" r="4" fill="url(#skinShadow)"/>
+</svg>

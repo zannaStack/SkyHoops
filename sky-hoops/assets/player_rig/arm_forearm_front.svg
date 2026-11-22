@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 26" width="36" height="26">
+<defs>
+  <linearGradient id="skinBase" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#f5d0b0" />
+    <stop offset="50%" stop-color="#e2ab82" />
+    <stop offset="100%" stop-color="#c6855b" />
+  </linearGradient>
+  <linearGradient id="skinShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#d4976c" />
+    <stop offset="100%" stop-color="#a8653e" />
+  </linearGradient>
+  <linearGradient id="jerseyRed" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#f94144" />
+    <stop offset="45%" stop-color="#d90429" />
+    <stop offset="100%" stop-color="#900c27" />
+  </linearGradient>
+  <linearGradient id="jerseyFold" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#900c27" stop-opacity="0.6"/>
+    <stop offset="50%" stop-color="#d90429" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#ff758f" stop-opacity="0.3"/>
+  </linearGradient>
+  <linearGradient id="shortsDark" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#2b2d42" />
+    <stop offset="60%" stop-color="#1b1c29" />
+    <stop offset="100%" stop-color="#0e0f17" />
+  </linearGradient>
+  <linearGradient id="sneakerUpper" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#ffb703" />
+    <stop offset="50%" stop-color="#fb8500" />
+    <stop offset="100%" stop-color="#d90429" />
+  </linearGradient>
+  <linearGradient id="soleWhite" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#ffffff" />
+    <stop offset="70%" stop-color="#edf2f4" />
+    <stop offset="100%" stop-color="#8d99ae" />
+  </linearGradient>
+  <linearGradient id="compressionSleeve" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#1a1c23"/>
+    <stop offset="50%" stop-color="#323644"/>
+    <stop offset="100%" stop-color="#14151b"/>
+  </linearGradient>
+  <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#ffd166"/>
+    <stop offset="100%" stop-color="#f77f00"/>
+  </linearGradient>
+  <linearGradient id="hairFade" x1="0%" y1="100%" x2="0%" y2="0%">
+    <stop offset="0%" stop-color="#1b1a20" />
+    <stop offset="70%" stop-color="#100f14" />
+    <stop offset="100%" stop-color="#2a2734" />
+  </linearGradient>
+</defs>
+  <!-- Giunto gomito -->
+  <circle cx="6" cy="8" r="4.5" fill="url(#skinBase)"/>
+  <!-- Avambraccio atletico -->
+  <path d="M 5 6 Q 16 7 24 5 Q 26 10 18 14 Q 10 15 5 11 Z" fill="url(#skinBase)"/>
+  <!-- Polsino sportivo in spugna bianca -->
+  <rect x="18" y="4" width="6" height="8" rx="2" fill="#ffffff" stroke="#e0e1dd" stroke-width="0.8" transform="rotate(-15 18 4)"/>
+  <!-- Mano con dita aperte rivolte verso il basso per spingere la palla -->
+  <path d="M 23 6 Q 30 4 35 6 Q 33 10 29 11 Q 34 13 32 16 Q 27 16 23 12 Z" fill="url(#skinBase)"/>
+</svg>

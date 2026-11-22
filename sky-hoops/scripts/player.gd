@@ -15,6 +15,8 @@ var launch_force: float = 12.0
 var boost_speed: float = 500.0
 var max_visible_dots: int = 2
 
+@onready var rig: Node2D = get_node_or_null("Rig")
+@onready var anim_player: AnimationPlayer = get_node_or_null("AnimationPlayer")
 @onready var ball_visual: Sprite2D = $BallVisual
 @onready var trajectory_dots: Node2D = $TrajectoryDots
 @onready var dust_particles: CPUParticles2D = $DustParticles
@@ -201,25 +203,40 @@ func _physics_process(delta: float) -> void:
 	floor_constant_speed = true
 	move_and_slide()
 
+	# GESTIONE ANIMAZIONI SCHELETRICHE 2D (Run, Jump, Fall, Idle)
+	if anim_player:
+		if is_game_over:
+			if anim_player.current_animation != "idle":
+				anim_player.play("idle", 0.15)
+		elif not is_on_floor() and not is_flying:
+			if velocity.y < -40.0:
+				if anim_player.current_animation != "jump":
+					anim_player.play("jump", 0.1)
+			else:
+				if anim_player.current_animation != "fall":
+					anim_player.play("fall", 0.12)
+		else:
+			if anim_player.current_animation != "run":
+				anim_player.play("run", 0.1)
+			# I passi accelerano proporzionalmente alla velocità reale della corsa!
+			anim_player.speed_scale = (current_speed / base_speed) * 1.15
+
 	# Squash & Stretch all'atterraggio dopo un salto
 	if not was_on_floor and is_on_floor() and not is_game_over:
-		var land_tween = create_tween()
-		land_tween.tween_property($Sprite2D, "scale", Vector2(0.58, 0.42), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		land_tween.tween_property($Sprite2D, "scale", BASE_PLAYER_SCALE, 0.12).set_trans(Tween.TRANS_SINE)
+		if rig:
+			var land_tween = create_tween()
+			land_tween.tween_property(rig, "scale", Vector2(0.58, 0.42), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			land_tween.tween_property(rig, "scale", BASE_PLAYER_SCALE, 0.12).set_trans(Tween.TRANS_SINE)
 		GameManager.vibrate_light()
 	was_on_floor = is_on_floor()
 
-	# Animazione Procedurale: allineamento pendenza colline e bobbing di corsa
+	# Allineamento dinamico alla pendenza del terreno (Salite e Discese)
 	if is_on_floor() and not is_game_over:
 		var floor_normal: Vector2 = get_floor_normal()
 		var target_rotation: float = floor_normal.angle() + PI / 2.0
 		rotation = lerp_angle(rotation, target_rotation, 14.0 * delta)
-		$Sprite2D.position.y = -6.0 + sin(global_position.x * 0.08) * 3.5
-		$Sprite2D.rotation = sin(global_position.x * 0.08) * 0.08
 	else:
 		rotation = lerp_angle(rotation, 0.0, 6.0 * delta)
-		$Sprite2D.position.y = lerp($Sprite2D.position.y, -6.0, 8.0 * delta)
-		$Sprite2D.rotation = lerp($Sprite2D.rotation, 0.0, 8.0 * delta)
 
 	# Gestione polvere ai piedi in base al contatto col suolo e movimento
 	if dust_particles:
@@ -244,9 +261,12 @@ func _unhandled_input(event: InputEvent) -> void:
 func jump() -> void:
 	if is_on_floor() and not is_game_over:
 		velocity.y = -jump_force
-		var tween = create_tween()
-		tween.tween_property($Sprite2D, "scale", Vector2(0.40, 0.62), 0.08)
-		tween.tween_property($Sprite2D, "scale", BASE_PLAYER_SCALE, 0.15)
+		if anim_player:
+			anim_player.play("jump", 0.08)
+		if rig:
+			var tween = create_tween()
+			tween.tween_property(rig, "scale", Vector2(0.40, 0.62), 0.08)
+			tween.tween_property(rig, "scale", BASE_PLAYER_SCALE, 0.15)
 
 # --- SISTEMA PALLEGGIO FISICO REALISTICO (DRIBBLING) ---
 func update_ball_dribble(delta: float) -> void:
@@ -375,18 +395,23 @@ func perform_slam_dunk(hoop: Node2D) -> void:
 	get_parent().add_child(ball)
 	ball.linear_velocity = Vector2(0.0, 850.0)
 
+	if anim_player:
+		anim_player.play("dunk", 0.05)
+
 	# FASE 1: Scatto atletico e inchiodata a due mani sul ferro
 	var slam_pos: Vector2 = hoop.global_position + Vector2(-10.0, -32.0)
 	var tween = create_tween()
 	tween.tween_property(self, "global_position", slam_pos, 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.parallel().tween_property($Sprite2D, "rotation", 0.35, 0.06)
-	tween.parallel().tween_property($Sprite2D, "scale", Vector2(0.64, 0.40), 0.06)
+	if rig:
+		tween.parallel().tween_property(rig, "rotation", 0.35, 0.06)
+		tween.parallel().tween_property(rig, "scale", Vector2(0.64, 0.40), 0.06)
 
 	# FASE 2: PIROETTA ACROBATICA (360° spin somersault) e proiezione fluida oltre il canestro
 	var exit_pos_x: float = hoop.global_position.x + 55.0 # Oltre il tabellone
 	tween.tween_property(self, "global_position:x", exit_pos_x, 0.32).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.parallel().tween_property($Sprite2D, "rotation", 0.35 + TAU, 0.38).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween.parallel().tween_property($Sprite2D, "scale", BASE_PLAYER_SCALE, 0.25)
+	if rig:
+		tween.parallel().tween_property(rig, "rotation", 0.35 + TAU, 0.38).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween.parallel().tween_property(rig, "scale", BASE_PLAYER_SCALE, 0.25)
 
 	# Inerzia per cadere con naturalezza sotto e oltre il ferro verso il terreno
 	velocity.x = current_speed * 1.35
@@ -394,7 +419,8 @@ func perform_slam_dunk(hoop: Node2D) -> void:
 
 	# Ripristina rotazione a 0.0 al termine della piroetta
 	tween.tween_callback(func():
-		$Sprite2D.rotation = 0.0
+		if rig:
+			rig.rotation = 0.0
 	)
 
 	get_tree().create_timer(1.2).timeout.connect(reload_ball)
@@ -529,9 +555,10 @@ func trigger_boost(is_micro: bool, bonus_coins: int = 1) -> void:
 	stamina = min(max_stamina, stamina + (35.0 if not is_micro else 60.0))
 	reload_ball()
 	
-	var tween = create_tween()
-	tween.tween_property($Sprite2D, "scale", Vector2(0.62, 0.40), 0.1)
-	tween.tween_property($Sprite2D, "scale", BASE_PLAYER_SCALE, 0.2)
+	if rig:
+		var tween = create_tween()
+		tween.tween_property(rig, "scale", Vector2(0.62, 0.40), 0.1)
+		tween.tween_property(rig, "scale", BASE_PLAYER_SCALE, 0.2)
 
 func reset_combo() -> void:
 	combo_count = 0
