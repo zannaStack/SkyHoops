@@ -10,10 +10,24 @@ const ENERGY_SCENE: PackedScene = preload("res://scenes/pickup_energy.tscn")
 
 # Parametri matematici del terreno ondulato
 var chunk_width: float = 1200.0
-var step_x: float = 35.0 # Risoluzione della curva per renderla ancora più morbida
+var step_x: float = 24.0 # 1200 / 24 = esattamente 50 passi senza residuo o interruzioni
 var current_generated_x: float = 0.0
 
 var active_chunks: Array[Node2D] = []
+
+func get_terrain_y(x: float) -> float:
+	return 520.0 + sin(x * 0.003) * 90.0 + cos(x * 0.006) * 40.0
+
+# Campiona i punti della collina garantendo continuità matematica assoluta tra i chunk
+func sample_surface_points(from_x: float, to_x: float) -> Array[Vector2]:
+	var points: Array[Vector2] = []
+	var x: float = from_x
+	while x < to_x:
+		points.append(Vector2(x, get_terrain_y(x)))
+		x += step_x
+	# Punto finale obbligatorio esattamente al confine to_x
+	points.append(Vector2(to_x, get_terrain_y(to_x)))
+	return points
 
 func _ready() -> void:
 	if not player_node:
@@ -57,31 +71,15 @@ func generate_next_chunk() -> void:
 	var gap_end_x: float = gap_center_x + (gap_width * 0.5)
 
 	if not has_gap:
-		# Calcola i punti continui della superficie ondulata
-		var surface_points: Array[Vector2] = []
-		var x = start_x
-		while x <= end_x:
-			var y = 520.0 + sin(x * 0.003) * 90.0 + cos(x * 0.006) * 40.0
-			surface_points.append(Vector2(x, y))
-			x += step_x
+		var surface_points = sample_surface_points(start_x, end_x)
 		create_ground_segment(chunk_root, surface_points, start_x, end_x)
 	else:
 		# Sezione A (prima del baratro)
-		var surface_A: Array[Vector2] = []
-		var x_A = start_x
-		while x_A <= gap_start_x:
-			var y = 520.0 + sin(x_A * 0.003) * 90.0 + cos(x_A * 0.006) * 40.0
-			surface_A.append(Vector2(x_A, y))
-			x_A += step_x
+		var surface_A = sample_surface_points(start_x, gap_start_x)
 		create_ground_segment(chunk_root, surface_A, start_x, gap_start_x)
 
 		# Sezione B (dopo il baratro)
-		var surface_B: Array[Vector2] = []
-		var x_B = gap_end_x
-		while x_B <= end_x:
-			var y = 520.0 + sin(x_B * 0.003) * 90.0 + cos(x_B * 0.006) * 40.0
-			surface_B.append(Vector2(x_B, y))
-			x_B += step_x
+		var surface_B = sample_surface_points(gap_end_x, end_x)
 		create_ground_segment(chunk_root, surface_B, gap_end_x, end_x)
 
 		# Spawna un arco guida di monete direttamente sopra il baratro
@@ -188,25 +186,34 @@ func spawn_energy_in_chunk(parent_chunk: Node2D, start_x: float, end_x: float) -
 func create_ground_segment(parent: Node2D, points: Array[Vector2], seg_start: float, seg_end: float) -> void:
 	if points.size() < 2:
 		return
+
+	# 1. Collisione fisica continua (BUILD_SEGMENTS evita spigoli verticali interni tra chunk)
 	var static_body = StaticBody2D.new()
 	var col_poly = CollisionPolygon2D.new()
+	col_poly.build_mode = CollisionPolygon2D.BUILD_SEGMENTS
+	col_poly.polygon = PackedVector2Array(points)
+	static_body.add_child(col_poly)
+	parent.add_child(static_body)
+
+	# 2. Riempimento visivo terra sottostante
 	var poly: Array[Vector2] = []
 	poly.append_array(points)
 	poly.append(Vector2(seg_end, 1800.0))
 	poly.append(Vector2(seg_start, 1800.0))
-	col_poly.polygon = PackedVector2Array(poly)
-	static_body.add_child(col_poly)
-	parent.add_child(static_body)
 
 	var ground_fill = Polygon2D.new()
 	ground_fill.polygon = PackedVector2Array(poly)
 	ground_fill.color = Color(0.38, 0.22, 0.13)
 	parent.add_child(ground_fill)
 
+	# 3. Superficie d'erba verde continua con giunture arrotondate
 	var grass_line = Line2D.new()
 	grass_line.points = PackedVector2Array(points)
-	grass_line.width = 8.0
+	grass_line.width = 9.0
 	grass_line.default_color = Color(0.24, 0.72, 0.30)
+	grass_line.joint_mode = Line2D.LINE_JOINT_ROUND
+	grass_line.begin_cap_mode = Line2D.LINE_CAP_ROUND
+	grass_line.end_cap_mode = Line2D.LINE_CAP_ROUND
 	parent.add_child(grass_line)
 
 func spawn_gap_coin_arc(parent_chunk: Node2D, gap_start: float, gap_end: float) -> void:

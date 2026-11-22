@@ -203,7 +203,8 @@ func _physics_process(delta: float) -> void:
 	update_ball_dribble(delta)
 
 	velocity.x = current_speed
-	floor_snap_length = 12.0
+	floor_snap_length = 20.0
+	floor_constant_speed = true
 	move_and_slide()
 
 	# Squash & Stretch all'atterraggio dopo un salto
