@@ -120,7 +120,7 @@ flowchart TD
 6. **Animazione Scheletrica 2D (Rig Cutout & AnimationPlayer)**:
    - Il player usa una gerarchia `Rig` (`Node2D`) con componenti modulari SVG ad alta definizione in `assets/player_rig/`.
    - Scala base atleta: `Vector2(0.75, 0.75)` (150% della scala originale per massima leggibilità su schermo 720p/1080p).
-   - Scala pallone da basket coordinata: `Vector2(0.55, 0.55)`.
+   - Scala pallone da basket: `Vector2(0.40, 0.40)` (perfettamente identica a `ball.tscn`).
    - `AnimationPlayer` controlla i cicli `run`, `jump`, `fall`, `dunk`, `idle` con interpolazione fluida a 60 FPS.
    - La cadenza della corsa si adatta dinamicamente: `anim_player.speed_scale = (current_speed / base_speed) * 1.15`.
    - L'inclinazione su salite e discese è gestita con `lerp_angle(rotation, floor_normal.angle() + PI / 2.0, 14.0 * delta)`.

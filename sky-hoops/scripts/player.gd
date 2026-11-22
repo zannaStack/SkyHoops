@@ -29,7 +29,7 @@ var current_dunk_hoop: Node2D = null
 var was_on_floor: bool = true
 var dribble_timer: float = 0.0
 const BASE_PLAYER_SCALE: Vector2 = Vector2(0.75, 0.75)
-var base_ball_scale: Vector2 = Vector2(0.55, 0.55)
+var base_ball_scale: Vector2 = Vector2(0.40, 0.40)
 
 # Parametri Combo e modalità "On Fire"
 var combo_count: int = 0
