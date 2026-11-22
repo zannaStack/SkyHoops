@@ -110,11 +110,11 @@ func _on_body_entered(body: Node2D) -> void:
 			
 			# Effetto Swish a molla (Squash & Stretch della retina)
 			if visual_sprite:
-				var stretch_target = Vector2(0.72, 1.65) if is_dunk else Vector2(0.82, 1.45)
+				var stretch_target = Vector2(0.65, 1.85) if is_dunk else Vector2(0.82, 1.45)
 				var tween = create_tween()
 				tween.tween_property(visual_sprite, "scale", stretch_target, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-				tween.tween_property(visual_sprite, "scale", Vector2(1.14, 0.86), 0.12).set_trans(Tween.TRANS_SINE)
-				tween.tween_property(visual_sprite, "scale", Vector2(1.0, 1.0), 0.22).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+				tween.tween_property(visual_sprite, "scale", Vector2(1.18, 0.82), 0.12).set_trans(Tween.TRANS_SINE)
+				tween.tween_property(visual_sprite, "scale", Vector2(1.0, 1.0), 0.24).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
 func show_floating_text(custom_text: String) -> void:
 	var label = Label.new()

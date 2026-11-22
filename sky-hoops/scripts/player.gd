@@ -318,8 +318,16 @@ func check_dunk_opportunity() -> void:
 			continue
 		var dx: float = hoop.global_position.x - global_position.x
 		var dy: float = hoop.global_position.y - global_position.y
-		# Raggio di schiacciata: da -30 a 240px orizzontali e tra -140 e 150px verticali
-		if dx > -30.0 and dx < 240.0 and abs(dy) < 160.0:
+
+		# CONDIZIONI PRECISE SCHIACCIATA:
+		# 1. Molto vicino orizzontalmente (da -15px a 85px dal ferro)
+		var is_close_x: bool = dx > -15.0 and dx < 85.0
+		# 2. Vicino verticalmente alla quota canestro
+		var is_close_y: bool = abs(dy) < 130.0
+		# 3. La palla si trova INTERAMENTE SOPRA il canestro (Y minore = più in alto)
+		var is_ball_above_hoop: bool = ball_visual.global_position.y < (hoop.global_position.y - 10.0)
+
+		if is_close_x and is_close_y and is_ball_above_hoop:
 			var dist = Vector2(dx, dy).length()
 			if dist < min_dist:
 				min_dist = dist
@@ -356,33 +364,45 @@ func perform_slam_dunk(hoop: Node2D) -> void:
 		if shoot_btn:
 			shoot_btn.release_focus()
 
-	# Hitstop (Freeze Frame cinematico reale a mezz'aria)
+	# Hitstop (Freeze Frame cinematico a mezz'aria durante l'inchiodata)
 	Engine.time_scale = 0.08
-	get_tree().create_timer(0.12, true, false, true).timeout.connect(func():
+	get_tree().create_timer(0.10, true, false, true).timeout.connect(func():
 		Engine.time_scale = 1.0
 	)
 
 	add_camera_trauma(0.85)
 	GameManager.vibrate_double()
 
-	# Posa atletica schiacciata: scatto acrobatico sopra il ferro
-	var dunk_target: Vector2 = hoop.global_position + Vector2(-24.0, -38.0)
-	var tween = create_tween()
-	tween.tween_property(self, "global_position", dunk_target, 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.parallel().tween_property($Sprite2D, "rotation", 0.35, 0.08)
-	tween.parallel().tween_property($Sprite2D, "scale", Vector2(0.62, 0.42), 0.08)
-
-	# Istanzia il pallone ad altissima velocità verso il basso
+	# Istanzia il pallone ad altissima velocità verso il basso attraverso la retina
 	var ball: RigidBody2D = BALL_SCENE.instantiate()
-	ball.global_position = hoop.global_position + Vector2(0.0, -22.0)
+	ball.global_position = hoop.global_position + Vector2(0.0, -20.0)
 	ball.is_dunk = true
 	get_parent().add_child(ball)
-	ball.linear_velocity = Vector2(10.0, 750.0)
+	ball.linear_velocity = Vector2(0.0, 850.0)
 
-	# Rebound acrobatico del corridore
-	tween.tween_property($Sprite2D, "rotation", 0.0, 0.2)
-	tween.parallel().tween_property($Sprite2D, "scale", BASE_PLAYER_SCALE, 0.2)
-	velocity.y = -220.0
+	# FASE 1: Scatto atletico e inchiodata a due mani sul ferro
+	var slam_pos: Vector2 = hoop.global_position + Vector2(-10.0, -32.0)
+	var tween = create_tween()
+	tween.tween_property(self, "global_position", slam_pos, 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property($Sprite2D, "rotation", 0.35, 0.06)
+	tween.parallel().tween_property($Sprite2D, "scale", Vector2(0.64, 0.40), 0.06)
+
+	# FASE 2: PIROETTA ACROBATICA (360° spin somersault) e proiezione fluida oltre il canestro
+	var exit_pos_x: float = hoop.global_position.x + 55.0 # Oltre il tabellone
+	tween.tween_property(self, "global_position:x", exit_pos_x, 0.32).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property($Sprite2D, "rotation", 0.35 + TAU, 0.38).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property($Sprite2D, "scale", BASE_PLAYER_SCALE, 0.25)
+
+	# Inerzia per cadere con naturalezza sotto e oltre il ferro verso il terreno
+	velocity.x = current_speed * 1.35
+	velocity.y = 150.0
+
+	# Ripristina rotazione a 0.0 al termine della piroetta
+	tween.tween_callback(func():
+		$Sprite2D.rotation = 0.0
+	)
+
+	get_tree().create_timer(1.2).timeout.connect(reload_ball)
 
 	get_tree().create_timer(1.2).timeout.connect(reload_ball)
 

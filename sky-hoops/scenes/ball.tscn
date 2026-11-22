@@ -20,6 +20,7 @@ fill_to = Vector2(0.85, 0.85)
 
 [node name="Ball" type="RigidBody2D" unique_id=1967342746]
 collision_layer = 4
+collision_mask = 9
 physics_material_override = SubResource("PhysicsMaterial_7fw7d")
 contact_monitor = true
 max_contacts_reported = 4

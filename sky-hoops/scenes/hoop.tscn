@@ -45,8 +45,8 @@ offset = Vector2(16, 0)
 
 [node name="RimLeft" type="StaticBody2D" parent="." unique_id=1971157256]
 position = Vector2(-34, 0)
-collision_layer = 1
-collision_mask = 7
+collision_layer = 8
+collision_mask = 0
 physics_material_override = SubResource("PhysicsMaterial_rim")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RimLeft" unique_id=37198135]
@@ -54,8 +54,8 @@ shape = SubResource("CircleShape2D_rim")
 
 [node name="RimRight" type="StaticBody2D" parent="." unique_id=554700612]
 position = Vector2(34, 0)
-collision_layer = 1
-collision_mask = 7
+collision_layer = 8
+collision_mask = 0
 physics_material_override = SubResource("PhysicsMaterial_rim")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RimRight" unique_id=1637186649]
@@ -63,8 +63,8 @@ shape = SubResource("CircleShape2D_rim")
 
 [node name="Backboard" type="StaticBody2D" parent="." unique_id=554700613]
 position = Vector2(57, 0)
-collision_layer = 1
-collision_mask = 7
+collision_layer = 8
+collision_mask = 0
 physics_material_override = SubResource("PhysicsMaterial_backboard")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Backboard" unique_id=1637186650]
