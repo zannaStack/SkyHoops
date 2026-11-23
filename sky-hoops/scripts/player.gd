@@ -28,7 +28,7 @@ var can_dunk: bool = false
 var current_dunk_hoop: Node2D = null
 var was_on_floor: bool = true
 var dribble_timer: float = 0.0
-const BASE_PLAYER_SCALE: Vector2 = Vector2(0.75, 0.75)
+const BASE_PLAYER_SCALE: Vector2 = Vector2(1, 1)
 var base_ball_scale: Vector2 = Vector2(0.40, 0.40)
 
 # Parametri Combo e modalità "On Fire"
@@ -70,6 +70,7 @@ var current_drag_vector: Vector2 = Vector2.ZERO
 var hud: CanvasLayer = null
 
 func _ready() -> void:
+	add_to_group("player")
 	old_high_score = GameManager.high_score
 	if camera:
 		base_camera_offset = camera.offset
@@ -99,8 +100,10 @@ func _ready() -> void:
 				shoot_btn.button_up.connect(_on_shoot_button_up)
 
 func apply_upgrades_from_manager() -> void:
-	launch_force = 12.0 + (GameManager.power_level * 1.5)
-	boost_speed = 500.0 + (GameManager.power_level * 25.0)
+	base_speed = 280.0 + ((GameManager.speed_level - 1) * 20.0)
+	current_speed = base_speed
+	boost_speed = 500.0 + ((GameManager.speed_level - 1) * 32.0)
+	launch_force = 16.0
 	max_visible_dots = clamp(GameManager.aim_level + 1, 2, 10)
 	jump_force = 480.0 + ((GameManager.jump_level - 1) * 32.0)
 	max_stamina = 100.0 + ((GameManager.stamina_level - 1) * 20.0)
@@ -219,7 +222,7 @@ func _physics_process(delta: float) -> void:
 			if anim_player.current_animation != "run":
 				anim_player.play("run", 0.1)
 			# I passi accelerano proporzionalmente alla velocità reale della corsa!
-			anim_player.speed_scale = (current_speed / base_speed) * 1.15
+			anim_player.speed_scale = (current_speed / 280.0) * 1.15
 
 	# Squash & Stretch all'atterraggio dopo un salto
 	if not was_on_floor and is_on_floor() and not is_game_over:
@@ -521,13 +524,13 @@ func draw_trajectory() -> void:
 	
 	trajectory_dots.update_dots(dots_array)
 
-func trigger_boost(is_micro: bool, bonus_coins: int = 1) -> void:
+func trigger_boost(is_micro: bool, bonus_coins: int = 35) -> void:
 	if is_game_over:
 		return
 
 	# Statistiche tiri e canestri
 	shots_scored += 1
-	if bonus_coins >= 2:
+	if bonus_coins >= 30:
 		perfect_swishes += 1
 
 	# Incrementa la serie di canestri consecutivi (On Fire attivo fin dal 1° canestro)
@@ -544,9 +547,8 @@ func trigger_boost(is_micro: bool, bonus_coins: int = 1) -> void:
 	current_speed = boost_speed if not is_micro else boost_speed * 1.3
 	add_camera_trauma(0.45 if not is_micro else 0.70)
 	
-	# Monete raddoppiate per ogni canestro con successo in modalità On Fire
-	var base_coins: int = bonus_coins if bonus_coins > 1 else (1 if not is_micro else 3)
-	var earned_coins: int = base_coins * 2
+	# Accredita direttamente il bottino guadagnato dal canestro
+	var earned_coins: int = bonus_coins
 	coins_earned_this_run += earned_coins
 	GameManager.add_coins(earned_coins)
 	if hud:
@@ -585,5 +587,5 @@ func trigger_game_over() -> void:
 		}
 		hud.show_game_over(distance_meters, stats)
 
-func _on_hoop_goal_scored(is_micro: bool, bonus_coins: int = 1) -> void:
+func _on_hoop_goal_scored(is_micro: bool, bonus_coins: int = 35) -> void:
 	trigger_boost(is_micro, bonus_coins)

@@ -7,10 +7,15 @@ const BASE_STAT_COST: int = 100
 
 # Dati persistenti del giocatore
 var coins: int = 0
-var power_level: int = 1
+var speed_level: int = 1
 var aim_level: int = 1
 var jump_level: int = 1
 var stamina_level: int = 1
+
+# Alias per retrocompatibilità
+var power_level: int:
+	get: return speed_level
+	set(val): speed_level = val
 
 # Livello abilità speciali: 0 = nessuna, 1 = Calamita, 2 = Stamina 1000m, 3 = Volo 1000m
 var special_ability_level: int = 0
@@ -25,8 +30,11 @@ func get_stat_cost(level: int) -> int:
 		return -1 # Livello Massimo Raggiunto
 	return BASE_STAT_COST * int(pow(2, level - 1))
 
+func get_speed_upgrade_cost() -> int:
+	return get_stat_cost(speed_level)
+
 func get_power_upgrade_cost() -> int:
-	return get_stat_cost(power_level)
+	return get_speed_upgrade_cost()
 
 func get_aim_upgrade_cost() -> int:
 	return get_stat_cost(aim_level)
@@ -56,14 +64,17 @@ func add_coins(amount: int) -> void:
 	coins += amount
 	save_game()
 
-func upgrade_power() -> bool:
-	var cost = get_power_upgrade_cost()
-	if cost > 0 and coins >= cost and power_level < MAX_STAT_LEVEL:
+func upgrade_speed() -> bool:
+	var cost = get_speed_upgrade_cost()
+	if cost > 0 and coins >= cost and speed_level < MAX_STAT_LEVEL:
 		coins -= cost
-		power_level += 1
+		speed_level += 1
 		save_game()
 		return true
 	return false
+
+func upgrade_power() -> bool:
+	return upgrade_speed()
 
 func upgrade_aim() -> bool:
 	var cost = get_aim_upgrade_cost()
@@ -110,7 +121,7 @@ func update_high_score(distance: int) -> void:
 func save_game() -> void:
 	var data = {
 		"coins": coins,
-		"power_level": power_level,
+		"speed_level": speed_level,
 		"aim_level": aim_level,
 		"jump_level": jump_level,
 		"stamina_level": stamina_level,
@@ -135,7 +146,7 @@ func load_game() -> void:
 		if parse_result == OK:
 			var data = json.data
 			coins = data.get("coins", 0)
-			power_level = clamp(data.get("power_level", 1), 1, MAX_STAT_LEVEL)
+			speed_level = clamp(data.get("speed_level", data.get("power_level", 1)), 1, MAX_STAT_LEVEL)
 			aim_level = clamp(data.get("aim_level", 1), 1, MAX_STAT_LEVEL)
 			jump_level = clamp(data.get("jump_level", 1), 1, MAX_STAT_LEVEL)
 			stamina_level = clamp(data.get("stamina_level", 1), 1, MAX_STAT_LEVEL)

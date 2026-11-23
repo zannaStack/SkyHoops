@@ -65,6 +65,7 @@ var btn_prev: Button = null
 var btn_next: Button = null
 
 var upgrade_area: Panel = null
+var btn_speed: Button = null
 var btn_power: Button = null
 var btn_aim: Button = null
 var btn_jump: Button = null
@@ -97,8 +98,10 @@ func _ready() -> void:
 		btn_start.pressed.connect(_on_start_pressed)
 
 	# Collega i potenziamenti dell'officina
-	if btn_power and not btn_power.pressed.is_connected(_on_power_pressed):
-		btn_power.pressed.connect(_on_power_pressed)
+	if btn_speed and not btn_speed.pressed.is_connected(_on_speed_pressed):
+		btn_speed.pressed.connect(_on_speed_pressed)
+	elif btn_power and not btn_power.pressed.is_connected(_on_speed_pressed):
+		btn_power.pressed.connect(_on_speed_pressed)
 	if btn_aim and not btn_aim.pressed.is_connected(_on_aim_pressed):
 		btn_aim.pressed.connect(_on_aim_pressed)
 	if btn_jump and not btn_jump.pressed.is_connected(_on_jump_pressed):
@@ -124,7 +127,9 @@ func _ensure_nodes() -> void:
 	if not record_label: record_label = find_child("RecordLabel", true, false)
 	if not center_card_area: center_card_area = find_child("CenterCardArea", true, false)
 	if not upgrade_area: upgrade_area = find_child("UpgradeArea", true, false)
-	if not btn_power: btn_power = find_child("BtnPower", true, false)
+	if not btn_speed: btn_speed = find_child("BtnSpeed", true, false)
+	if not btn_speed: btn_speed = find_child("BtnPower", true, false)
+	btn_power = btn_speed
 	if not btn_aim: btn_aim = find_child("BtnAim", true, false)
 	if not btn_jump: btn_jump = find_child("BtnJump", true, false)
 	if not btn_stamina: btn_stamina = find_child("BtnStamina", true, false)
@@ -209,17 +214,17 @@ func _on_next_pressed() -> void:
 
 func refresh_upgrade_buttons() -> void:
 	_ensure_nodes()
-	# 1. FORZA
-	if btn_power:
-		var p_cost = GameManager.get_power_upgrade_cost()
-		if p_cost == -1:
-			btn_power.text = "FORZA (Lv. 10/10) - MAX"
-			btn_power.icon = null
-			btn_power.disabled = true
+	# 1. VELOCITA'
+	if btn_speed:
+		var sp_cost = GameManager.get_speed_upgrade_cost()
+		if sp_cost == -1:
+			btn_speed.text = "VELOCITA' (Lv. 10/10) - MAX"
+			btn_speed.icon = null
+			btn_speed.disabled = true
 		else:
-			btn_power.text = "FORZA (Lv. " + str(GameManager.power_level) + "/10) - " + str(p_cost)
-			btn_power.icon = COIN_ICON
-			btn_power.disabled = (GameManager.coins < p_cost)
+			btn_speed.text = "VELOCITA' (Lv. " + str(GameManager.speed_level) + "/10) - " + str(sp_cost)
+			btn_speed.icon = COIN_ICON
+			btn_speed.disabled = (GameManager.coins < sp_cost)
 
 	# 2. MIRINO
 	if btn_aim:
@@ -277,10 +282,13 @@ func refresh_upgrade_buttons() -> void:
 			2: special_desc.text = "Prossima: ✈️ Volo aereo supersonico per i primi 1000 metri!"
 			_: special_desc.text = "✨ Calamita, Stamina 1000m e Volo Aereo tutti attivi!"
 
-func _on_power_pressed() -> void:
-	if GameManager.upgrade_power():
+func _on_speed_pressed() -> void:
+	if GameManager.upgrade_speed():
 		refresh_top_bar()
 		refresh_upgrade_buttons()
+
+func _on_power_pressed() -> void:
+	_on_speed_pressed()
 
 func _on_aim_pressed() -> void:
 	if GameManager.upgrade_aim():

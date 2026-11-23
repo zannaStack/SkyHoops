@@ -60,33 +60,40 @@ func _on_body_entered(body: Node2D) -> void:
 			var hit_bird: bool = body.get("hit_bird") == true
 			var bounce_cnt: int = body.get("bounce_count") if body.get("bounce_count") != null else 0
 			
-			var bonus: int = 1
-			var text_msg: String = "🏀 SWISH! +1 🪙"
+			var player = get_tree().get_first_node_in_group("player")
+			var is_player_on_fire: bool = (player != null and player.get("is_on_fire") == true)
+			var mult: float = 1.5 if is_player_on_fire else 1.0
+
+			var bonus: int = 25
+			var text_msg: String = ""
 			
 			if is_dunk:
-				bonus = 5
-				text_msg = "💥 SLAM DUNK! +5 🪙"
+				bonus = int(round(65.0 * mult))
+				text_msg = "💥 SLAM DUNK! +" + str(bonus) + " 🪙"
 				GameManager.vibrate_double()
 			elif hit_bird:
-				bonus = 4
-				text_msg = "🐦 OFF THE BIRD! +4 🪙"
+				bonus = int(round(55.0 * mult))
+				text_msg = "🐦 OFF THE BIRD! +" + str(bonus) + " 🪙"
 				GameManager.vibrate_double()
 			elif bounce_cnt > 0:
-				bonus = 3
-				text_msg = "🤹 TRICK SHOT (" + str(bounce_cnt) + "x Rimbalzo)! +3 🪙"
+				bonus = int(round(50.0 * mult))
+				text_msg = "🤹 TRICK SHOT (" + str(bounce_cnt) + "x)! +" + str(bonus) + " 🪙"
 				GameManager.vibrate_medium()
 			elif is_micro:
-				bonus = 3
-				text_msg = "🔥 MICRO SWISH! +3 🪙"
+				bonus = int(round(45.0 * mult))
+				text_msg = "🔥 MICRO SWISH! +" + str(bonus) + " 🪙"
 				GameManager.vibrate_double()
 			elif hit_backboard:
-				bonus = 2
-				text_msg = "🎯 BANK SHOT! +2 🪙"
+				bonus = int(round(25.0 * mult))
+				text_msg = "🎯 BANK SHOT! +" + str(bonus) + " 🪙"
 				GameManager.vibrate_medium()
 			else:
-				bonus = 2
-				text_msg = "✨ PERFECT SWISH! +2 🪙"
+				bonus = int(round(35.0 * mult))
+				text_msg = "✨ PERFECT SWISH! +" + str(bonus) + " 🪙"
 				GameManager.vibrate_double()
+
+			if is_player_on_fire:
+				text_msg += " (ON FIRE! 🔥)"
 
 			print("🏀 CANESTRO CONVALIDATO: ", text_msg)
 			goal_scored.emit(is_micro, bonus)
@@ -123,7 +130,10 @@ func _on_body_entered(body: Node2D) -> void:
 func show_floating_text(custom_text: String) -> void:
 	var label = Label.new()
 	label.text = custom_text
-	label.position = Vector2(-75, -75)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.position = Vector2(-150, -75)
+	label.size = Vector2(300, 30)
 	label.modulate = Color(1.0, 0.9, 0.2)
 	label.add_theme_font_size_override("font_size", 19)
 	add_child(label)

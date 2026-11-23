@@ -1,74 +1,143 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 34" width="36" height="34">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 52" width="54" height="52">
 <defs>
+  <!-- Sfumatura Pelle Calda Tanned / Caricatura -->
   <linearGradient id="skinBase" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%" stop-color="#f5d0b0" />
-    <stop offset="50%" stop-color="#e2ab82" />
-    <stop offset="100%" stop-color="#c6855b" />
+    <stop offset="0%" stop-color="#fed7aa" />
+    <stop offset="40%" stop-color="#fb923c" />
+    <stop offset="85%" stop-color="#ea580c" />
+    <stop offset="100%" stop-color="#c2410c" />
   </linearGradient>
   <linearGradient id="skinShadow" x1="0%" y1="0%" x2="0%" y2="100%">
-    <stop offset="0%" stop-color="#d4976c" />
-    <stop offset="100%" stop-color="#a8653e" />
+    <stop offset="0%" stop-color="#ea580c" />
+    <stop offset="70%" stop-color="#c2410c" />
+    <stop offset="100%" stop-color="#9a3412" />
   </linearGradient>
-  <linearGradient id="jerseyRed" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%" stop-color="#f94144" />
-    <stop offset="45%" stop-color="#d90429" />
-    <stop offset="100%" stop-color="#900c27" />
+  <linearGradient id="skinHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#ffedd5" stop-opacity="0.8"/>
+    <stop offset="100%" stop-color="#fed7aa" stop-opacity="0.1"/>
+  </linearGradient>
+
+  <!-- Canotta e Pantaloncini Royal Blue (Dunk City) -->
+  <linearGradient id="jerseyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#3b82f6" />
+    <stop offset="45%" stop-color="#1d4ed8" />
+    <stop offset="100%" stop-color="#1e3a8a" />
   </linearGradient>
   <linearGradient id="jerseyFold" x1="0%" y1="0%" x2="100%" y2="0%">
-    <stop offset="0%" stop-color="#900c27" stop-opacity="0.6"/>
-    <stop offset="50%" stop-color="#d90429" stop-opacity="0"/>
-    <stop offset="100%" stop-color="#ff758f" stop-opacity="0.3"/>
+    <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.7"/>
+    <stop offset="50%" stop-color="#1d4ed8" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#60a5fa" stop-opacity="0.4"/>
   </linearGradient>
-  <linearGradient id="shortsDark" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%" stop-color="#2b2d42" />
-    <stop offset="60%" stop-color="#1b1c29" />
-    <stop offset="100%" stop-color="#0e0f17" />
+
+  <!-- Bordo Oro / Giallo Caldo -->
+  <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#fef08a" />
+    <stop offset="35%" stop-color="#facc15" />
+    <stop offset="80%" stop-color="#eab308" />
+    <stop offset="100%" stop-color="#ca8a04" />
   </linearGradient>
+
+  <!-- Capelli Castani Sfumati con Texture a Ciuffi -->
+  <linearGradient id="hairDark" x1="0%" y1="100%" x2="0%" y2="0%">
+    <stop offset="0%" stop-color="#1c1917" />
+    <stop offset="60%" stop-color="#292524" />
+    <stop offset="100%" stop-color="#44403c" />
+  </linearGradient>
+
+  <!-- Fascia Bianca Sudore -->
+  <linearGradient id="sweatbandWhite" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#ffffff" />
+    <stop offset="65%" stop-color="#f1f5f9" />
+    <stop offset="100%" stop-color="#cbd5e1" />
+  </linearGradient>
+
+  <!-- Gocce di Sudore Cristalline -->
+  <linearGradient id="sweatDrop" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+    <stop offset="50%" stop-color="#bae6fd" stop-opacity="0.85" />
+    <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.7" />
+  </linearGradient>
+
+  <!-- Ginocchiera e Guanti Sportivi Neri -->
+  <linearGradient id="gearBlack" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#3f3f46" />
+    <stop offset="55%" stop-color="#27272a" />
+    <stop offset="100%" stop-color="#18181b" />
+  </linearGradient>
+
+  <!-- Sneaker Tomaia Grigio / Blu Scuro & Intersuola Bianca -->
   <linearGradient id="sneakerUpper" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%" stop-color="#ffb703" />
-    <stop offset="50%" stop-color="#fb8500" />
-    <stop offset="100%" stop-color="#d90429" />
+    <stop offset="0%" stop-color="#475569" />
+    <stop offset="50%" stop-color="#334155" />
+    <stop offset="100%" stop-color="#1e293b" />
   </linearGradient>
   <linearGradient id="soleWhite" x1="0%" y1="0%" x2="0%" y2="100%">
     <stop offset="0%" stop-color="#ffffff" />
-    <stop offset="70%" stop-color="#edf2f4" />
-    <stop offset="100%" stop-color="#8d99ae" />
-  </linearGradient>
-  <linearGradient id="compressionSleeve" x1="0%" y1="0%" x2="100%" y2="0%">
-    <stop offset="0%" stop-color="#1a1c23"/>
-    <stop offset="50%" stop-color="#323644"/>
-    <stop offset="100%" stop-color="#14151b"/>
-  </linearGradient>
-  <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="0%">
-    <stop offset="0%" stop-color="#ffd166"/>
-    <stop offset="100%" stop-color="#f77f00"/>
-  </linearGradient>
-  <linearGradient id="hairFade" x1="0%" y1="100%" x2="0%" y2="0%">
-    <stop offset="0%" stop-color="#1b1a20" />
-    <stop offset="70%" stop-color="#100f14" />
-    <stop offset="100%" stop-color="#2a2734" />
+    <stop offset="70%" stop-color="#e2e8f0" />
+    <stop offset="100%" stop-color="#94a3b8" />
   </linearGradient>
 </defs>
-  <!-- Collo -->
-  <path d="M 10 21 L 16 30 L 24 28 L 19 19 Z" fill="url(#skinShadow)"/>
-  <path d="M 13 21 Q 18 26 20 29" stroke="#f5d0b0" stroke-width="1" fill="none"/>
+  <!-- Collo muscoloso con ombra sotto-mandibola -->
+  <path d="M 17 32 L 23 48 L 35 45 L 29 30 Z" fill="url(#skinShadow)" stroke="#9a3412" stroke-width="0.8"/>
+  <path d="M 21 34 Q 28 42 30 46" stroke="#fed7aa" stroke-width="1.2" stroke-linecap="round" fill="none"/>
   
-  <!-- Profilo Testa / Mandibola -->
-  <path d="M 12 10 Q 16 0 28 3 Q 34 6 33 14 Q 31 20 25 22 Q 17 24 12 18 Z" fill="url(#skinBase)"/>
+  <!-- Goccia di sudore sul collo -->
+  <ellipse cx="26" cy="40" rx="1.5" ry="2.2" fill="url(#sweatDrop)" transform="rotate(15 26 40)"/>
+  <circle cx="25.5" cy="39.2" r="0.6" fill="#ffffff"/>
+
+  <!-- Sagoma Testa / Mandibola scolpita ed espressiva (profilo 3/4) -->
+  <path d="M 12 18 Q 14 6 32 8 Q 44 10 46 22 Q 47 32 38 40 Q 28 44 20 38 Q 13 32 12 18 Z" fill="url(#skinBase)" stroke="#9a3412" stroke-width="1.2"/>
   
-  <!-- Orecchio anatomico -->
-  <path d="M 15 12 Q 13 10 15 7 Q 18 7 18 11 Q 17 14 15 14 Z" fill="url(#skinShadow)"/>
-  
-  <!-- Occhio concentrato, sopracciglio e profilo -->
-  <path d="M 26 7 Q 31 6 33 8" stroke="#1a1c23" stroke-width="1.4" stroke-linecap="round" fill="none"/>
-  <ellipse cx="30" cy="10" rx="1.8" ry="1.4" fill="#1a1c23"/>
-  <path d="M 34 12 L 36 14 L 33 15" stroke="#c6855b" stroke-width="1" stroke-linecap="round" fill="none"/>
-  <line x1="32" y1="18" x2="29" y2="18.5" stroke="#a8653e" stroke-width="1.2" stroke-linecap="round"/>
-  
-  <!-- Capelli High-Top Fade -->
-  <path d="M 11 8 Q 12 0 19 -2 Q 29 -3 32 3 Q 28 5 23 5 Q 15 5 12 10 Z" fill="url(#hairFade)"/>
-  
-  <!-- Fascia sportiva tergisudore celeste brillante (Headband) -->
-  <path d="M 13 5 Q 23 4 33 7 Q 32 10 23 8 Q 13 8 13 5 Z" fill="#00b4d8" stroke="#0077b6" stroke-width="0.8"/>
-  <polygon points="23,5 25,8 21,8" fill="#ffffff"/>
+  <!-- Chiaroscuro zigomo e tempia -->
+  <path d="M 34 16 Q 44 22 41 30 Q 35 36 26 38" stroke="#ea580c" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <ellipse cx="28" cy="22" rx="7" ry="4" fill="url(#skinHighlight)" transform="rotate(-10 28 22)"/>
+
+  <!-- Barba incolta leggera / 5 o'clock shadow su mandibola e mento -->
+  <path d="M 23 35 Q 32 37 38 31 Q 38 37 32 40 Q 25 41 23 35 Z" fill="#78350f" opacity="0.28"/>
+
+  <!-- Orecchio dettagliato -->
+  <path d="M 17 22 Q 13 18 16 14 Q 21 14 21 20 Q 20 25 17 25 Z" fill="url(#skinBase)" stroke="#9a3412" stroke-width="1"/>
+  <path d="M 17 17 Q 19 18 18 21" stroke="#9a3412" stroke-width="1" fill="none"/>
+
+  <!-- Naso deciso e scolpito -->
+  <path d="M 37 18 Q 45 22 42 27 L 37 26" fill="url(#skinShadow)" stroke="#7c2d12" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="40" cy="25" rx="1.2" ry="0.9" fill="#7c2d12"/>
+
+  <!-- Occhio grande, espressivo e concentrato con sopracciglio folto -->
+  <path d="M 30 14 Q 38 12 43 16" stroke="#1c1917" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  <!-- Occhio bianco + iride + pupilla + riflesso luce -->
+  <path d="M 33 17 Q 38 15 42 19 Q 37 22 33 19 Z" fill="#ffffff" stroke="#1c1917" stroke-width="1"/>
+  <ellipse cx="38" cy="18" rx="2.5" ry="2.2" fill="#451a03"/>
+  <circle cx="38.5" cy="18" r="1.5" fill="#0c0a09"/>
+  <circle cx="37.5" cy="16.8" r="0.8" fill="#ffffff"/>
+
+  <!-- GRANDE SORRISO CHARISMATICO CON DENTI BIANCHI (come l'immagine!) -->
+  <path d="M 30 28 Q 38 27 44 29 Q 43 36 34 36 Q 29 35 30 28 Z" fill="#450a0a" stroke="#1c1917" stroke-width="1.2"/>
+  <!-- Fila di denti superiori bianchi splendenti -->
+  <path d="M 31 29 Q 38 28 43 30 Q 42 33 33 33 Q 31 32 31 29 Z" fill="#ffffff"/>
+  <line x1="37" y1="29" x2="37" y2="32.5" stroke="#cbd5e1" stroke-width="0.8"/>
+  <line x1="34" y1="29.2" x2="34" y2="32" stroke="#cbd5e1" stroke-width="0.8"/>
+  <line x1="40" y1="29.5" x2="40" y2="32" stroke="#cbd5e1" stroke-width="0.8"/>
+
+  <!-- FASCIA BIANCA DA BASKET (Sweatband) sulla fronte -->
+  <path d="M 15 11 Q 30 7 45 12 L 44 18 Q 30 13 14 17 Z" fill="url(#sweatbandWhite)" stroke="#94a3b8" stroke-width="1.1"/>
+  <path d="M 14.5 17 Q 30 12.5 44 17.5" stroke="#cbd5e1" stroke-width="0.8" fill="none"/>
+
+  <!-- CAPELLI CASTANI CON CIUFFI E PUNTE A CRESTA (Spiky Hair) -->
+  <path d="M 12 12 Q 13 2 24 1 Q 28 -2 33 0 Q 38 -3 43 2 Q 47 4 47 11 L 44 12 Q 33 7 15 11 Z" fill="url(#hairDark)" stroke="#0c0a09" stroke-width="1.2"/>
+  <!-- Ciuffi e texture capelli -->
+  <polygon points="23,1 26,-4 28,1" fill="#292524"/>
+  <polygon points="31,0 35,-5 37,1" fill="#44403c"/>
+  <polygon points="40,2 44,-2 46,4" fill="#292524"/>
+
+  <!-- GOCCE DI SUDORE ATLETICHE LUNGO LA FRONTE E LA GUANCIA -->
+  <!-- Goccia 1 (tempia) -->
+  <path d="M 17 8 Q 15 12 18 12 Q 19 12 19 10 Z" fill="url(#sweatDrop)"/>
+  <circle cx="17.2" cy="10" r="0.5" fill="#ffffff"/>
+  <!-- Goccia 2 (fronte/fascia) -->
+  <path d="M 28 12 Q 26 16 29 16 Q 30 15 30 13 Z" fill="url(#sweatDrop)"/>
+  <circle cx="28.2" cy="14" r="0.6" fill="#ffffff"/>
+  <!-- Goccia 3 (guancia) -->
+  <path d="M 43 21 Q 41 24 43 25 Q 44 24 44 22 Z" fill="url(#sweatDrop)"/>
+  <circle cx="42.5" cy="23" r="0.5" fill="#ffffff"/>
 </svg>

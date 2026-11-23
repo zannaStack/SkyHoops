@@ -28,7 +28,8 @@ var damage_flash_timer: float = 0.0
 @onready var game_over_label: Label = $GameOverPanel/GameOver
 @onready var game_over_coin_label: Label = get_node_or_null("GameOverPanel/GameOverCoinContainer/GameOverCoinLabel")
 @onready var stats_label: Control = $GameOverPanel/StatsLabel
-@onready var power_button: Button = $GameOverPanel/UpgradesGrid/PowerButton
+@onready var speed_button: Button = get_node_or_null("GameOverPanel/UpgradesGrid/SpeedButton")
+@onready var power_button: Button = speed_button
 @onready var aim_button: Button = $GameOverPanel/UpgradesGrid/AimButton
 @onready var jump_button: Button = $GameOverPanel/UpgradesGrid/JumpButton
 @onready var stamina_button: Button = $GameOverPanel/UpgradesGrid/StaminaButton
@@ -69,8 +70,8 @@ func _ready() -> void:
 		retry_button.pressed.connect(_on_retry_pressed)
 	if menu_button and not menu_button.pressed.is_connected(_on_menu_pressed):
 		menu_button.pressed.connect(_on_menu_pressed)
-	if power_button and not power_button.pressed.is_connected(_on_power_pressed):
-		power_button.pressed.connect(_on_power_pressed)
+	if speed_button and not speed_button.pressed.is_connected(_on_speed_pressed):
+		speed_button.pressed.connect(_on_speed_pressed)
 	if aim_button and not aim_button.pressed.is_connected(_on_aim_pressed):
 		aim_button.pressed.connect(_on_aim_pressed)
 	if jump_button and not jump_button.pressed.is_connected(_on_jump_pressed):
@@ -120,8 +121,11 @@ func _ensure_nodes() -> void:
 			game_over_coin_label = game_over_panel.get_node_or_null("GameOverCoinContainer/GameOverCoinLabel")
 		if not stats_label:
 			stats_label = game_over_panel.get_node_or_null("StatsLabel")
-		if not power_button:
-			power_button = game_over_panel.get_node_or_null("UpgradesGrid/PowerButton")
+		if not speed_button:
+			speed_button = game_over_panel.get_node_or_null("UpgradesGrid/SpeedButton")
+			if not speed_button:
+				speed_button = game_over_panel.get_node_or_null("UpgradesGrid/PowerButton")
+			power_button = speed_button
 		if not aim_button:
 			aim_button = game_over_panel.get_node_or_null("UpgradesGrid/AimButton")
 		if not jump_button:
@@ -278,16 +282,16 @@ func _on_resume_pressed() -> void:
 
 func refresh_upgrade_buttons() -> void:
 	_ensure_nodes()
-	if power_button:
-		var p_cost = GameManager.get_power_upgrade_cost()
-		if p_cost == -1:
-			power_button.text = "FORZA (Lv. 10/10) - MAX"
-			power_button.icon = null
-			power_button.disabled = true
+	if speed_button:
+		var sp_cost = GameManager.get_speed_upgrade_cost()
+		if sp_cost == -1:
+			speed_button.text = "VELOCITA' (Lv. 10/10) - MAX"
+			speed_button.icon = null
+			speed_button.disabled = true
 		else:
-			power_button.text = "FORZA (Lv. " + str(GameManager.power_level) + "/10) - " + str(p_cost)
-			power_button.icon = COIN_ICON
-			power_button.disabled = (GameManager.coins < p_cost)
+			speed_button.text = "VELOCITA' (Lv. " + str(GameManager.speed_level) + "/10) - " + str(sp_cost)
+			speed_button.icon = COIN_ICON
+			speed_button.disabled = (GameManager.coins < sp_cost)
 	
 	if aim_button:
 		var a_cost = GameManager.get_aim_upgrade_cost()
@@ -322,12 +326,15 @@ func refresh_upgrade_buttons() -> void:
 			stamina_button.icon = COIN_ICON
 			stamina_button.disabled = (GameManager.coins < s_cost)
 
-func _on_power_pressed() -> void:
-	if GameManager.upgrade_power():
+func _on_speed_pressed() -> void:
+	if GameManager.upgrade_speed():
 		update_coins(GameManager.coins)
 		if game_over_coin_label:
 			game_over_coin_label.text = str(GameManager.coins)
 		refresh_upgrade_buttons()
+
+func _on_power_pressed() -> void:
+	_on_speed_pressed()
 
 func _on_aim_pressed() -> void:
 	if GameManager.upgrade_aim():

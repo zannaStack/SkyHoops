@@ -22,17 +22,17 @@ sky-hoops/
 ├── MAPPING.md                        # Questa mappa architetturale
 ├── assets/                           # Risorse grafiche vettoriali (SVG)
 │   ├── coin.svg                      # Icona moneta oro ad alta risoluzione
-│   ├── player_runner.svg             # Sprite atleta runner originale
+│   ├── player_runner.svg             # Sprite atleta runner stile caricatura "Dunk City"
 │   ├── player_rig/                   # Componenti modulari dello scheletro 2D (Skeletal Cutout)
-│   │   ├── torso.svg                 # Busto con canotta #23 e pantaloncini
-│   │   ├── head.svg                  # Testa, headband celeste, capelli, profilo concentrato
-│   │   ├── thigh_front.svg           # Coscia anteriore con compression sleeve nero
-│   │   ├── shin_front.svg            # Polpaccio, calzino a coste e sneaker Jordan anteriore
-│   │   ├── thigh_back.svg            # Coscia posteriore in ombra
-│   │   ├── shin_back.svg             # Polpaccio e sneaker posteriore con Air Bubble
-│   │   ├── arm_upper_front.svg       # Spalla e bicipite anteriore
-│   │   ├── arm_forearm_front.svg     # Avambraccio, polsino e mano aperta che guida il palleggio
-│   │   └── arm_back.svg              # Braccio posteriore per bilanciamento della corsa
+│   │   ├── torso.svg                 # Canotta Royal Blue "Dunk 7 City", bordi oro, pantaloncini blu
+│   │   ├── head.svg                  # Testa caricatura espressiva: capelli spiky, fascia bianca, sudore, sorriso con denti
+│   │   ├── thigh_front.svg           # Coscia muscolosa con ginocchiera sportiva nera (knee pad)
+│   │   ├── shin_front.svg            # Polpaccio, calzino bianco a doppie strisce blu e sneaker chunky da basket
+│   │   ├── thigh_back.svg            # Coscia posteriore in ombra con ginocchiera nera
+│   │   ├── shin_back.svg             # Polpaccio e sneaker posteriore scura con suola bianca
+│   │   ├── arm_upper_front.svg       # Spalla e bicipite muscoloso con goccia di sudore
+│   │   ├── arm_forearm_front.svg     # Avambraccio con guanto nero da basket fingerless e inserto oro
+│   │   └── arm_back.svg              # Braccio posteriore con guanto nero fingerless
 │   ├── basketball.svg                # Texture realistica del pallone da basket
 │   ├── hoop.svg                      # Tabellone, ferro e retina del canestro
 │   └── spike.svg                     # Ostacoli aculei a terra
@@ -70,7 +70,7 @@ sky-hoops/
 | **Layer 1** | `Terrain` | Terreno procedurale (`StaticBody2D` in `chunk`) | Mask: `1` | Poligono chiuso solido fino a $y=1800$ per consentire il floor snap |
 | **Layer 2** | `Player` | `player.tscn` (`CharacterBody2D`) | Mask: `1` (Terreno) | **Non collidere MAI con Layer 8** (evita incastri durante la schiacciata) |
 | **Layer 3** | `Obstacles` | Spuntoni (`Area2D`), Uccelli | Mask: `2` (Player), `9` (Ball) | Attivano danno o trick shot |
-| **Layer 4** | `Collectibles`| Monete, Energy Drink (`Area2D`) | Mask: `2` (Player) | Raccolta al passaggio del player |
+| **Layer 4** | `Collectibles`| Monete, Energy Drink (`Area2D`) | Mask: `2` (Player) + `Ball` | Raccolta sia al passaggio del player sia al tocco della palla tirata |
 | **Layer 8** | `Hoop` | Ferro e Tabellone (`StaticBody2D` in `hoop.tscn`)| Mask: `0` (Non rilevano fisicamente il player) | Solo la palla vi rimbalza contro |
 | **Layer 9** | `Ball` | `ball.tscn` (`RigidBody2D`) | Mask: `1` (Terreno) + `8` (Ferro/Tabellone) | Maschera $= 1 + 8 = 9$. Rimbalza su ferro e terra |
 
@@ -94,8 +94,31 @@ flowchart TD
     HUD -->|Acquisti upgrade| GM
 ```
 
-- **Ciclo On Fire**:
-  - `trigger_boost`: Ogni canestro riuscito fa `combo_count += 1`, attiva `is_on_fire = true`, raddoppia le monete guadagnate ($2\times$) e aggiorna l'HUD.
+- **Struttura dei Potenziamenti (Officina & Game Over)**:
+  - 4 Statistiche scalabili su **10 Livelli** (Costi: $100 \times 2^{\text{level}-1}$, da 100 a 51.200 monete):
+    - **VELOCITÀ (`speed_level`)**: Incrementa la velocità di corsa base del runner ($280 \rightarrow 460\text{ px/s}$) e la velocità in boost ($500 \rightarrow 788\text{ px/s}$), accelerando proporzionalmente anche la cadenza dei passi dell'animazione.
+    - **MIRINO (`aim_level`)**: Incrementa il numero di punti guida visibili nella traiettoria balistica di tiro ($2 \rightarrow 10$ punti).
+    - **SALTO (`jump_level`)**: Incrementa l'elevazione e spinta del salto ($480 \rightarrow 768\text{ px/s}$).
+    - **STAMINA (`stamina_level`)**: Incrementa la riserva di energia ($100 \rightarrow 280$) e ne riduce il consumo progressivo.
+  - 3 Abilità Speciali sbloccabili (5.000 / 10.000 / 20.000 monete): Calamita, Stamina 1000m, Volo Aereo 1000m.
+
+- **Ciclo On Fire & Economia di Gioco**:
+  - `trigger_boost`: Ogni canestro riuscito fa `combo_count += 1`, attiva `is_on_fire = true`, accredita il valore del tiro e aggiorna l'HUD.
+  - **Valore Canestri (Rapporto Canestro/Monete)**:
+    - Bank Shot: +25 🪙 (+38 🪙 On Fire)
+    - Perfect Swish: +35 🪙 (+52 🪙 On Fire)
+    - Micro Swish: +45 🪙 (+68 🪙 On Fire)
+    - Trick Shot (rimbalzo): +50 🪙 (+75 🪙 On Fire)
+    - Off The Bird: +55 🪙 (+82 🪙 On Fire)
+    - Slam Dunk: +65 🪙 (+98 🪙 On Fire)
+    - Il testo fluttuante mostra esattamente le monete incassate con suffisso `(ON FIRE! 🔥)`.
+    - Questo garantisce che 2-3 canestri consentano già di finanziare il primo livello di upgrade (100 🪙), incentivando il gioco attivo rispetto alla mera raccolta.
+  - **Disposizione Monete (Archi Guidati & Raccolta con Palla)**:
+    - Le monete non fluttuano a caso sul terreno: compaiono *esclusivamente* come **arco di salto sopra i burroni** (5 monete) o come **traiettoria balistica di tiro su alcuni canestri** (~45% dei canestri, garantito al primo canestro introduttivo).
+    - Le monete sono raccoglibili **sia dal runner sia dal pallone da basket** in volo: al contatto con la palla, si disattivano istantaneamente con scintillii dorati e accreditano le monete alla partita.
+  - **Disposizione Spuntoni/Mine & Ricariche Stamina**:
+    - Funzione `get_safe_ground_x`: garantisce che nessun ostacolo o pickup energetico compaia mai nel vuoto sopra un burrone.
+    - Gli spuntoni/mine si allineano alla pendenza del terreno (`get_terrain_slope_angle`) e hanno frequenza elevata (65% base + 35% doppio ostacolo), risultando oltre 6 volte più frequenti delle ricariche di stamina (ridotte al 12% oltre 1000m).
   - `shot_missed`: Emesso da `ball.gd` se tocca il terreno (`layer 1`) o cade fuori schermo ($y > 780$) prima di fare canestro. Reset immediato della combo (`combo_count = 0`, `is_on_fire = false`).
   - La serie **non** scade con un timer tra un canestro e l'altro, ma vive fino al primo errore.
 

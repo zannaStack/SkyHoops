@@ -209,12 +209,12 @@ theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 14
 columns = 2
 
-[node name="BtnPower" type="Button" parent="UpgradeArea/StatsGrid" unique_id=1029384764]
+[node name="BtnSpeed" type="Button" parent="UpgradeArea/StatsGrid" unique_id=1029384764]
 custom_minimum_size = Vector2(330, 52)
 layout_mode = 2
 theme_override_constants/icon_max_width = 22
 theme_override_font_sizes/font_size = 17
-text = "FORZA (Lv. 1/10) - 100"
+text = "VELOCITA' (Lv. 1/10) - 100"
 icon = ExtResource("3_coin_icon")
 icon_alignment = 2
 

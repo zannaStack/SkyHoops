@@ -1,59 +1,91 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 24" width="28" height="24">
 <defs>
+  <!-- Sfumatura Pelle Calda Tanned / Caricatura -->
   <linearGradient id="skinBase" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%" stop-color="#f5d0b0" />
-    <stop offset="50%" stop-color="#e2ab82" />
-    <stop offset="100%" stop-color="#c6855b" />
+    <stop offset="0%" stop-color="#fed7aa" />
+    <stop offset="40%" stop-color="#fb923c" />
+    <stop offset="85%" stop-color="#ea580c" />
+    <stop offset="100%" stop-color="#c2410c" />
   </linearGradient>
   <linearGradient id="skinShadow" x1="0%" y1="0%" x2="0%" y2="100%">
-    <stop offset="0%" stop-color="#d4976c" />
-    <stop offset="100%" stop-color="#a8653e" />
+    <stop offset="0%" stop-color="#ea580c" />
+    <stop offset="70%" stop-color="#c2410c" />
+    <stop offset="100%" stop-color="#9a3412" />
   </linearGradient>
-  <linearGradient id="jerseyRed" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%" stop-color="#f94144" />
-    <stop offset="45%" stop-color="#d90429" />
-    <stop offset="100%" stop-color="#900c27" />
+  <linearGradient id="skinHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#ffedd5" stop-opacity="0.8"/>
+    <stop offset="100%" stop-color="#fed7aa" stop-opacity="0.1"/>
+  </linearGradient>
+
+  <!-- Canotta e Pantaloncini Royal Blue (Dunk City) -->
+  <linearGradient id="jerseyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#3b82f6" />
+    <stop offset="45%" stop-color="#1d4ed8" />
+    <stop offset="100%" stop-color="#1e3a8a" />
   </linearGradient>
   <linearGradient id="jerseyFold" x1="0%" y1="0%" x2="100%" y2="0%">
-    <stop offset="0%" stop-color="#900c27" stop-opacity="0.6"/>
-    <stop offset="50%" stop-color="#d90429" stop-opacity="0"/>
-    <stop offset="100%" stop-color="#ff758f" stop-opacity="0.3"/>
+    <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.7"/>
+    <stop offset="50%" stop-color="#1d4ed8" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#60a5fa" stop-opacity="0.4"/>
   </linearGradient>
-  <linearGradient id="shortsDark" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%" stop-color="#2b2d42" />
-    <stop offset="60%" stop-color="#1b1c29" />
-    <stop offset="100%" stop-color="#0e0f17" />
+
+  <!-- Bordo Oro / Giallo Caldo -->
+  <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#fef08a" />
+    <stop offset="35%" stop-color="#facc15" />
+    <stop offset="80%" stop-color="#eab308" />
+    <stop offset="100%" stop-color="#ca8a04" />
   </linearGradient>
+
+  <!-- Capelli Castani Sfumati con Texture a Ciuffi -->
+  <linearGradient id="hairDark" x1="0%" y1="100%" x2="0%" y2="0%">
+    <stop offset="0%" stop-color="#1c1917" />
+    <stop offset="60%" stop-color="#292524" />
+    <stop offset="100%" stop-color="#44403c" />
+  </linearGradient>
+
+  <!-- Fascia Bianca Sudore -->
+  <linearGradient id="sweatbandWhite" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#ffffff" />
+    <stop offset="65%" stop-color="#f1f5f9" />
+    <stop offset="100%" stop-color="#cbd5e1" />
+  </linearGradient>
+
+  <!-- Gocce di Sudore Cristalline -->
+  <linearGradient id="sweatDrop" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+    <stop offset="50%" stop-color="#bae6fd" stop-opacity="0.85" />
+    <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.7" />
+  </linearGradient>
+
+  <!-- Ginocchiera e Guanti Sportivi Neri -->
+  <linearGradient id="gearBlack" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#3f3f46" />
+    <stop offset="55%" stop-color="#27272a" />
+    <stop offset="100%" stop-color="#18181b" />
+  </linearGradient>
+
+  <!-- Sneaker Tomaia Grigio / Blu Scuro & Intersuola Bianca -->
   <linearGradient id="sneakerUpper" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%" stop-color="#ffb703" />
-    <stop offset="50%" stop-color="#fb8500" />
-    <stop offset="100%" stop-color="#d90429" />
+    <stop offset="0%" stop-color="#475569" />
+    <stop offset="50%" stop-color="#334155" />
+    <stop offset="100%" stop-color="#1e293b" />
   </linearGradient>
   <linearGradient id="soleWhite" x1="0%" y1="0%" x2="0%" y2="100%">
     <stop offset="0%" stop-color="#ffffff" />
-    <stop offset="70%" stop-color="#edf2f4" />
-    <stop offset="100%" stop-color="#8d99ae" />
-  </linearGradient>
-  <linearGradient id="compressionSleeve" x1="0%" y1="0%" x2="100%" y2="0%">
-    <stop offset="0%" stop-color="#1a1c23"/>
-    <stop offset="50%" stop-color="#323644"/>
-    <stop offset="100%" stop-color="#14151b"/>
-  </linearGradient>
-  <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="0%">
-    <stop offset="0%" stop-color="#ffd166"/>
-    <stop offset="100%" stop-color="#f77f00"/>
-  </linearGradient>
-  <linearGradient id="hairFade" x1="0%" y1="100%" x2="0%" y2="0%">
-    <stop offset="0%" stop-color="#1b1a20" />
-    <stop offset="70%" stop-color="#100f14" />
-    <stop offset="100%" stop-color="#2a2734" />
+    <stop offset="70%" stop-color="#e2e8f0" />
+    <stop offset="100%" stop-color="#94a3b8" />
   </linearGradient>
 </defs>
-  <!-- Spalla/Deltoide rotondo per giuntura perfetta -->
-  <circle cx="8" cy="8" r="7.5" fill="url(#skinBase)"/>
-  <!-- Bicipite/Braccio proteso -->
-  <path d="M 7 14 Q 16 18 22 13 Q 23 8 14 4 L 8 4 Z" fill="url(#skinBase)"/>
-  <path d="M 11 11 Q 16 14 19 11" stroke="#f5d0b0" stroke-width="1" fill="none"/>
-  <!-- Gomito arrotondato -->
-  <circle cx="21" cy="13" r="4.5" fill="url(#skinBase)"/>
+  <!-- Spalla/Deltoide rotondo per giuntura anatomica perfetta -->
+  <circle cx="8" cy="8" r="7.5" fill="url(#skinBase)" stroke="#9a3412" stroke-width="1"/>
+  <!-- Bicipite atletico muscoloso proteso in avanti -->
+  <path d="M 7 14 Q 16 19 22 13 Q 23 7 14 4 L 8 4 Z" fill="url(#skinBase)" stroke="#9a3412" stroke-width="1"/>
+  <!-- Solco di definizione muscolare bicipite/tricipite -->
+  <path d="M 11 10 Q 16 14 20 11" stroke="#ffedd5" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <!-- Goccia di sudore sul bicipite -->
+  <ellipse cx="15" cy="14" rx="1.2" ry="1.8" fill="url(#sweatDrop)" transform="rotate(-20 15 14)"/>
+  <circle cx="14.6" cy="13.4" r="0.4" fill="#ffffff"/>
+  <!-- Gomito arrotondato per overlap pulito -->
+  <circle cx="21" cy="13" r="4.5" fill="url(#skinBase)" stroke="#9a3412" stroke-width="0.8"/>
 </svg>

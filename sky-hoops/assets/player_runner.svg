@@ -1,65 +1,76 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" width="120" height="140">
   <defs>
-    <!-- Sfumatura Pelle Atletica (chiaroscuri muscolari) -->
+    <!-- Sfumatura Pelle Calda Tanned / Caricatura -->
     <linearGradient id="skinBase" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f5d0b0" />
-      <stop offset="50%" stop-color="#e2ab82" />
-      <stop offset="100%" stop-color="#c6855b" />
+      <stop offset="0%" stop-color="#fed7aa" />
+      <stop offset="40%" stop-color="#fb923c" />
+      <stop offset="85%" stop-color="#ea580c" />
+      <stop offset="100%" stop-color="#c2410c" />
     </linearGradient>
     <linearGradient id="skinShadow" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#d4976c" />
-      <stop offset="100%" stop-color="#a8653e" />
+      <stop offset="0%" stop-color="#ea580c" />
+      <stop offset="70%" stop-color="#c2410c" />
+      <stop offset="100%" stop-color="#9a3412" />
     </linearGradient>
 
-    <!-- Canotta Basket Rossa Premium (Jersey con riflesso) -->
-    <linearGradient id="jerseyRed" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f94144" />
-      <stop offset="45%" stop-color="#d90429" />
-      <stop offset="100%" stop-color="#900c27" />
+    <!-- Canotta e Pantaloncini Royal Blue (Dunk City) -->
+    <linearGradient id="jerseyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="45%" stop-color="#1d4ed8" />
+      <stop offset="100%" stop-color="#1e3a8a" />
     </linearGradient>
     <linearGradient id="jerseyFold" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#900c27" stop-opacity="0.6"/>
-      <stop offset="50%" stop-color="#d90429" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#ff758f" stop-opacity="0.3"/>
+      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.7"/>
+      <stop offset="50%" stop-color="#1d4ed8" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#60a5fa" stop-opacity="0.4"/>
     </linearGradient>
 
-    <!-- Pantaloncini Basket Nero Antracite & Mesh -->
-    <linearGradient id="shortsDark" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2b2d42" />
-      <stop offset="60%" stop-color="#1b1c29" />
-      <stop offset="100%" stop-color="#0e0f17" />
+    <!-- Bordo Oro / Giallo Caldo -->
+    <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="35%" stop-color="#facc15" />
+      <stop offset="80%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#ca8a04" />
     </linearGradient>
 
-    <!-- Scarpa da Basket High-End (Sneaker Pro Jordan/Kobe Vibe) -->
+    <!-- Capelli Castani Sfumati -->
+    <linearGradient id="hairDark" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#1c1917" />
+      <stop offset="60%" stop-color="#292524" />
+      <stop offset="100%" stop-color="#44403c" />
+    </linearGradient>
+
+    <!-- Fascia Bianca Sudore -->
+    <linearGradient id="sweatbandWhite" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="65%" stop-color="#f1f5f9" />
+      <stop offset="100%" stop-color="#cbd5e1" />
+    </linearGradient>
+
+    <!-- Gocce di Sudore Cristalline -->
+    <linearGradient id="sweatDrop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+      <stop offset="50%" stop-color="#bae6fd" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.7" />
+    </linearGradient>
+
+    <!-- Ginocchiera e Guanti Sportivi Neri -->
+    <linearGradient id="gearBlack" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3f3f46" />
+      <stop offset="55%" stop-color="#27272a" />
+      <stop offset="100%" stop-color="#18181b" />
+    </linearGradient>
+
+    <!-- Sneaker Tomaia Grigio / Blu Scuro & Intersuola Bianca -->
     <linearGradient id="sneakerUpper" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffb703" />
-      <stop offset="50%" stop-color="#fb8500" />
-      <stop offset="100%" stop-color="#d90429" />
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="50%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#1e293b" />
     </linearGradient>
     <linearGradient id="soleWhite" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#ffffff" />
-      <stop offset="70%" stop-color="#edf2f4" />
-      <stop offset="100%" stop-color="#8d99ae" />
-    </linearGradient>
-
-    <!-- Leg Sleeve a compressione nero opaco -->
-    <linearGradient id="compressionSleeve" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#1a1c23"/>
-      <stop offset="50%" stop-color="#323644"/>
-      <stop offset="100%" stop-color="#14151b"/>
-    </linearGradient>
-
-    <!-- Sfumatura Oro Bordo Maglia -->
-    <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#ffd166"/>
-      <stop offset="100%" stop-color="#f77f00"/>
-    </linearGradient>
-
-    <!-- Capelli con volume e sfumatura fade -->
-    <linearGradient id="hairFade" x1="0%" y1="100%" x2="0%" y2="0%">
-      <stop offset="0%" stop-color="#1b1a20" />
-      <stop offset="70%" stop-color="#100f14" />
-      <stop offset="100%" stop-color="#2a2734" />
+      <stop offset="70%" stop-color="#e2e8f0" />
+      <stop offset="100%" stop-color="#94a3b8" />
     </linearGradient>
   </defs>
 
@@ -69,118 +80,128 @@
   <!-- ================= GAMBA POSTERIORE (Slanciata indietro) ================= -->
   <!-- Coscia posteriore muscolosa -->
   <path d="M 50 82 Q 34 94 22 100 Q 25 106 33 103 Q 48 95 56 86 Z" fill="url(#skinShadow)"/>
-  <!-- Polpaccio e tendine posteriore -->
+  <!-- Ginocchiera posteriore nera -->
+  <ellipse cx="28" cy="102" rx="6" ry="5" fill="url(#gearBlack)" stroke="#09090b" stroke-width="1"/>
+  <!-- Polpaccio posteriore -->
   <path d="M 22 100 Q 14 105 10 110 Q 14 114 24 108 Q 30 104 33 103 Z" fill="url(#skinBase)"/>
   
-  <!-- Sneaker Posteriore (Profilo dinamico ad alta definizione) -->
-  <path d="M 10 110 L 2 114 L 0 123 Q 4 127 18 126 L 22 120 L 16 113 Z" fill="url(#sneakerUpper)"/>
-  <!-- Intersuola / Air Cushion posteriore -->
+  <!-- Calzino alto bianco con doppie strisce blu -->
+  <path d="M 10 110 L 16 113 L 13 118 L 8 115 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="0.6"/>
+  <line x1="10" y1="111" x2="12" y2="114" stroke="#2563eb" stroke-width="1.2"/>
+  <line x1="12" y1="112" x2="14" y2="115" stroke="#2563eb" stroke-width="1.2"/>
+
+  <!-- Sneaker Posteriore Chunky -->
+  <path d="M 10 110 L 2 114 L 0 123 Q 4 127 18 126 L 22 120 L 16 113 Z" fill="url(#sneakerUpper)" stroke="#0f172a" stroke-width="1.2"/>
   <path d="M 0 123 L 18 126 L 19 129 L -1 127 Z" fill="url(#soleWhite)"/>
-  <rect x="5" y="121" width="8" height="2" rx="1" fill="#00b4d8" opacity="0.9"/> <!-- Air bubble celeste -->
+  <rect x="5" y="121" width="8" height="2" rx="1" fill="#facc15" opacity="0.9"/>
 
-  <!-- ================= BRACCIO POSTERIORE (Bilanciamento atletico) ================= -->
-  <!-- Spalla posteriore / Deltoide -->
+  <!-- ================= BRACCIO POSTERIORE ================= -->
+  <!-- Spalla / Deltoide posteriore -->
   <ellipse cx="44" cy="50" rx="7" ry="6" fill="url(#skinShadow)" transform="rotate(-15 44 50)"/>
-  <!-- Bicipite/Tricipite posteriore -->
   <path d="M 40 54 Q 28 62 18 64 Q 19 69 26 68 Q 38 64 43 57 Z" fill="url(#skinShadow)"/>
-  <!-- Avambraccio e polsino spugna -->
   <path d="M 18 64 Q 10 59 4 55 Q 6 51 13 56 Q 20 62 26 68 Z" fill="url(#skinBase)"/>
-  <rect x="12" y="56" width="7" height="6" rx="2" fill="#ffffff" stroke="#e0e1dd" stroke-width="0.7" transform="rotate(-30 12 56)"/>
-  <!-- Mano posteriore tesa con dita affusolate -->
-  <path d="M 4 55 Q 0 52 1 48 Q 4 49 7 53 Z" fill="url(#skinBase)"/>
+  <!-- Guanto nero con rinforzo oro/arancio -->
+  <path d="M 10 57 L 3 53 Q 1 49 3 46 L 7 51 Z" fill="url(#gearBlack)" stroke="#09090b" stroke-width="1"/>
+  <rect x="4" y="48" width="4" height="4" rx="1" fill="url(#goldTrim)"/>
+  <path d="M 3 46 Q 0 44 1 41 Q 4 42 6 46 Z" fill="url(#skinBase)"/>
 
-  <!-- ================= BUSTO & CANOTTA DA BASKET (#23) ================= -->
-  <!-- Canotta sagomata atletica con vita a V -->
-  <path d="M 44 42 Q 62 39 74 45 L 70 82 Q 57 85 46 80 Z" fill="url(#jerseyRed)"/>
-  
-  <!-- Pieghe di movimento della maglia -->
+  <!-- ================= BUSTO & CANOTTA ROYAL BLUE (DUNK 7 CITY) ================= -->
+  <path d="M 44 42 Q 62 39 74 45 L 70 82 Q 57 85 46 80 Z" fill="url(#jerseyBlue)" stroke="#1e3a8a" stroke-width="1.2"/>
   <path d="M 46 54 Q 58 60 68 56 Q 66 61 54 62 Q 47 58 46 54 Z" fill="url(#jerseyFold)"/>
   <path d="M 48 68 Q 58 73 68 70 Q 64 74 54 75 Q 49 71 48 68 Z" fill="url(#jerseyFold)"/>
 
-  <!-- Bordo dorato / nero costina su colletto e giromanica -->
-  <path d="M 52 42 Q 60 49 68 44" stroke="url(#goldTrim)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  <path d="M 53 43 Q 60 48 67 45" stroke="#101935" stroke-width="0.8" fill="none"/>
-  <path d="M 44 42 Q 47 52 46 58" stroke="url(#goldTrim)" stroke-width="2" fill="none"/>
-  <path d="M 74 45 Q 73 54 71 60" stroke="url(#goldTrim)" stroke-width="2" fill="none"/>
+  <!-- Bordo Oro V-Neck e Giromanica -->
+  <path d="M 52 42 Q 60 49 68 44" stroke="url(#goldTrim)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M 53 43 Q 60 48 67 45" stroke="#1e3a8a" stroke-width="1" fill="none"/>
+  <path d="M 44 42 Q 47 52 46 58" stroke="url(#goldTrim)" stroke-width="2.5" fill="none"/>
+  <path d="M 74 45 Q 73 54 71 60" stroke="url(#goldTrim)" stroke-width="2.5" fill="none"/>
 
-  <!-- Numero 23 iconico tridimensionale con contorno dorato -->
-  <!-- Ombra del numero -->
-  <text x="59.5" y="68.5" font-family="'Impact', 'Arial Black', sans-serif" font-size="19" font-weight="900" fill="#1b1c29" text-anchor="middle">23</text>
-  <!-- Numero principale in rilievo -->
-  <text x="58" y="67" font-family="'Impact', 'Arial Black', sans-serif" font-size="19" font-weight="900" fill="#ffffff" stroke="url(#goldTrim)" stroke-width="1.2" text-anchor="middle">23</text>
+  <!-- DUNK 7 CITY sul petto -->
+  <text x="59" y="55" font-family="'Impact', 'Arial Black', sans-serif" font-size="6.5" font-weight="900" fill="#facc15" stroke="#1e3a8a" stroke-width="0.7" text-anchor="middle" letter-spacing="0.5">DUNK</text>
+  <text x="60.5" y="67.5" font-family="'Impact', 'Arial Black', sans-serif" font-size="15" font-weight="900" fill="#0f172a" text-anchor="middle">7</text>
+  <text x="59" y="66" font-family="'Impact', 'Arial Black', sans-serif" font-size="15" font-weight="900" fill="#facc15" stroke="#ca8a04" stroke-width="0.8" text-anchor="middle">7</text>
+  <text x="59" y="73" font-family="'Impact', 'Arial Black', sans-serif" font-size="6" font-weight="900" fill="#facc15" stroke="#1e3a8a" stroke-width="0.6" text-anchor="middle" letter-spacing="0.8">CITY</text>
 
-  <!-- ================= PANTALONCINI DA BASKET ================= -->
-  <!-- Pantaloncini scuri ampi con piping laterale bicolore -->
-  <path d="M 46 78 Q 58 83 71 80 L 76 96 Q 66 100 60 97 L 57 87 L 52 97 Q 44 95 43 90 Z" fill="url(#shortsDark)"/>
-  <!-- Fascia piping rosso e oro laterale sul pantaloncino -->
-  <path d="M 68 81 L 73 97" stroke="#e63946" stroke-width="2.5" fill="none"/>
-  <path d="M 70.5 81.5 L 75 97" stroke="url(#goldTrim)" stroke-width="1" fill="none"/>
+  <!-- PANTALONCINI ROYAL BLUE con riga dorata -->
+  <path d="M 46 78 Q 58 83 71 80 L 76 96 Q 66 100 60 97 L 57 87 L 52 97 Q 44 95 43 90 Z" fill="url(#jerseyBlue)" stroke="#1e3a8a" stroke-width="1.2"/>
+  <path d="M 68 81 L 73 97" stroke="url(#goldTrim)" stroke-width="3" fill="none" stroke-linecap="round"/>
 
-  <!-- ================= GAMBA ANTERIORE (Scatto atletico potente) ================= -->
-  <!-- Coscia anteriore con leg sleeve a compressione (look NBA moderno!) -->
-  <path d="M 61 88 Q 74 98 84 104 Q 82 110 74 112 Q 65 106 58 96 Z" fill="url(#compressionSleeve)"/>
-  <!-- Dettaglio muscolo quadricipite su compressione -->
-  <path d="M 64 91 Q 74 99 80 103" stroke="#484d63" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+  <!-- ================= GAMBA ANTERIORE ================= -->
+  <!-- Coscia muscolosa -->
+  <path d="M 61 88 Q 74 98 84 104 Q 82 110 74 112 Q 65 106 58 96 Z" fill="url(#skinBase)" stroke="#9a3412" stroke-width="1"/>
+  <!-- GINOCCHIERA NERA (Knee Pad) -->
+  <ellipse cx="80" cy="106" rx="7" ry="6" fill="url(#gearBlack)" stroke="#09090b" stroke-width="1.2"/>
+  <path d="M 76 104 Q 80 102 84 105" stroke="#71717a" stroke-width="1" fill="none"/>
 
-  <!-- Ginocchiera / Polpaccio atletico sagomato -->
-  <path d="M 83 104 Q 92 114 96 122 Q 91 126 84 122 Q 78 116 75 111 Z" fill="url(#skinBase)"/>
-  <!-- Muscolo gastrocnemio (polpaccio) definito -->
-  <path d="M 86 108 Q 91 114 90 120" stroke="#d4976c" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <!-- Polpaccio atletico -->
+  <path d="M 83 104 Q 92 114 96 122 Q 91 126 84 122 Q 78 116 75 111 Z" fill="url(#skinBase)" stroke="#9a3412" stroke-width="1"/>
+  <path d="M 86 108 Q 91 114 90 120" stroke="#ea580c" stroke-width="1.2" stroke-linecap="round" fill="none"/>
 
-  <!-- Calzino alto sportivo a coste bianco con doppie strisce rosse -->
-  <path d="M 86 118 L 97 123 L 95 129 L 84 125 Z" fill="#ffffff" stroke="#ced4da" stroke-width="0.6"/>
-  <line x1="88" y1="120" x2="90" y2="124" stroke="#d90429" stroke-width="1.2"/>
-  <line x1="91" y1="121" x2="93" y2="125" stroke="#d90429" stroke-width="1.2"/>
+  <!-- Calzino alto sportivo con strisce blu -->
+  <path d="M 86 118 L 97 123 L 95 129 L 84 125 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="0.8"/>
+  <line x1="88" y1="120" x2="90" y2="124" stroke="#2563eb" stroke-width="1.5"/>
+  <line x1="91" y1="121" x2="93" y2="125" stroke="#2563eb" stroke-width="1.5"/>
 
-  <!-- Sneaker Anteriore (Jordan Style ad altissimo dettaglio) -->
-  <path d="M 86 124 L 98 126 Q 106 125 114 127 L 115 133 Q 102 135 84 133 L 83 129 Z" fill="url(#sneakerUpper)"/>
-  <!-- Tomaia con dettagli lacci e rinforzo punta -->
-  <path d="M 97 124 Q 102 127 108 128" stroke="#ffffff" stroke-width="1.5" fill="none"/>
-  <path d="M 94 126 L 98 128" stroke="#1b1c29" stroke-width="1"/>
-  <!-- Suola sagomata ad alto assorbimento con battistrada -->
-  <path d="M 84 132 L 115 133 L 114 136 L 83 135 Z" fill="url(#soleWhite)"/>
-  <line x1="92" y1="135" x2="108" y2="135.5" stroke="#ffb703" stroke-width="1.5"/>
+  <!-- Sneaker Anteriore Chunky -->
+  <path d="M 86 124 L 98 126 Q 106 125 114 127 L 115 133 Q 102 135 84 133 L 83 129 Z" fill="url(#sneakerUpper)" stroke="#0f172a" stroke-width="1.2"/>
+  <path d="M 97 124 Q 102 127 108 128" stroke="#facc15" stroke-width="1.5" fill="none"/>
+  <path d="M 94 126 L 98 128" stroke="#ffffff" stroke-width="1.2"/>
+  <path d="M 84 132 L 115 133 L 114 136 L 83 135 Z" fill="url(#soleWhite)" stroke="#cbd5e1" stroke-width="0.8"/>
+  <line x1="92" y1="135" x2="108" y2="135.5" stroke="#facc15" stroke-width="1.5"/>
 
-  <!-- ================= COLLO & TESTA ATLETICA ================= -->
-  <!-- Collo atletico con muscolo sternocleidomastoideo -->
-  <path d="M 55 35 L 61 44 L 69 42 L 64 33 Z" fill="url(#skinShadow)"/>
-  <path d="M 58 35 Q 63 40 65 43" stroke="#f5d0b0" stroke-width="1" fill="none"/>
+  <!-- ================= COLLO & TESTA CARICATURA ================= -->
+  <!-- Collo atletico -->
+  <path d="M 55 35 L 61 44 L 69 42 L 64 33 Z" fill="url(#skinShadow)" stroke="#9a3412" stroke-width="1"/>
+  <!-- Goccia sudore sul collo -->
+  <ellipse cx="60" cy="40" rx="1.2" ry="1.8" fill="url(#sweatDrop)" transform="rotate(15 60 40)"/>
 
-  <!-- Profilo Testa / Mandibola scolpita -->
-  <path d="M 57 24 Q 61 14 73 17 Q 79 20 78 28 Q 76 34 70 36 Q 62 38 57 32 Z" fill="url(#skinBase)"/>
-  <!-- Orecchio anatomico -->
-  <path d="M 60 26 Q 58 24 60 21 Q 63 21 63 25 Q 62 28 60 28 Z" fill="url(#skinShadow)"/>
-  <path d="M 60 23 Q 61 24 61 26" stroke="#c6855b" stroke-width="0.8" fill="none"/>
+  <!-- Testa caricatura / Profilo espressivo -->
+  <path d="M 56 22 Q 58 10 72 12 Q 83 14 84 25 Q 85 34 76 40 Q 66 44 59 38 Q 54 32 56 22 Z" fill="url(#skinBase)" stroke="#9a3412" stroke-width="1.3"/>
+  <ellipse cx="70" cy="26" rx="6" ry="4" fill="url(#skinHighlight)" transform="rotate(-10 70 26)"/>
+  <path d="M 64 36 Q 72 38 77 33 Q 76 38 71 40 Q 66 41 64 36 Z" fill="#78350f" opacity="0.25"/> <!-- Barba incolta -->
 
-  <!-- Occhio concentrato, sopracciglio e profilo atletico -->
-  <path d="M 71 21 Q 76 20 78 22" stroke="#1a1c23" stroke-width="1.4" stroke-linecap="round" fill="none"/> <!-- Sopracciglio -->
-  <ellipse cx="75" cy="24" rx="1.8" ry="1.4" fill="#1a1c23"/> <!-- Occhio deciso -->
-  <path d="M 79 26 L 81 28 L 78 29" stroke="#c6855b" stroke-width="1" stroke-linecap="round" fill="none"/> <!-- Naso -->
-  <line x1="77" y1="32" x2="74" y2="32.5" stroke="#a8653e" stroke-width="1.2" stroke-linecap="round"/> <!-- Bocca -->
+  <!-- Orecchio -->
+  <path d="M 59 26 Q 56 22 59 18 Q 63 18 63 24 Q 62 28 59 28 Z" fill="url(#skinBase)" stroke="#9a3412" stroke-width="1"/>
 
-  <!-- Capelli moderni con taglio "High Top Fade" sfumato -->
-  <path d="M 56 22 Q 57 14 64 12 Q 74 11 77 17 Q 73 19 68 19 Q 60 19 57 24 Z" fill="url(#hairFade)"/>
-  
-  <!-- Fascia sportiva tergisudore celeste brillante (Headband pro) -->
-  <path d="M 58 19 Q 68 18 78 21 Q 77 24 68 22 Q 58 22 58 19 Z" fill="#00b4d8" stroke="#0077b6" stroke-width="0.8"/>
-  <!-- Logo geometrico bianco al centro della fascia -->
-  <polygon points="68,19 70,22 66,22" fill="#ffffff"/>
+  <!-- Naso e Occhio -->
+  <path d="M 77 22 Q 84 26 81 30 L 77 29" fill="url(#skinShadow)" stroke="#7c2d12" stroke-width="1.1"/>
+  <path d="M 72 17 Q 79 15 84 19" stroke="#1c1917" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  <path d="M 74 20 Q 79 18 83 22 Q 78 25 74 22 Z" fill="#ffffff" stroke="#1c1917" stroke-width="1"/>
+  <ellipse cx="79" cy="21" rx="2.4" ry="2" fill="#451a03"/>
+  <circle cx="79.5" cy="21" r="1.3" fill="#0c0a09"/>
+  <circle cx="78.5" cy="19.8" r="0.7" fill="#ffffff"/>
 
-  <!-- ================= BRACCIO ANTERIORE (Dribbling / Tiro in estensione) ================= -->
+  <!-- Sorriso con denti bianchi -->
+  <path d="M 72 31 Q 79 30 84 32 Q 83 37 75 37 Q 71 36 72 31 Z" fill="#450a0a" stroke="#1c1917" stroke-width="1.2"/>
+  <path d="M 73 32 Q 79 31 83 33 Q 82 35 75 35 Q 73 34 73 32 Z" fill="#ffffff"/>
+
+  <!-- FASCIA BIANCA SUDORE -->
+  <path d="M 58 15 Q 70 12 83 16 L 82 21 Q 70 17 57 20 Z" fill="url(#sweatbandWhite)" stroke="#94a3b8" stroke-width="1.1"/>
+
+  <!-- CAPELLI CASTANI SPIKY -->
+  <path d="M 55 16 Q 56 6 66 5 Q 70 2 75 4 Q 80 1 84 6 Q 87 8 86 15 L 83 16 Q 72 12 58 15 Z" fill="url(#hairDark)" stroke="#0c0a09" stroke-width="1.2"/>
+  <polygon points="65,5 68,0 70,5" fill="#292524"/>
+  <polygon points="73,4 77,-1 79,5" fill="#44403c"/>
+  <polygon points="81,6 85,2 87,8" fill="#292524"/>
+
+  <!-- Gocce di sudore su fronte e guancia -->
+  <path d="M 60 12 Q 58 16 61 16 Q 62 15 62 13 Z" fill="url(#sweatDrop)"/>
+  <circle cx="60.2" cy="14" r="0.5" fill="#ffffff"/>
+  <path d="M 83 24 Q 81 27 83 28 Q 84 27 84 25 Z" fill="url(#sweatDrop)"/>
+
+  <!-- ================= BRACCIO ANTERIORE ================= -->
   <!-- Spalla / Deltoide anteriore muscoloso -->
-  <ellipse cx="68" cy="46" rx="8" ry="7" fill="url(#skinBase)" transform="rotate(10 68 46)"/>
-  
-  <!-- Bicipite e gomito flesso in avanti -->
-  <path d="M 72 48 Q 84 52 92 48 Q 94 54 86 58 Q 78 58 72 52 Z" fill="url(#skinBase)"/>
-  <!-- Definizione bicipite -->
-  <path d="M 77 50 Q 84 53 88 51" stroke="#f5d0b0" stroke-width="1" fill="none"/>
+  <ellipse cx="68" cy="46" rx="8" ry="7" fill="url(#skinBase)" stroke="#9a3412" stroke-width="1" transform="rotate(10 68 46)"/>
+  <path d="M 72 48 Q 84 52 92 48 Q 94 54 86 58 Q 78 58 72 52 Z" fill="url(#skinBase)" stroke="#9a3412" stroke-width="1"/>
+  <!-- Goccia sudore bicipite -->
+  <ellipse cx="80" cy="53" rx="1.1" ry="1.6" fill="url(#sweatDrop)" transform="rotate(-15 80 53)"/>
 
-  <!-- Avambraccio atletico che scende verso la palla -->
-  <path d="M 91 49 Q 102 46 109 42 Q 111 47 104 52 Q 96 55 88 53 Z" fill="url(#skinBase)"/>
+  <path d="M 91 49 Q 102 46 109 42 Q 111 47 104 52 Q 96 55 88 53 Z" fill="url(#skinBase)" stroke="#9a3412" stroke-width="1"/>
   
-  <!-- Polsino sportivo bianco al polso -->
-  <rect x="101" y="42" width="7" height="7" rx="2" fill="#ffffff" stroke="#e0e1dd" stroke-width="0.8" transform="rotate(-25 101 42)"/>
-
-  <!-- Mano anteriore con dita aperte pronte a spingere il pallone nel palleggio -->
-  <path d="M 107 43 Q 115 39 119 39 Q 117 43 113 46 Q 118 47 116 50 Q 111 51 106 48 Z" fill="url(#skinBase)"/>
+  <!-- GUANTO NERO FINGERLESS ANTERIORE con inserto oro -->
+  <path d="M 102 42 L 112 39 Q 115 43 113 49 L 103 52 Z" fill="url(#gearBlack)" stroke="#09090b" stroke-width="1"/>
+  <rect x="105" y="42" width="6" height="5" rx="1.5" fill="url(#goldTrim)" transform="rotate(-20 105 42)"/>
+  <!-- Dita aperte pronte al palleggio -->
+  <path d="M 112 40 Q 116 38 119 39 Q 117 42 113 43 Z" fill="url(#skinBase)" stroke="#9a3412" stroke-width="0.8"/>
+  <path d="M 113 43 Q 118 42 119 45 Q 117 47 113 46 Z" fill="url(#skinBase)" stroke="#9a3412" stroke-width="0.8"/>
 </svg>

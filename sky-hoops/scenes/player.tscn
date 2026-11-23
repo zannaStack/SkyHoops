@@ -674,8 +674,7 @@ script = ExtResource("1_g2els")
 shape = SubResource("CircleShape2D_7fw7d")
 
 [node name="Rig" type="Node2D" parent="." unique_id=497611058]
-position = Vector2(0, -9)
-scale = Vector2(0.75, 0.75)
+position = Vector2(0, -25)
 
 [node name="Shadow" type="Polygon2D" parent="Rig"]
 position = Vector2(0, 48)
@@ -717,7 +716,7 @@ texture = ExtResource("8_torso")
 position = Vector2(2, -44)
 
 [node name="HeadSprite" type="Sprite2D" parent="Rig/Torso/Head"]
-position = Vector2(4, -13)
+position = Vector2(3, -19)
 texture = ExtResource("9_head")
 
 [node name="FrontLeg" type="Node2D" parent="Rig"]

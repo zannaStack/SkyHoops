@@ -348,12 +348,12 @@ theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 12
 columns = 2
 
-[node name="PowerButton" type="Button" parent="GameOverPanel/UpgradesGrid" unique_id=1984210395]
+[node name="SpeedButton" type="Button" parent="GameOverPanel/UpgradesGrid" unique_id=1984210395]
 custom_minimum_size = Vector2(280, 48)
 layout_mode = 2
 theme_override_constants/icon_max_width = 20
 theme_override_font_sizes/font_size = 15
-text = "FORZA (Lv. 1/10) - 100"
+text = "VELOCITA' (Lv. 1/10) - 100"
 icon = ExtResource("2_coin_icon")
 icon_alignment = 2
 

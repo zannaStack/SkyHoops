@@ -32,12 +32,18 @@ func start_spin_animation() -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if is_collected:
 		return
-	if body is CharacterBody2D: # Player
+
+	var is_player: bool = body is CharacterBody2D
+	var is_ball: bool = body is RigidBody2D
+
+	if is_player or is_ball:
 		is_collected = true
+		set_deferred("monitoring", false)
 		
-		# Moltiplicatore se il giocatore è in stato "On Fire"
+		# Controlla se il giocatore è in stato "On Fire"
+		var player = body if is_player else get_tree().get_first_node_in_group("player")
 		var multiplier: int = 1
-		if "is_on_fire" in body and body.is_on_fire:
+		if player and player.get("is_on_fire") == true:
 			multiplier = 2
 
 		var total_coins: int = value * multiplier
@@ -49,13 +55,17 @@ func _on_body_entered(body: Node2D) -> void:
 		if hud and hud.has_method("update_coins"):
 			hud.update_coins(GameManager.coins)
 		
+		# Se colpita dalla palla, registra nelle monete guadagnate della run corrente del player
+		if player and "coins_earned_this_run" in player:
+			player.coins_earned_this_run += total_coins
+		
 		# Particelle di scintillio dorato
 		if spark_particles:
 			spark_particles.emitting = true
 		
-		# Animazione di raccolta (salita, ingrandimento e fade-out)
+		# Animazione di raccolta (salita, ingrandimento e fade-out rapido)
 		var tween = create_tween()
-		tween.tween_property(self, "position:y", position.y - 45.0, 0.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		tween.parallel().tween_property(sprite, "scale", Vector2(0.55, 0.55), 0.3)
-		tween.parallel().tween_property(self, "modulate:a", 0.0, 0.3)
+		tween.tween_property(self, "position:y", position.y - 45.0, 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tween.parallel().tween_property(sprite, "scale", Vector2(0.55, 0.55), 0.25)
+		tween.parallel().tween_property(self, "modulate:a", 0.0, 0.25)
 		tween.tween_callback(queue_free)

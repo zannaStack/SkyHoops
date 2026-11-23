@@ -1,71 +1,109 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 56" width="52" height="56">
 <defs>
+  <!-- Sfumatura Pelle Calda Tanned / Caricatura -->
   <linearGradient id="skinBase" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%" stop-color="#f5d0b0" />
-    <stop offset="50%" stop-color="#e2ab82" />
-    <stop offset="100%" stop-color="#c6855b" />
+    <stop offset="0%" stop-color="#fed7aa" />
+    <stop offset="40%" stop-color="#fb923c" />
+    <stop offset="85%" stop-color="#ea580c" />
+    <stop offset="100%" stop-color="#c2410c" />
   </linearGradient>
   <linearGradient id="skinShadow" x1="0%" y1="0%" x2="0%" y2="100%">
-    <stop offset="0%" stop-color="#d4976c" />
-    <stop offset="100%" stop-color="#a8653e" />
+    <stop offset="0%" stop-color="#ea580c" />
+    <stop offset="70%" stop-color="#c2410c" />
+    <stop offset="100%" stop-color="#9a3412" />
   </linearGradient>
-  <linearGradient id="jerseyRed" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%" stop-color="#f94144" />
-    <stop offset="45%" stop-color="#d90429" />
-    <stop offset="100%" stop-color="#900c27" />
+  <linearGradient id="skinHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#ffedd5" stop-opacity="0.8"/>
+    <stop offset="100%" stop-color="#fed7aa" stop-opacity="0.1"/>
+  </linearGradient>
+
+  <!-- Canotta e Pantaloncini Royal Blue (Dunk City) -->
+  <linearGradient id="jerseyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#3b82f6" />
+    <stop offset="45%" stop-color="#1d4ed8" />
+    <stop offset="100%" stop-color="#1e3a8a" />
   </linearGradient>
   <linearGradient id="jerseyFold" x1="0%" y1="0%" x2="100%" y2="0%">
-    <stop offset="0%" stop-color="#900c27" stop-opacity="0.6"/>
-    <stop offset="50%" stop-color="#d90429" stop-opacity="0"/>
-    <stop offset="100%" stop-color="#ff758f" stop-opacity="0.3"/>
+    <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.7"/>
+    <stop offset="50%" stop-color="#1d4ed8" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#60a5fa" stop-opacity="0.4"/>
   </linearGradient>
-  <linearGradient id="shortsDark" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%" stop-color="#2b2d42" />
-    <stop offset="60%" stop-color="#1b1c29" />
-    <stop offset="100%" stop-color="#0e0f17" />
+
+  <!-- Bordo Oro / Giallo Caldo -->
+  <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#fef08a" />
+    <stop offset="35%" stop-color="#facc15" />
+    <stop offset="80%" stop-color="#eab308" />
+    <stop offset="100%" stop-color="#ca8a04" />
   </linearGradient>
+
+  <!-- Capelli Castani Sfumati con Texture a Ciuffi -->
+  <linearGradient id="hairDark" x1="0%" y1="100%" x2="0%" y2="0%">
+    <stop offset="0%" stop-color="#1c1917" />
+    <stop offset="60%" stop-color="#292524" />
+    <stop offset="100%" stop-color="#44403c" />
+  </linearGradient>
+
+  <!-- Fascia Bianca Sudore -->
+  <linearGradient id="sweatbandWhite" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#ffffff" />
+    <stop offset="65%" stop-color="#f1f5f9" />
+    <stop offset="100%" stop-color="#cbd5e1" />
+  </linearGradient>
+
+  <!-- Gocce di Sudore Cristalline -->
+  <linearGradient id="sweatDrop" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+    <stop offset="50%" stop-color="#bae6fd" stop-opacity="0.85" />
+    <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.7" />
+  </linearGradient>
+
+  <!-- Ginocchiera e Guanti Sportivi Neri -->
+  <linearGradient id="gearBlack" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#3f3f46" />
+    <stop offset="55%" stop-color="#27272a" />
+    <stop offset="100%" stop-color="#18181b" />
+  </linearGradient>
+
+  <!-- Sneaker Tomaia Grigio / Blu Scuro & Intersuola Bianca -->
   <linearGradient id="sneakerUpper" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%" stop-color="#ffb703" />
-    <stop offset="50%" stop-color="#fb8500" />
-    <stop offset="100%" stop-color="#d90429" />
+    <stop offset="0%" stop-color="#475569" />
+    <stop offset="50%" stop-color="#334155" />
+    <stop offset="100%" stop-color="#1e293b" />
   </linearGradient>
   <linearGradient id="soleWhite" x1="0%" y1="0%" x2="0%" y2="100%">
     <stop offset="0%" stop-color="#ffffff" />
-    <stop offset="70%" stop-color="#edf2f4" />
-    <stop offset="100%" stop-color="#8d99ae" />
-  </linearGradient>
-  <linearGradient id="compressionSleeve" x1="0%" y1="0%" x2="100%" y2="0%">
-    <stop offset="0%" stop-color="#1a1c23"/>
-    <stop offset="50%" stop-color="#323644"/>
-    <stop offset="100%" stop-color="#14151b"/>
-  </linearGradient>
-  <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="0%">
-    <stop offset="0%" stop-color="#ffd166"/>
-    <stop offset="100%" stop-color="#f77f00"/>
-  </linearGradient>
-  <linearGradient id="hairFade" x1="0%" y1="100%" x2="0%" y2="0%">
-    <stop offset="0%" stop-color="#1b1a20" />
-    <stop offset="70%" stop-color="#100f14" />
-    <stop offset="100%" stop-color="#2a2734" />
+    <stop offset="70%" stop-color="#e2e8f0" />
+    <stop offset="100%" stop-color="#94a3b8" />
   </linearGradient>
 </defs>
-  <!-- Canotta Basket Sagomata #23 -->
-  <path d="M 6 4 Q 24 1 36 7 L 32 44 Q 19 47 8 42 Z" fill="url(#jerseyRed)"/>
-  <path d="M 8 16 Q 20 22 30 18 Q 28 23 16 24 Q 9 20 8 16 Z" fill="url(#jerseyFold)"/>
-  <path d="M 10 30 Q 20 35 30 32 Q 26 36 16 37 Q 11 33 10 30 Z" fill="url(#jerseyFold)"/>
+  <!-- Canotta Basket Royal Blue sagomata con spalle atletiche -->
+  <path d="M 6 4 Q 24 1 37 7 L 33 44 Q 19 47 8 42 Z" fill="url(#jerseyBlue)" stroke="#1e3a8a" stroke-width="1.2"/>
   
-  <!-- Bordo dorato colletto e giromanica -->
-  <path d="M 14 4 Q 22 11 30 6" stroke="url(#goldTrim)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  <path d="M 15 5 Q 22 10 29 7" stroke="#101935" stroke-width="0.8" fill="none"/>
-  <path d="M 6 4 Q 9 14 8 20" stroke="url(#goldTrim)" stroke-width="2" fill="none"/>
-  <path d="M 36 7 Q 35 16 33 22" stroke="url(#goldTrim)" stroke-width="2" fill="none"/>
+  <!-- Pieghe dinamiche di corsa sulla maglia -->
+  <path d="M 8 16 Q 20 22 31 18 Q 28 23 16 24 Q 9 20 8 16 Z" fill="url(#jerseyFold)"/>
+  <path d="M 10 30 Q 20 35 31 32 Q 26 36 16 37 Q 11 33 10 30 Z" fill="url(#jerseyFold)"/>
   
-  <!-- Numero 23 tridimensionale -->
-  <text x="22.5" y="30.5" font-family="'Impact', 'Arial Black', sans-serif" font-size="19" font-weight="900" fill="#1b1c29" text-anchor="middle">23</text>
-  <text x="21" y="29" font-family="'Impact', 'Arial Black', sans-serif" font-size="19" font-weight="900" fill="#ffffff" stroke="url(#goldTrim)" stroke-width="1.2" text-anchor="middle">23</text>
+  <!-- Bordo DORATO V-Neck del colletto e giromanica (Look Golden State / Dunk City) -->
+  <path d="M 13 4 Q 22 13 30 6" stroke="url(#goldTrim)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M 15 5 Q 22 11 29 7" stroke="#1e3a8a" stroke-width="1" fill="none"/>
+  <path d="M 6 4 Q 9 14 8 20" stroke="url(#goldTrim)" stroke-width="2.5" fill="none"/>
+  <path d="M 37 7 Q 36 16 34 22" stroke="url(#goldTrim)" stroke-width="2.5" fill="none"/>
   
-  <!-- Pantaloncini Basket scuri con piping rosso/oro -->
-  <path d="M 8 40 Q 20 45 33 42 L 38 54 Q 28 58 22 55 L 19 45 L 14 55 Q 6 53 5 48 Z" fill="url(#shortsDark)"/>
-  <path d="M 30 43 L 35 55" stroke="#e63946" stroke-width="2.5" fill="none"/>
-  <path d="M 32.5 43.5 L 37 55" stroke="url(#goldTrim)" stroke-width="1" fill="none"/>
+  <!-- DETTAGLIO PETTO: "DUNK 7 CITY" in oro atletico collegiale -->
+  <!-- DUNK (curvato in alto) -->
+  <text x="21" y="19" font-family="'Impact', 'Arial Black', sans-serif" font-size="6.5" font-weight="900" fill="#facc15" stroke="#1e3a8a" stroke-width="0.7" text-anchor="middle" letter-spacing="0.5">DUNK</text>
+  
+  <!-- NUMERO 7 GRANDE CENTRALE -->
+  <text x="22.5" y="31.5" font-family="'Impact', 'Arial Black', sans-serif" font-size="15" font-weight="900" fill="#0f172a" text-anchor="middle">7</text>
+  <text x="21" y="30" font-family="'Impact', 'Arial Black', sans-serif" font-size="15" font-weight="900" fill="#facc15" stroke="#ca8a04" stroke-width="0.8" text-anchor="middle">7</text>
+  
+  <!-- CITY (sotto al 7) -->
+  <text x="21" y="38" font-family="'Impact', 'Arial Black', sans-serif" font-size="6" font-weight="900" fill="#facc15" stroke="#1e3a8a" stroke-width="0.6" text-anchor="middle" letter-spacing="0.8">CITY</text>
+  
+  <!-- PANTALONCINI DA BASKET ROYAL BLUE con bande laterali dorate -->
+  <path d="M 8 40 Q 20 45 34 42 L 39 54 Q 29 58 23 55 L 19 45 L 14 55 Q 6 53 5 48 Z" fill="url(#jerseyBlue)" stroke="#1e3a8a" stroke-width="1.2"/>
+  <!-- Fascia dorata laterale sul pantaloncino -->
+  <path d="M 31 43 L 36 55" stroke="url(#goldTrim)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M 33 43.5 L 37.5 55" stroke="#1e3a8a" stroke-width="0.8" fill="none"/>
 </svg>
