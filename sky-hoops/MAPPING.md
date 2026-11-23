@@ -145,5 +145,6 @@ flowchart TD
    - Scala base atleta: `Vector2(0.75, 0.75)` (150% della scala originale per massima leggibilità su schermo 720p/1080p).
    - Scala pallone da basket: `Vector2(0.40, 0.40)` (perfettamente identica a `ball.tscn`).
    - `AnimationPlayer` controlla i cicli `run`, `jump`, `fall`, `dunk`, `idle` con interpolazione fluida a 60 FPS.
+   - Il braccio posteriore (`BackArm`) è orientato verso la spalla posteriore: i suoi track di rotazione sono sincronizzati in fase controlaterale con `FrontLeg` (oscillazione coordinata con la falcata della corsa, slancio in elevazione su salto/dunk).
    - La cadenza della corsa si adatta dinamicamente: `anim_player.speed_scale = (current_speed / base_speed) * 1.15`.
    - L'inclinazione su salite e discese è gestita con `lerp_angle(rotation, floor_normal.angle() + PI / 2.0, 14.0 * delta)`.

@@ -281,7 +281,7 @@ func update_ball_dribble(delta: float) -> void:
 
 	# 1. In fase di caricamento tiro (Aim con slow-motion)
 	if is_dragging or is_button_charging:
-		var aim_x = -24.0 if current_drag_vector.x < -10.0 else 30.0
+		var aim_x = -24.0 if current_drag_vector.x < -10.0 else 38.0
 		var target_aim_pos = Vector2(aim_x, -32.0)
 		ball_visual.position = ball_visual.position.lerp(target_aim_pos, 16.0 * delta)
 		ball_visual.scale = ball_visual.scale.lerp(base_ball_scale, 14.0 * delta)
@@ -289,7 +289,7 @@ func update_ball_dribble(delta: float) -> void:
 
 	# 2. In Schiacciata pronta (Slam Dunk range)
 	if can_dunk:
-		var target_dunk_pos = Vector2(22.0, -42.0)
+		var target_dunk_pos = Vector2(30.0, -42.0)
 		ball_visual.position = ball_visual.position.lerp(target_dunk_pos, 14.0 * delta)
 		ball_visual.scale = ball_visual.scale.lerp(base_ball_scale, 14.0 * delta)
 		return
@@ -298,7 +298,7 @@ func update_ball_dribble(delta: float) -> void:
 	var is_flying: bool = (GameManager.special_ability_level >= 3 and int(global_position.x / 50.0) < 1000)
 	if not is_on_floor() or is_flying:
 		# Palla raccolta al petto/in controllo durante il balzo
-		var air_pos = Vector2(26.0, -10.0 + sin(Time.get_ticks_msec() * 0.007) * 4.0)
+		var air_pos = Vector2(34.0, -10.0 + sin(Time.get_ticks_msec() * 0.007) * 4.0)
 		ball_visual.position = ball_visual.position.lerp(air_pos, 12.0 * delta)
 		ball_visual.scale = ball_visual.scale.lerp(base_ball_scale, 12.0 * delta)
 		return
@@ -310,7 +310,7 @@ func update_ball_dribble(delta: float) -> void:
 	# Ciclo rimbalzo: 0 = mano in alto, 1 = tocco del suolo in basso
 	var cycle: float = abs(sin(dribble_timer))
 	var dribble_y: float = lerp(-3.0, 30.0, cycle)
-	var dribble_x: float = lerp(24.0, 36.0, cycle)
+	var dribble_x: float = lerp(32.0, 44.0, cycle)
 
 	ball_visual.position.x = dribble_x
 	ball_visual.position.y = dribble_y
