@@ -174,6 +174,14 @@ func flash_stamina_damage(duration: float = 0.5) -> void:
 		tween.tween_property(stamina_bar, "scale", Vector2(1.04, 1.16), 0.08).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		tween.tween_property(stamina_bar, "scale", Vector2(1.0, 1.0), 0.14)
 
+func flash_stamina_heal(duration: float = 0.4) -> void:
+	if stamina_fill_style:
+		stamina_fill_style.bg_color = Color(0.18, 1.0, 0.45)
+	if stamina_bar:
+		var tween = create_tween()
+		tween.tween_property(stamina_bar, "scale", Vector2(1.06, 1.20), 0.09).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tween.tween_property(stamina_bar, "scale", Vector2(1.0, 1.0), 0.15)
+
 func update_distance(distance_meters: int) -> void:
 	_ensure_nodes()
 	if distance_label:
@@ -207,7 +215,7 @@ func update_combo(combo_count: int, is_on_fire: bool) -> void:
 	_ensure_nodes()
 	
 	if fire_border:
-		fire_border.visible = is_on_fire
+		fire_border.visible = is_on_fire and combo_count >= 2
 			
 	var target_display: CanvasItem = combo_container if combo_container else combo_label
 	if not target_display:
@@ -217,8 +225,16 @@ func update_combo(combo_count: int, is_on_fire: bool) -> void:
 		if not target_display.visible:
 			trigger_impact_flash(Color(1.0, 0.45, 0.1, 0.35))
 		target_display.visible = true
+		
+		var mult: int = clamp(combo_count, 1, 5)
 		if combo_label:
-			combo_label.text = "🔥 ON FIRE! x" + str(combo_count) + " (2x"
+			if combo_count == 1:
+				combo_label.text = "🎯 STREAK: 1 (x1 🪙)"
+			elif mult < 5:
+				combo_label.text = "🔥 ON FIRE! " + str(combo_count) + " CANESTRI (x" + str(mult) + " 🪙)"
+			else:
+				combo_label.text = "🔥🔥 MAX FIRE! " + str(combo_count) + " STREAK (x5 🪙 MAX!)"
+				
 		var tween = create_tween()
 		tween.tween_property(target_display, "scale", Vector2(1.22, 1.22), 0.08)
 		tween.tween_property(target_display, "scale", Vector2(1.0, 1.0), 0.14)

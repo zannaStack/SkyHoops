@@ -10,6 +10,19 @@ func _on_body_entered(body: Node2D) -> void:
 	if has_triggered:
 		return
 	if body is CharacterBody2D: # Player
+		# Immunità durante l'Aura Dorata Fluttuante
+		if body.get("is_golden_immune") == true or body.get("is_golden_aura") == true:
+			has_triggered = true
+			show_immune_text()
+			GameManager.vibrate_light()
+			
+			# Lo spuntone viene disintegrato dall'aura dorata
+			var shatter_tween = create_tween()
+			shatter_tween.tween_property(sprite, "scale", Vector2(1.35, 0.1), 0.12)
+			shatter_tween.tween_property(self, "modulate", Color(1.0, 0.85, 0.2, 0.0), 0.2)
+			shatter_tween.tween_callback(queue_free)
+			return
+
 		has_triggered = true
 		
 		# Sottrae 25 punti stamina
@@ -38,6 +51,19 @@ func _on_body_entered(body: Node2D) -> void:
 		spike_tween.tween_property(sprite, "scale", Vector2(0.5, 0.1), 0.2)
 		spike_tween.tween_property(self, "modulate:a", 0.0, 0.3)
 		spike_tween.tween_callback(queue_free)
+
+func show_immune_text() -> void:
+	var label = Label.new()
+	label.text = "✨ AURA IMMUNE! 🛡️"
+	label.position = Vector2(-75, -55)
+	label.modulate = Color(1.0, 0.90, 0.25)
+	label.add_theme_font_size_override("font_size", 18)
+	add_child(label)
+	
+	var tween = create_tween()
+	tween.tween_property(label, "position:y", -110.0, 0.7).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property(label, "modulate:a", 0.0, 0.7)
+	tween.tween_callback(label.queue_free)
 
 func show_damage_text() -> void:
 	var label = Label.new()

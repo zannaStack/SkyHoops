@@ -40,11 +40,12 @@ func _on_body_entered(body: Node2D) -> void:
 		is_collected = true
 		set_deferred("monitoring", false)
 		
-		# Controlla se il giocatore è in stato "On Fire"
+		# Controlla se il giocatore è in serie / On Fire
 		var player = body if is_player else get_tree().get_first_node_in_group("player")
 		var multiplier: int = 1
 		if player and player.get("is_on_fire") == true:
-			multiplier = 2
+			var combo: int = player.get("combo_count") if player.get("combo_count") != null else 1
+			multiplier = clamp(combo, 1, 5)
 
 		var total_coins: int = value * multiplier
 		GameManager.add_coins(total_coins)

@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://c7pgen0h0clcg" path="res://assets/hoop_backboard.svg" id="2_hoop_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sensor"]
-size = Vector2(50, 22)
+size = Vector2(38, 16)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_rim"]
 bounce = 0.72
@@ -36,7 +36,7 @@ collision_mask = 4
 script = ExtResource("1_kqfn8")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=987441805]
-position = Vector2(0, 12)
+position = Vector2(0, 15)
 shape = SubResource("RectangleShape2D_sensor")
 
 [node name="VisualSprite" type="Sprite2D" parent="." unique_id=772711558]

@@ -250,7 +250,7 @@ tracks/7/keys = {
 "times": PackedFloat32Array(0.00, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [0.3491, -0.7854]
+"values": [0.384, 0.384]
 }
 tracks/8/type = "value"
 tracks/8/imported = false
@@ -262,7 +262,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0.00, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [0.1745, -0.3491]
+"values": [0.2618, 0.2618]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -274,7 +274,7 @@ tracks/9/keys = {
 "times": PackedFloat32Array(0.00, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [-0.1745, -0.6981]
+"values": [-0.1047, -0.1047]
 }
 
 [sub_resource type="Animation" id="Animation_fall"]
@@ -376,7 +376,7 @@ tracks/7/keys = {
 "times": PackedFloat32Array(0.00, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [-0.3491, 0.4189]
+"values": [0.384, 0.384]
 }
 tracks/8/type = "value"
 tracks/8/imported = false
@@ -388,7 +388,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0.00, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [-0.1745, 0.2618]
+"values": [0.2618, 0.2618]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -400,7 +400,7 @@ tracks/9/keys = {
 "times": PackedFloat32Array(0.00, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [-0.3491, 0.0873]
+"values": [-0.1047, -0.1047]
 }
 
 [sub_resource type="Animation" id="Animation_dunk"]

@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://c7nan4def001a"]
+
+[ext_resource type="Script" path="res://scripts/defender_dummy.gd" id="1_dummy_script"]
+[ext_resource type="Texture2D" path="res://assets/defender_dummy.svg" id="2_dummy_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dummy"]
+size = Vector2(40, 115)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_prox"]
+size = Vector2(280, 180)
+
+[node name="DefenderDummy" type="Area2D"]
+collision_layer = 0
+collision_mask = 6
+script = ExtResource("1_dummy_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -58)
+shape = SubResource("RectangleShape2D_dummy")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -70)
+texture = ExtResource("2_dummy_tex")
+
+[node name="ProximityArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ProximityArea"]
+position = Vector2(-110, -80)
+shape = SubResource("RectangleShape2D_prox")
+
+[node name="BlockParticles" type="CPUParticles2D" parent="."]
+position = Vector2(0, -95)
+emitting = false
+one_shot = true
+explosiveness = 0.9
+amount = 16
+lifetime = 0.45
+direction = Vector2(-1, -0.3)
+spread = 40.0
+gravity = Vector2(0, 200)
+initial_velocity_min = 90.0
+initial_velocity_max = 180.0
+scale_amount_min = 2.5
+scale_amount_max = 5.0
+color = Color(1, 0.45, 0.15, 0.95)

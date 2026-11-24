@@ -17,6 +17,9 @@ var max_visible_dots: int = 2
 
 @onready var rig: Node2D = get_node_or_null("Rig")
 @onready var anim_player: AnimationPlayer = get_node_or_null("AnimationPlayer")
+@onready var front_arm: Node2D = get_node_or_null("Rig/FrontArm")
+@onready var forearm_front: Node2D = get_node_or_null("Rig/FrontArm/ForearmFront")
+@onready var back_arm: Node2D = get_node_or_null("Rig/BackArm")
 @onready var ball_visual: Sprite2D = $BallVisual
 @onready var trajectory_dots: Node2D = $TrajectoryDots
 @onready var dust_particles: CPUParticles2D = $DustParticles
@@ -48,6 +51,23 @@ var current_speed: float = 280.0
 var is_boosting: bool = false
 var boost_timer: float = 0.0
 
+# Meccanica Aura Dorata & Immunità Ostacoli (Post-Canestro)
+var is_golden_aura: bool = false
+var is_golden_immune: bool = false
+var golden_aura_timer: float = 0.0
+const GOLDEN_AURA_DURATION: float = 3.5
+var golden_aura_node: Node2D = null
+var golden_aura_sprite: Sprite2D = null
+var golden_aura_particles: CPUParticles2D = null
+var golden_aura_light: PointLight2D = null
+var has_jumped_in_air: bool = false
+var jumped_with_ball: bool = false
+const TRAVELING_STAMINA_PENALTY: float = 20.0
+
+# Coyote Time per salto reattivo e pulito (zero salti doppi in aria)
+var coyote_timer: float = 0.0
+const COYOTE_TIME_MAX: float = 0.10
+
 var stamina: float = 100.0
 var is_game_over: bool = false
 
@@ -76,6 +96,7 @@ func _ready() -> void:
 		base_camera_offset = camera.offset
 	stamina = max_stamina
 	apply_upgrades_from_manager()
+	_setup_golden_aura()
 	
 	hud = get_parent().get_node_or_null("HUD")
 	if hud:
@@ -108,20 +129,39 @@ func apply_upgrades_from_manager() -> void:
 	jump_force = 480.0 + ((GameManager.jump_level - 1) * 32.0)
 	max_stamina = 100.0 + ((GameManager.stamina_level - 1) * 20.0)
 	stamina = max_stamina
-	stamina_decay_rate = 3.5 / (1.0 + (GameManager.stamina_level - 1) * 0.12)
+	# Decay bilanciato: consumo leggermente più rapido a bassi livelli per creare sana tensione arcade
+	stamina_decay_rate = 5.2 / (1.0 + (GameManager.stamina_level - 1) * 0.10)
 
 func _process(delta: float) -> void:
-	if not camera:
-		return
-	if trauma > 0.0:
-		trauma = max(trauma - trauma_decay * delta, 0.0)
-		var shake: float = trauma * trauma
-		camera.offset = base_camera_offset + Vector2(
-			randf_range(-1.0, 1.0) * max_shake_offset.x * shake,
-			randf_range(-1.0, 1.0) * max_shake_offset.y * shake
-		)
-	elif camera.offset != base_camera_offset:
-		camera.offset = base_camera_offset
+	if camera:
+		if trauma > 0.0:
+			trauma = max(trauma - trauma_decay * delta, 0.0)
+			var shake: float = trauma * trauma
+			camera.offset = base_camera_offset + Vector2(
+				randf_range(-1.0, 1.0) * max_shake_offset.x * shake,
+				randf_range(-1.0, 1.0) * max_shake_offset.y * shake
+			)
+		elif camera.offset != base_camera_offset:
+			camera.offset = base_camera_offset
+
+	# Blocco della mano destra e del braccio sul pallone quando l'atleta è a mezz'aria (nessun palleggio spuro)
+	if has_ball and not is_game_over:
+		var is_flying_now: bool = (GameManager.special_ability_level >= 3 and int(global_position.x / 50.0) < 1000)
+		var is_airborne: bool = (not is_on_floor()) or has_jumped_in_air or abs(velocity.y) > 20.0 or is_flying_now
+		if is_airborne and not (is_dragging or is_button_charging):
+			if front_arm:
+				front_arm.rotation = 0.384
+			if forearm_front:
+				forearm_front.rotation = 0.2618
+			if back_arm:
+				back_arm.rotation = -0.1047
+		elif is_airborne and (is_dragging or is_button_charging):
+			if front_arm:
+				front_arm.rotation = 0.32
+			if forearm_front:
+				forearm_front.rotation = 0.18
+			if back_arm:
+				back_arm.rotation = -0.15
 
 func add_camera_trauma(amount: float) -> void:
 	trauma = clamp(trauma + amount, 0.0, 1.0)
@@ -148,7 +188,7 @@ func _physics_process(delta: float) -> void:
 		var target_flight_y: float = 330.0 + sin(Time.get_ticks_msec() * 0.003) * 20.0
 		global_position.y = lerp(global_position.y, target_flight_y, 4.0 * delta)
 		velocity.y = 0
-		current_speed = (boost_speed if is_boosting else base_speed) * 1.35
+		current_speed = base_speed * 1.35
 		if fire_particles:
 			fire_particles.emitting = true
 	else:
@@ -157,15 +197,44 @@ func _physics_process(delta: float) -> void:
 		if not is_on_fire and fire_particles:
 			fire_particles.emitting = false
 
-	if is_boosting:
-		boost_timer -= delta
-		if boost_timer <= 0:
-			is_boosting = false
-			if not is_flying:
-				current_speed = base_speed
+	# MECCANICA AURA DORATA (IMMUNITÀ TOTALE A TRAPPOLE E OSTACOLI)
+	if golden_aura_timer > 0.0:
+		golden_aura_timer -= delta
+		is_golden_aura = true
+		is_golden_immune = true
+		
+		# Animazione di rotazione e pulsazione dell'aura dorata
+		if golden_aura_node:
+			golden_aura_node.visible = true
+			if golden_aura_sprite:
+				golden_aura_sprite.rotation += 2.4 * delta
+				var pulse = 0.92 + sin(Time.get_ticks_msec() * 0.008) * 0.08
+				golden_aura_sprite.scale = Vector2(pulse, pulse)
+				if golden_aura_timer < 0.8:
+					golden_aura_sprite.modulate.a = (sin(Time.get_ticks_msec() * 0.025) * 0.5 + 0.5) * 0.85
+				else:
+					golden_aura_sprite.modulate.a = 0.95
+			if golden_aura_particles and not golden_aura_particles.emitting:
+				golden_aura_particles.emitting = true
+			if golden_aura_light:
+				golden_aura_light.enabled = true
 	else:
-		if not is_flying:
-			current_speed = base_speed
+		if is_golden_aura:
+			is_golden_aura = false
+			is_golden_immune = false
+			if golden_aura_node:
+				golden_aura_node.visible = false
+			if golden_aura_particles:
+				golden_aura_particles.emitting = false
+			if golden_aura_light:
+				golden_aura_light.enabled = false
+
+	# VELOCITÀ PROGRESSIVA FLUIDA (Aumenta dolcemente con i metri percorsi, senza mai diventare ingestibile)
+	if not is_flying:
+		# Guadagna gradualmente circa +15 px/s ogni 500m, con un tetto massimo morbido di +70 px/s
+		var distance_speed_bonus: float = min(float(distance_meters) * 0.03, 70.0)
+		var target_speed: float = base_speed + distance_speed_bonus
+		current_speed = lerp(current_speed, target_speed, 2.0 * delta)
 
 	# ABILITÀ SPECIALE 2: Stamina sempre piena per i primi 1000 metri!
 	if GameManager.special_ability_level >= 2 and distance_meters < 1000:
@@ -193,25 +262,33 @@ func _physics_process(delta: float) -> void:
 
 	# Luce On Fire dinamica
 	if fire_light:
-		fire_light.enabled = (is_on_fire or is_flying)
+		fire_light.enabled = (is_on_fire or is_flying or is_golden_aura)
 
 	# Controllo opportunità di Schiacciata (Slam Dunk)
 	check_dunk_opportunity()
 
-	# Palleggio fisico e dinamico del basket (Dribbling realistico)
-	update_ball_dribble(delta)
-
 	velocity.x = current_speed
-	floor_snap_length = 24.0 if is_on_floor() else 0.0
+	floor_snap_length = 24.0 if (is_on_floor() and velocity.y >= 0.0) else 0.0
 	floor_constant_speed = true
 	move_and_slide()
 
+	if is_on_floor():
+		coyote_timer = COYOTE_TIME_MAX
+		has_jumped_in_air = false
+	else:
+		coyote_timer = max(0.0, coyote_timer - delta)
+
+	# Controllo palla & palleggio (attivo a terra, bloccato saldamente al petto in salto)
+	update_ball_dribble(delta)
+
 	# GESTIONE ANIMAZIONI SCHELETRICHE 2D (Run, Jump, Fall, Idle)
 	if anim_player:
+		var is_airborne: bool = (not is_on_floor()) or has_jumped_in_air or abs(velocity.y) > 20.0 or is_flying
 		if is_game_over:
 			if anim_player.current_animation != "idle":
 				anim_player.play("idle", 0.15)
-		elif not is_on_floor() and not is_flying:
+		elif is_airborne:
+			anim_player.speed_scale = 1.0
 			if velocity.y < -40.0:
 				if anim_player.current_animation != "jump":
 					anim_player.play("jump", 0.1)
@@ -224,13 +301,23 @@ func _physics_process(delta: float) -> void:
 			# I passi accelerano proporzionalmente alla velocità reale della corsa!
 			anim_player.speed_scale = (current_speed / 280.0) * 1.15
 
-	# Squash & Stretch all'atterraggio dopo un salto
+	# Squash & Stretch e controllo infrazione "Passi" all'atterraggio dopo un salto
 	if not was_on_floor and is_on_floor() and not is_game_over:
 		if rig:
 			var land_tween = create_tween()
 			land_tween.tween_property(rig, "scale", BASE_PLAYER_SCALE * Vector2(1.16, 0.84), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 			land_tween.tween_property(rig, "scale", BASE_PLAYER_SCALE, 0.12).set_trans(Tween.TRANS_SINE)
-		GameManager.vibrate_light()
+
+		# INFRAZIONE BASKET: PASSI (Atterraggio con palla in mano dopo un salto senza aver tirato)
+		if jumped_with_ball and has_ball:
+			if is_golden_aura:
+				show_floating_status("🛡️ PASSI EVITATI DALL'AURA!", Color(1.0, 0.92, 0.3))
+			else:
+				apply_traveling_penalty()
+		else:
+			GameManager.vibrate_light()
+
+		jumped_with_ball = false
 	was_on_floor = is_on_floor()
 
 	# Allineamento dinamico alla pendenza del terreno (Salite e Discese)
@@ -262,7 +349,14 @@ func _unhandled_input(event: InputEvent) -> void:
 				_on_shoot_button_up()
 
 func jump() -> void:
-	if is_on_floor() and not is_game_over:
+	if is_game_over:
+		return
+		
+	# Salto consentito solo se a contatto col terreno o in finestra coyote time (zero salti doppi in aria)
+	if is_on_floor() or coyote_timer > 0.0:
+		coyote_timer = 0.0
+		has_jumped_in_air = true
+		jumped_with_ball = has_ball
 		velocity.y = -jump_force
 		if anim_player:
 			anim_player.play("jump", 0.08)
@@ -271,13 +365,10 @@ func jump() -> void:
 			tween.tween_property(rig, "scale", BASE_PLAYER_SCALE * Vector2(0.80, 1.24), 0.08)
 			tween.tween_property(rig, "scale", BASE_PLAYER_SCALE, 0.15)
 
-# --- SISTEMA PALLEGGIO FISICO REALISTICO (DRIBBLING) ---
+# --- SISTEMA PALLEGGIO FISICO REALISTICO (DRIBBLING A TERRA & PRESA IN VOLO) ---
 func update_ball_dribble(delta: float) -> void:
 	if not has_ball or not ball_visual or not ball_visual.visible:
 		return
-
-	# Rotazione naturale rotolamento della palla in corsa
-	ball_visual.rotation += (current_speed / 48.0) * delta
 
 	# 1. In fase di caricamento tiro (Aim con slow-motion)
 	if is_dragging or is_button_charging:
@@ -294,16 +385,21 @@ func update_ball_dribble(delta: float) -> void:
 		ball_visual.scale = ball_visual.scale.lerp(base_ball_scale, 14.0 * delta)
 		return
 
-	# 3. In salto / a mezz'aria o in volo
+	# 3. IN SALTO / A MEZZ'ARIA O IN VOLO -> NESSUN PALLEGGIO!
+	# In aria l'atleta interrompe categoricamente il palleggio e serra il pallone a due mani
+	# saldo al petto/mento (Vector2(24, -28)), pronto allo stacco aereo o al tiro
 	var is_flying: bool = (GameManager.special_ability_level >= 3 and int(global_position.x / 50.0) < 1000)
-	if not is_on_floor() or is_flying:
-		# Palla raccolta al petto/in controllo durante il balzo
-		var air_pos = Vector2(34.0, -10.0 + sin(Time.get_ticks_msec() * 0.007) * 4.0)
-		ball_visual.position = ball_visual.position.lerp(air_pos, 12.0 * delta)
-		ball_visual.scale = ball_visual.scale.lerp(base_ball_scale, 12.0 * delta)
+	var is_in_air: bool = (not is_on_floor()) or has_jumped_in_air or abs(velocity.y) > 20.0 or is_flying
+
+	if is_in_air:
+		var air_gather_pos = Vector2(24.0, -28.0)
+		ball_visual.position = ball_visual.position.lerp(air_gather_pos, 16.0 * delta)
+		ball_visual.scale = ball_visual.scale.lerp(base_ball_scale, 14.0 * delta)
+		ball_visual.rotation = lerp_angle(ball_visual.rotation, -0.12, 10.0 * delta)
 		return
 
-	# 4. Corsa a terra -> PALLEGGIO RITMICO (Dribble tra mano e asfalto/erba)
+	# 4. CORSA A TERRA -> PALLEGGIO RITMICO (Attivo ESCLUSIVAMENTE a contatto col suolo)
+	ball_visual.rotation += (current_speed / 48.0) * delta
 	var speed_factor = current_speed / base_speed
 	dribble_timer += delta * 13.0 * speed_factor
 
@@ -340,10 +436,10 @@ func check_dunk_opportunity() -> void:
 		# CONDIZIONI PRECISE SCHIACCIATA (adattate alle proporzioni del player 150%):
 		# 1. Molto vicino orizzontalmente (da -20px a 105px dal ferro)
 		var is_close_x: bool = dx > -20.0 and dx < 105.0
-		# 2. Vicino verticalmente alla quota canestro
-		var is_close_y: bool = abs(dy) < 145.0
+		# 2. Vicino verticalmente alla quota canestro (armonizzato con le nuove quote aeree dei canestri)
+		var is_close_y: bool = abs(dy) < 165.0
 		# 3. La palla si trova INTERAMENTE SOPRA il canestro (Y minore = più in alto)
-		var is_ball_above_hoop: bool = ball_visual.global_position.y < (hoop.global_position.y - 10.0)
+		var is_ball_above_hoop: bool = ball_visual.global_position.y < (hoop.global_position.y - 6.0)
 
 		if is_close_x and is_close_y and is_ball_above_hoop:
 			var dist = Vector2(dx, dy).length()
@@ -365,7 +461,9 @@ func perform_slam_dunk(hoop: Node2D) -> void:
 	if not is_instance_valid(hoop) or is_game_over or not has_ball:
 		return
 
+	shots_taken += 1
 	has_ball = false
+	jumped_with_ball = false
 	ball_visual.visible = false
 	can_dunk = false
 	is_button_charging = false
@@ -382,43 +480,56 @@ func perform_slam_dunk(hoop: Node2D) -> void:
 		if shoot_btn:
 			shoot_btn.release_focus()
 
-	# Hitstop (Freeze Frame cinematico a mezz'aria durante l'inchiodata)
-	Engine.time_scale = 0.08
-	get_tree().create_timer(0.10, true, false, true).timeout.connect(func():
-		Engine.time_scale = 1.0
-	)
+	# Hitstop & Slow-Motion cinematico d'impatto (Feature 7)
+	Engine.time_scale = 0.12
+	var sm_tween = create_tween()
+	sm_tween.tween_interval(0.10)
+	sm_tween.tween_property(Engine, "time_scale", 1.0, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
-	add_camera_trauma(0.85)
+	# Zoom punch della telecamera per esaltare l'impatto visivo
+	if camera:
+		var c_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		c_tween.tween_property(camera, "zoom", Vector2(1.12, 1.12), 0.08)
+		c_tween.tween_property(camera, "zoom", Vector2(1.0, 1.0), 0.28)
+
+	add_camera_trauma(0.95)
 	GameManager.vibrate_double()
+
+	# Piega elastica del ferro e della retina (Feature 1)
+	if hoop.has_method("trigger_rim_juice"):
+		hoop.trigger_rim_juice(true)
 
 	# Istanzia il pallone ad altissima velocità verso il basso attraverso la retina
 	var ball: RigidBody2D = BALL_SCENE.instantiate()
-	ball.global_position = hoop.global_position + Vector2(0.0, -20.0)
+	ball.global_position = hoop.global_position + Vector2(0.0, -18.0)
 	ball.is_dunk = true
 	get_parent().add_child(ball)
-	ball.linear_velocity = Vector2(0.0, 850.0)
+	ball.linear_velocity = Vector2(0.0, 920.0)
 
 	if anim_player:
 		anim_player.play("dunk", 0.05)
 
-	# FASE 1: Scatto atletico e inchiodata a due mani sul ferro
-	var slam_pos: Vector2 = hoop.global_position + Vector2(-12.0, -40.0)
+	# FASE 1: Scatto atletico e presa del ferro (Hang-time a due mani)
+	var slam_pos: Vector2 = hoop.global_position + Vector2(-10.0, -38.0)
 	var tween = create_tween()
 	tween.tween_property(self, "global_position", slam_pos, 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	if rig:
 		tween.parallel().tween_property(rig, "rotation", 0.35, 0.06)
 		tween.parallel().tween_property(rig, "scale", BASE_PLAYER_SCALE * Vector2(1.28, 0.80), 0.06)
+	
+	# Breve aggancio al ferro (hang time) che trasmette il peso dell'atleta
+	tween.tween_interval(0.05)
 
 	# FASE 2: PIROETTA ACROBATICA (360° spin somersault) e proiezione fluida oltre il canestro
-	var exit_pos_x: float = hoop.global_position.x + 65.0 # Oltre il tabellone
-	tween.tween_property(self, "global_position:x", exit_pos_x, 0.32).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	var exit_pos_x: float = hoop.global_position.x + 75.0 # Oltre il tabellone
+	tween.tween_property(self, "global_position:x", exit_pos_x, 0.30).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	if rig:
-		tween.parallel().tween_property(rig, "rotation", 0.35 + TAU, 0.38).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-		tween.parallel().tween_property(rig, "scale", BASE_PLAYER_SCALE, 0.25)
+		tween.parallel().tween_property(rig, "rotation", 0.35 + TAU, 0.36).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween.parallel().tween_property(rig, "scale", BASE_PLAYER_SCALE, 0.22)
 
 	# Inerzia per cadere con naturalezza sotto e oltre il ferro verso il terreno
-	velocity.x = current_speed * 1.35
-	velocity.y = 150.0
+	velocity.x = current_speed * 1.45
+	velocity.y = 130.0
 
 	# Ripristina rotazione a 0.0 al termine della piroetta
 	tween.tween_callback(func():
@@ -490,6 +601,7 @@ func release_shot() -> void:
 func shoot_ball() -> void:
 	shots_taken += 1
 	has_ball = false
+	jumped_with_ball = false
 	ball_visual.visible = false
 	
 	var ball: RigidBody2D = BALL_SCENE.instantiate()
@@ -533,19 +645,22 @@ func trigger_boost(is_micro: bool, bonus_coins: int = 35) -> void:
 	if bonus_coins >= 30:
 		perfect_swishes += 1
 
-	# Incrementa la serie di canestri consecutivi (On Fire attivo fin dal 1° canestro)
+	# Incrementa la serie di canestri consecutivi con tiri consecutivi
 	combo_count += 1
 	is_on_fire = true
 	if fire_particles:
 		fire_particles.emitting = true
+		fire_particles.amount = clamp(16 + combo_count * 8, 16, 48)
 	
 	if hud and hud.has_method("update_combo"):
 		hud.update_combo(combo_count, is_on_fire)
 
-	is_boosting = true
-	boost_timer = 2.0 if not is_micro else 3.5
-	current_speed = boost_speed if not is_micro else boost_speed * 1.3
-	add_camera_trauma(0.45 if not is_micro else 0.70)
+	# RIMOSSO IL BOOST BRUSCO DI VELOCITÀ:
+	# La velocità rimane stabile e confortevole a base_speed per non tradire i riflessi del giocatore
+	is_boosting = false
+	boost_timer = 0.0
+	current_speed = base_speed
+	add_camera_trauma(0.18 if not is_micro else 0.32)
 	
 	# Accredita direttamente il bottino guadagnato dal canestro
 	var earned_coins: int = bonus_coins
@@ -554,13 +669,126 @@ func trigger_boost(is_micro: bool, bonus_coins: int = 35) -> void:
 	if hud:
 		hud.update_coins(GameManager.coins)
 	
-	stamina = min(max_stamina, stamina + (35.0 if not is_micro else 60.0))
+	# RICOMPENSA 1: Ricarica immediata del +20% della Stamina massima
+	var stamina_gain: float = max_stamina * 0.20
+	stamina = min(max_stamina, stamina + stamina_gain)
+	if hud and hud.has_method("flash_stamina_heal"):
+		hud.flash_stamina_heal(0.4)
+	
+	# RICOMPENSA 2: Aura Dorata Fluttuante (Immune a burroni e trappole per 3.5s)
+	activate_golden_aura(is_micro)
+	
 	reload_ball()
 	
 	if rig:
 		var tween = create_tween()
 		tween.tween_property(rig, "scale", BASE_PLAYER_SCALE * Vector2(1.24, 0.80), 0.1)
 		tween.tween_property(rig, "scale", BASE_PLAYER_SCALE, 0.2)
+
+func _setup_golden_aura() -> void:
+	golden_aura_node = Node2D.new()
+	golden_aura_node.name = "GoldenAura"
+	golden_aura_node.position = Vector2(0, -10)
+	golden_aura_node.visible = false
+	add_child(golden_aura_node)
+	
+	# Sprite anello e alone sacro dorato
+	golden_aura_sprite = Sprite2D.new()
+	var aura_texture = load("res://assets/golden_aura.svg")
+	if aura_texture:
+		golden_aura_sprite.texture = aura_texture
+	golden_aura_sprite.scale = Vector2(0.95, 0.95)
+	golden_aura_sprite.modulate = Color(1.0, 0.95, 0.35, 0.0)
+	golden_aura_sprite.z_index = -1
+	golden_aura_node.add_child(golden_aura_sprite)
+	
+	# Particelle stellari e scintille dorate
+	golden_aura_particles = CPUParticles2D.new()
+	golden_aura_particles.emitting = false
+	golden_aura_particles.amount = 22
+	golden_aura_particles.lifetime = 0.50
+	golden_aura_particles.emission_shape = CPUParticles2D.EMISSION_SHAPE_SPHERE
+	golden_aura_particles.emission_sphere_radius = 28.0
+	golden_aura_particles.direction = Vector2(-1.0, -0.2)
+	golden_aura_particles.spread = 28.0
+	golden_aura_particles.gravity = Vector2(0, -35.0)
+	golden_aura_particles.initial_velocity_min = 40.0
+	golden_aura_particles.initial_velocity_max = 95.0
+	golden_aura_particles.scale_amount_min = 2.5
+	golden_aura_particles.scale_amount_max = 5.5
+	golden_aura_particles.color = Color(1.0, 0.92, 0.3, 0.9)
+	golden_aura_particles.z_index = -1
+	golden_aura_node.add_child(golden_aura_particles)
+	
+	# Luce calda dorata
+	golden_aura_light = PointLight2D.new()
+	golden_aura_light.enabled = false
+	golden_aura_light.energy = 1.6
+	golden_aura_light.color = Color(1.0, 0.90, 0.4)
+	
+	var grad = Gradient.new()
+	grad.colors = PackedColorArray([Color(1.0, 0.9, 0.3, 0.9), Color(1.0, 0.6, 0.1, 0.0)])
+	var grad_tex = GradientTexture2D.new()
+	grad_tex.gradient = grad
+	grad_tex.fill = GradientTexture2D.FILL_RADIAL
+	grad_tex.fill_from = Vector2(0.5, 0.5)
+	grad_tex.fill_to = Vector2(0.85, 0.85)
+	grad_tex.width = 128
+	grad_tex.height = 128
+	golden_aura_light.texture = grad_tex
+	golden_aura_light.texture_scale = 3.4
+	golden_aura_node.add_child(golden_aura_light)
+
+func activate_golden_aura(is_micro: bool) -> void:
+	is_golden_aura = true
+	is_golden_immune = true
+	golden_aura_timer = GOLDEN_AURA_DURATION if not is_micro else (GOLDEN_AURA_DURATION + 1.5)
+	
+	if not is_on_floor():
+		coyote_timer = 0.0
+		has_jumped_in_air = true
+	
+	if golden_aura_node:
+		golden_aura_node.visible = true
+		if golden_aura_sprite:
+			golden_aura_sprite.modulate.a = 0.95
+		if golden_aura_particles:
+			golden_aura_particles.emitting = true
+		if golden_aura_light:
+			golden_aura_light.enabled = true
+			
+	show_floating_status("✨ +20% STAMINA! 🛡️ AURA IMMUNE", Color(1.0, 0.92, 0.3))
+	GameManager.vibrate_light()
+
+func apply_traveling_penalty() -> void:
+	var penalty: float = TRAVELING_STAMINA_PENALTY
+	stamina = max(0.0, stamina - penalty)
+	if hud:
+		hud.update_stamina(stamina, max_stamina)
+		if hud.has_method("flash_stamina_damage"):
+			hud.flash_stamina_damage(0.55)
+	
+	show_floating_status("🚫 PASSI! (-20 STAMINA)", Color(1.0, 0.28, 0.28))
+	GameManager.vibrate_medium()
+	add_camera_trauma(0.30)
+	
+	if stamina <= 0.0:
+		trigger_game_over()
+
+func show_floating_status(text: String, color: Color = Color(1.0, 0.9, 0.25)) -> void:
+	var label = Label.new()
+	label.text = text
+	label.position = Vector2(-110, -85)
+	label.modulate = color
+	label.add_theme_font_size_override("font_size", 18)
+	label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
+	label.add_theme_constant_override("outline_size", 5)
+	add_child(label)
+	
+	var tween = create_tween()
+	tween.tween_property(label, "position:y", -145.0, 0.85).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property(label, "modulate:a", 0.0, 0.85)
+	tween.tween_callback(label.queue_free)
 
 func reset_combo() -> void:
 	combo_count = 0
@@ -575,6 +803,15 @@ func trigger_game_over() -> void:
 	is_game_over = true
 	Engine.time_scale = 1.0
 	reset_combo()
+	is_golden_aura = false
+	is_golden_immune = false
+	golden_aura_timer = 0.0
+	if golden_aura_node:
+		golden_aura_node.visible = false
+	if golden_aura_particles:
+		golden_aura_particles.emitting = false
+	if golden_aura_light:
+		golden_aura_light.enabled = false
 	trajectory_dots.clear_dots()
 	var distance_meters: int = max(0, int(global_position.x / 50.0))
 	GameManager.update_high_score(distance_meters)

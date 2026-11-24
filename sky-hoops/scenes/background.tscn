@@ -17,6 +17,23 @@ motion_mirroring = Vector2(1280, 0)
 position = Vector2(640, 360)
 texture = ExtResource("1_sky")
 
+[node name="LayerStars" type="ParallaxLayer" parent="." unique_id=1849182010]
+motion_scale = Vector2(0.08, 0.02)
+motion_mirroring = Vector2(1280, 0)
+
+[node name="StarsParticles" type="CPUParticles2D" parent="LayerStars" unique_id=1849182011]
+position = Vector2(640, 180)
+amount = 48
+lifetime = 2.2
+emission_shape = 3
+emission_rect_extents = Vector2(640, 180)
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.0
+initial_velocity_max = 2.0
+scale_amount_min = 1.5
+scale_amount_max = 3.2
+color = Color(1, 1, 1, 0.85)
+
 [node name="LayerMountains" type="ParallaxLayer" parent="." unique_id=1849182004]
 motion_scale = Vector2(0.2, 0.06)
 motion_mirroring = Vector2(1280, 0)
